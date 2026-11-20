@@ -1,0 +1,20 @@
+[
+  {
+    "id": "general",
+    "boardName": "AI International Certification & Qualification Board (AICQB)",
+    "supportEmail": "support@aicqb.org",
+    "officeAddress": "AICQB Headquarters, Kharadi, Pune, Maharashtra - 411014, India",
+    "portalVersion": "2026.1.0-PROD",
+    "razorpayLiveMode": false,
+    "razorpayKeyId": "rzp_test_TxAOCfGGT3YAG7",
+    "razorpayKeySecret": "p1p2ARmHfkhFjJnpKrbIaxYx",
+    "firebaseStatus": "Configured & Online",
+    "certificatePrefix": "AICQB",
+    "ceoName": "Kalik sham",
+    "ceoTitle": "Chief Executive Officer (CEO)",
+    "directorName": "Dr. Neha Kulkarni",
+    "directorTitle": "Director – Certification",
+    "createdAt": "2026-11-10T10:11:43.202Z",
+    "updatedAt": "2026-11-10T10:12:49.658Z"
+  }
+]

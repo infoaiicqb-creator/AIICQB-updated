@@ -1,0 +1,177 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Mail, Phone, MapPin, ShieldCheck, CheckCircle2, Globe2 } from 'lucide-react';
+
+export const Footer: React.FC = () => {
+  return (
+    <footer className="bg-[#10264B] text-white pt-14 pb-8 border-t-4 border-[#F47716]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-12 border-b border-slate-700/60">
+          {/* Column 1: Brand & About */}
+          <div className="lg:col-span-2 space-y-4">
+            <div className="flex items-center space-x-3 bg-white px-4 py-2.5 rounded-xl max-w-fit shadow-md">
+              <img src="/aicqb-logo.png" alt="AICQB Logo" className="h-14 sm:h-16 w-auto object-contain" />
+            </div>
+            <p className="text-slate-300 text-sm leading-relaxed max-w-sm">
+              AI International Certification & Qualification Board (AICQB) is an independent professional body setting
+              benchmarks for global skill standards, verified assessments, and multi-industry qualifications.
+            </p>
+            <div className="pt-2 text-xs text-slate-400 space-y-1.5">
+              <div className="flex items-center space-x-2">
+                <MapPin className="w-4 h-4 text-[#F47716] flex-shrink-0" />
+                <span>Kharadi, Pune, Maharashtra – 411014, India</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Mail className="w-4 h-4 text-[#F47716] flex-shrink-0" />
+                <span>support@aicqb.org | contact@aicqb.org</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Phone className="w-4 h-4 text-[#F47716] flex-shrink-0" />
+                <span>+91 98765 43210</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Column 2: Certifications */}
+          <div>
+            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4 border-l-2 border-[#F47716] pl-2">
+              Certification Domains
+            </h4>
+            <ul className="space-y-2 text-xs text-slate-300">
+              <li>
+                <Link to="/certifications?domain=AI+%26+Machine+Learning" className="hover:text-[#F47716] transition-colors">
+                  AI & Machine Learning
+                </Link>
+              </li>
+              <li>
+                <Link to="/certifications?domain=Software+Testing" className="hover:text-[#F47716] transition-colors">
+                  Software Testing & QA
+                </Link>
+              </li>
+              <li>
+                <Link to="/certifications?domain=Data+Science" className="hover:text-[#F47716] transition-colors">
+                  Data Science & Analytics
+                </Link>
+              </li>
+              <li>
+                <Link to="/certifications?domain=Cybersecurity" className="hover:text-[#F47716] transition-colors">
+                  Cybersecurity Defense
+                </Link>
+              </li>
+              <li>
+                <Link to="/certifications?domain=Cloud+Computing" className="hover:text-[#F47716] transition-colors">
+                  Cloud & DevOps
+                </Link>
+              </li>
+              <li>
+                <Link to="/certifications?domain=Business+Analysis" className="hover:text-[#F47716] transition-colors">
+                  Business Analysis & PM
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: Platform & Verify */}
+          <div>
+            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4 border-l-2 border-[#F47716] pl-2">
+              Platform & Verify
+            </h4>
+            <ul className="space-y-2 text-xs text-slate-300">
+              <li>
+                <Link to="/verify" className="text-[#F47716] font-semibold hover:underline flex items-center">
+                  <ShieldCheck className="w-3.5 h-3.5 mr-1" />
+                  Verify Certificate
+                </Link>
+              </li>
+              <li>
+                <Link to="/exams" className="hover:text-[#F47716] transition-colors">
+                  Online Examinations
+                </Link>
+              </li>
+              <li>
+                <Link to="/learning" className="hover:text-[#F47716] transition-colors">
+                  Learning Hub (LMS)
+                </Link>
+              </li>
+              <li>
+                <Link to="/pricing" className="hover:text-[#F47716] transition-colors">
+                  Pricing & Plans
+                </Link>
+              </li>
+              <li>
+                <Link to="/resources" className="hover:text-[#F47716] transition-colors">
+                  Study Guides & Syllabi
+                </Link>
+              </li>
+              <li>
+                <Link to="/events" className="hover:text-[#F47716] transition-colors">
+                  Events & Webinars
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: Trust & Organization */}
+          <div>
+            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4 border-l-2 border-[#F47716] pl-2">
+              Organization
+            </h4>
+            <ul className="space-y-2 text-xs text-slate-300">
+              <li>
+                <Link to="/about" className="hover:text-[#F47716] transition-colors">
+                  About AICQB
+                </Link>
+              </li>
+              <li>
+                <Link to="/partners" className="hover:text-[#F47716] transition-colors">
+                  Training Partners
+                </Link>
+              </li>
+              <li>
+                <Link to="/careers" className="hover:text-[#F47716] transition-colors">
+                  Careers at AICQB
+                </Link>
+              </li>
+              <li>
+                <Link to="/blog" className="hover:text-[#F47716] transition-colors">
+                  Blog & Industry Insights
+                </Link>
+              </li>
+              <li>
+                <Link to="/support" className="hover:text-[#F47716] transition-colors">
+                  Help Center & Support
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="hover:text-[#F47716] transition-colors">
+                  Contact Advisory Team
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Legal & Regulatory Disclaimer */}
+        <div className="pt-6 pb-4 text-xs text-slate-400 space-y-2">
+          <p className="leading-relaxed bg-slate-800/50 p-3 rounded border border-slate-700/50">
+            <span className="font-semibold text-slate-200">Legal Notice:</span> AICQB (AI International Certification &
+            Qualification Board) is an independent private international professional assessment and credentialing body.
+            AICQB certifications represent professional evaluation of competence under AICQB published syllabi and do not
+            purport to be government diplomas, state statutory licences, or university academic degrees.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-between pt-4 border-t border-slate-700/60 text-xs">
+            <p>© {new Date().getFullYear()} AICQB – AI International Certification & Qualification Board. All rights reserved.</p>
+            <div className="flex items-center space-x-4 mt-2 sm:mt-0 text-slate-400">
+              <span className="hover:text-white cursor-pointer">Terms of Service</span>
+              <span>•</span>
+              <span className="hover:text-white cursor-pointer">Privacy Policy</span>
+              <span>•</span>
+              <span className="hover:text-white cursor-pointer">Examination Code of Ethics</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+

@@ -1,0 +1,862 @@
+[
+  {
+    "id": "INV-AICQB-2026-1004",
+    "invoiceId": "INV-AICQB-2026-1004",
+    "paymentId": "pay_1794239319175_p4mymo",
+    "candidateUid": "usr_1794238898604_8636ld",
+    "candidateName": "pushpak Wani",
+    "candidateEmail": "pushpak@gmail.com",
+    "amount": 5500,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Cybersecurity Specialist (AICQB-CY-301)",
+        "amount": 5500
+      }
+    ],
+    "date": "2026-11-09T15:48:39.204Z",
+    "status": "Paid",
+    "createdAt": "2026-11-09T15:48:39.211Z",
+    "updatedAt": "2026-11-09T15:48:39.211Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1005",
+    "invoiceId": "INV-AICQB-2026-1005",
+    "paymentId": "pay_1794243722758_141hij",
+    "candidateUid": "usr_super_admin_001",
+    "candidateName": "Super Admin",
+    "candidateEmail": "admin@aicqb.org",
+    "amount": 4500,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Playwright Automation (AICQB-PW-CP)",
+        "amount": 4500
+      }
+    ],
+    "date": "2026-11-09T17:02:02.782Z",
+    "status": "Paid",
+    "createdAt": "2026-11-09T17:02:02.792Z",
+    "updatedAt": "2026-11-09T17:02:02.792Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1006",
+    "invoiceId": "INV-AICQB-2026-1006",
+    "paymentId": "pay_1794246057040_bp6gs1",
+    "candidateUid": "usr_1794238898604_8636ld",
+    "candidateName": "pushpak Wani",
+    "candidateEmail": "pushpak@gmail.com",
+    "amount": 4500,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Playwright Automation (AICQB-PW-CP)",
+        "amount": 4500
+      }
+    ],
+    "date": "2026-11-09T17:40:57.091Z",
+    "status": "Paid",
+    "createdAt": "2026-11-09T17:40:57.107Z",
+    "updatedAt": "2026-11-09T17:40:57.107Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1015",
+    "invoiceId": "INV-AICQB-2026-1015",
+    "paymentId": "pay_1794309177944_7eeavh",
+    "candidateUid": "usr_1794302257050_vlonnw",
+    "candidateName": "Pratik Borle",
+    "candidateEmail": "pratik@gmail.com",
+    "amount": 9999,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Software Tester (AICQB-ST-CP)",
+        "amount": 9999
+      }
+    ],
+    "date": "2026-11-10T11:12:57.957Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T11:12:57.961Z",
+    "updatedAt": "2026-11-10T11:12:57.961Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1016",
+    "invoiceId": "INV-AICQB-2026-1016",
+    "paymentId": "pay_1794309938996_9zgs3u",
+    "candidateUid": "usr_1794302257050_vlonnw",
+    "candidateName": "Pratik Borle",
+    "candidateEmail": "pratik@gmail.com",
+    "amount": 9999,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Software Tester (AICQB-ST-CP)",
+        "amount": 9999
+      }
+    ],
+    "date": "2026-11-10T11:25:39.009Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T11:25:39.011Z",
+    "updatedAt": "2026-11-10T11:25:39.011Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1017",
+    "invoiceId": "INV-AICQB-2026-1017",
+    "paymentId": "pay_1794309956690_xge2ib",
+    "candidateUid": "usr_1794302257050_vlonnw",
+    "candidateName": "Pratik Borle",
+    "candidateEmail": "pratik@gmail.com",
+    "amount": 9999,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Software Tester (AICQB-ST-CP)",
+        "amount": 9999
+      }
+    ],
+    "date": "2026-11-10T11:25:56.701Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T11:25:56.701Z",
+    "updatedAt": "2026-11-10T11:25:56.701Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1018",
+    "invoiceId": "INV-AICQB-2026-1018",
+    "paymentId": "pay_1794312634015_yksnru",
+    "candidateUid": "usr_1794302257050_vlonnw",
+    "candidateName": "Pratik Borle",
+    "candidateEmail": "pratik@gmail.com",
+    "amount": 4500,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified AI Professional (AICQB-AI-CP)",
+        "amount": 4500
+      }
+    ],
+    "date": "2026-11-10T12:10:34.046Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T12:10:34.077Z",
+    "updatedAt": "2026-11-10T12:10:34.077Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1019",
+    "invoiceId": "INV-AICQB-2026-1019",
+    "paymentId": "pay_1794312647582_ulkdgv",
+    "candidateUid": "usr_1794302257050_vlonnw",
+    "candidateName": "Pratik Borle",
+    "candidateEmail": "pratik@gmail.com",
+    "amount": 9999,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Software Tester (AICQB-ST-CP)",
+        "amount": 9999
+      }
+    ],
+    "date": "2026-11-10T12:10:47.590Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T12:10:47.590Z",
+    "updatedAt": "2026-11-10T12:10:47.590Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1020",
+    "invoiceId": "INV-AICQB-2026-1020",
+    "paymentId": "pay_1794312717867_8n3wnm",
+    "candidateUid": "usr_1794302257050_vlonnw",
+    "candidateName": "Pratik Borle",
+    "candidateEmail": "pratik@gmail.com",
+    "amount": 9999,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Software Tester (AICQB-ST-CP)",
+        "amount": 9999
+      }
+    ],
+    "date": "2026-11-10T12:11:57.877Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T12:11:57.877Z",
+    "updatedAt": "2026-11-10T12:11:57.877Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1021",
+    "invoiceId": "INV-AICQB-2026-1021",
+    "paymentId": "pay_1794312955371_83ycvv",
+    "candidateUid": "usr_super_admin_001",
+    "candidateName": "Super Admin",
+    "candidateEmail": "admin@aicqb.org",
+    "amount": 4502,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Data Science Professional (AICQB-DS-201)",
+        "amount": 4502
+      }
+    ],
+    "date": "2026-11-10T12:15:55.380Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T12:15:55.382Z",
+    "updatedAt": "2026-11-10T12:15:55.382Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1022",
+    "invoiceId": "INV-AICQB-2026-1022",
+    "paymentId": "pay_1794313155988_oa70nw",
+    "candidateUid": "usr_1794302257050_vlonnw",
+    "candidateName": "Pratik Borle",
+    "candidateEmail": "pratik@gmail.com",
+    "amount": 9999,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Playwright Automation (AICQB-PW-CP)",
+        "amount": 9999
+      }
+    ],
+    "date": "2026-11-10T12:19:16.026Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T12:19:16.047Z",
+    "updatedAt": "2026-11-10T12:19:16.047Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1023",
+    "invoiceId": "INV-AICQB-2026-1023",
+    "paymentId": "pay_1794319925679_ne8f5q",
+    "candidateUid": "usr_1794302257050_vlonnw",
+    "candidateName": "Pratik Borle",
+    "candidateEmail": "pratik@gmail.com",
+    "amount": 4502,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Data Science Professional (AICQB-DS-201)",
+        "amount": 4502
+      }
+    ],
+    "date": "2026-11-10T14:12:05.703Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T14:12:05.710Z",
+    "updatedAt": "2026-11-10T14:12:05.710Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1024",
+    "invoiceId": "INV-AICQB-2026-1024",
+    "paymentId": "pay_1794320005310_sg28cy",
+    "candidateUid": "usr_super_admin_001",
+    "candidateName": "Super Admin",
+    "candidateEmail": "admin@aicqb.org",
+    "amount": 4500,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified AI Professional (AICQB-AI-CP)",
+        "amount": 4500
+      }
+    ],
+    "date": "2026-11-10T14:13:25.322Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T14:13:25.324Z",
+    "updatedAt": "2026-11-10T14:13:25.324Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1025",
+    "invoiceId": "INV-AICQB-2026-1025",
+    "paymentId": "pay_1794320374058_b4jzxi",
+    "candidateUid": "usr_1794302257050_vlonnw",
+    "candidateName": "Pratik Borle",
+    "candidateEmail": "pratik@gmail.com",
+    "amount": 5500,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Cybersecurity Specialist (AICQB-CY-301)",
+        "amount": 5500
+      }
+    ],
+    "date": "2026-11-10T14:19:34.068Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T14:19:34.071Z",
+    "updatedAt": "2026-11-10T14:19:34.071Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1026",
+    "invoiceId": "INV-AICQB-2026-1026",
+    "paymentId": "pay_1794323992183_0ze3za",
+    "candidateUid": "usr_1794323936953_641yni",
+    "candidateName": "khushboo Wani",
+    "candidateEmail": "khushi@gmail.com",
+    "amount": 4500,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified AI Professional (AICQB-AI-CP)",
+        "amount": 4500
+      }
+    ],
+    "date": "2026-11-10T15:19:52.196Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T15:19:52.201Z",
+    "updatedAt": "2026-11-10T15:19:52.201Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1027",
+    "invoiceId": "INV-AICQB-2026-1027",
+    "paymentId": "pay_1794324892182_6dwb00",
+    "candidateUid": "usr_1794324854411_7qjr1a",
+    "candidateName": "Pavan",
+    "candidateEmail": "pavan@gmail.com",
+    "amount": 9999,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Playwright Automation (AICQB-PW-CP)",
+        "amount": 9999
+      }
+    ],
+    "date": "2026-11-10T15:34:52.198Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T15:34:52.204Z",
+    "updatedAt": "2026-11-10T15:34:52.204Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1028",
+    "invoiceId": "INV-AICQB-2026-1028",
+    "paymentId": "pay_1794328284574_mke8qi",
+    "candidateUid": "usr_1794324854411_7qjr1a",
+    "candidateName": "Pavan Desai",
+    "candidateEmail": "pavan@gmail.com",
+    "amount": 4500,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified AI Professional (AICQB-AI-CP)",
+        "amount": 4500
+      }
+    ],
+    "date": "2026-11-10T16:31:24.591Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T16:31:24.604Z",
+    "updatedAt": "2026-11-10T16:31:24.604Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1029",
+    "invoiceId": "INV-AICQB-2026-1029",
+    "paymentId": "pay_1794331740660_ss1d44",
+    "candidateUid": "usr_1794331639642_jnwny1",
+    "candidateName": "yash kolhe",
+    "candidateEmail": "yashkolhe@gmail.com",
+    "amount": 9999,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Software Tester (AICQB-ST-CP)",
+        "amount": 9999
+      }
+    ],
+    "date": "2026-11-10T17:29:00.677Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T17:29:00.682Z",
+    "updatedAt": "2026-11-10T17:29:00.682Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1030",
+    "invoiceId": "INV-AICQB-2026-1030",
+    "paymentId": "pay_1794332204779_vcpkuo",
+    "candidateUid": "usr_1794331639642_jnwny1",
+    "candidateName": "yash kolhe",
+    "candidateEmail": "yashkolhe@gmail.com",
+    "amount": 4500,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified AI Professional (AICQB-AI-CP)",
+        "amount": 4500
+      }
+    ],
+    "date": "2026-11-10T17:36:44.791Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T17:36:44.793Z",
+    "updatedAt": "2026-11-10T17:36:44.793Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1034",
+    "invoiceId": "INV-AICQB-2026-1034",
+    "paymentId": "pay_1794333335279_4rqs3h",
+    "candidateUid": "usr_1794333335065_c6vn04",
+    "candidateName": "Test User 2",
+    "candidateEmail": "t2_1794333335049@a.com",
+    "amount": 4500,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified AI Professional (AICQB-AI-CP)",
+        "amount": 4500
+      }
+    ],
+    "date": "2026-11-10T17:55:35.287Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T17:55:35.293Z",
+    "updatedAt": "2026-11-10T17:55:35.293Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1036",
+    "invoiceId": "INV-AICQB-2026-1036",
+    "paymentId": "pay_1794333383635_cwbvx8",
+    "candidateUid": "usr_1794333383424_nmzp39",
+    "candidateName": "Test User 3",
+    "candidateEmail": "t3_1794333383413@a.com",
+    "amount": 4500,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified AI Professional (AICQB-AI-CP)",
+        "amount": 4500
+      }
+    ],
+    "date": "2026-11-10T17:56:23.643Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T17:56:23.645Z",
+    "updatedAt": "2026-11-10T17:56:23.645Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1037",
+    "invoiceId": "INV-AICQB-2026-1037",
+    "paymentId": "pay_1794333394517_fvz8el",
+    "candidateUid": "usr_1794333393694_lqjs0j",
+    "candidateName": "Test User 4",
+    "candidateEmail": "t4_1794333393676@a.com",
+    "amount": 4500,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified AI Professional (AICQB-AI-CP)",
+        "amount": 4500
+      }
+    ],
+    "date": "2026-11-10T17:56:34.525Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T17:56:34.526Z",
+    "updatedAt": "2026-11-10T17:56:34.526Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1045",
+    "invoiceId": "INV-AICQB-2026-1045",
+    "paymentId": "pay_1794333821682_mmlaes",
+    "candidateUid": "usr_1794333777300_uiz0wb",
+    "candidateName": "Rahul patil",
+    "candidateEmail": "rahul@gmail.com",
+    "amount": 9999,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Playwright Automation (AICQB-PW-CP)",
+        "amount": 9999
+      }
+    ],
+    "date": "2026-11-10T18:03:41.692Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T18:03:41.695Z",
+    "updatedAt": "2026-11-10T18:03:41.695Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1048",
+    "invoiceId": "INV-AICQB-2026-1048",
+    "paymentId": "pay_1794334719207_281ta0",
+    "candidateUid": "usr_1794333777300_uiz0wb",
+    "candidateName": "Rahul patil",
+    "candidateEmail": "rahul@gmail.com",
+    "amount": 9999,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Software Tester (AICQB-ST-CP)",
+        "amount": 9999
+      }
+    ],
+    "date": "2026-11-10T18:18:39.216Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T18:18:39.220Z",
+    "updatedAt": "2026-11-10T18:18:39.220Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1049",
+    "invoiceId": "INV-AICQB-2026-1049",
+    "paymentId": "pay_1794334781724_x1uhgl",
+    "candidateUid": "usr_1794333777300_uiz0wb",
+    "candidateName": "Rahul patil",
+    "candidateEmail": "rahul@gmail.com",
+    "amount": 4500,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified AI Professional (AICQB-AI-CP)",
+        "amount": 4500
+      }
+    ],
+    "date": "2026-11-10T18:19:41.732Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T18:19:41.733Z",
+    "updatedAt": "2026-11-10T18:19:41.733Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1050",
+    "invoiceId": "INV-AICQB-2026-1050",
+    "paymentId": "pay_1794334949058_2cnm6o",
+    "candidateUid": "usr_1794333777300_uiz0wb",
+    "candidateName": "Rahul patil",
+    "candidateEmail": "rahul@gmail.com",
+    "amount": 4502,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Data Science Professional (AICQB-DS-201)",
+        "amount": 4502
+      }
+    ],
+    "date": "2026-11-10T18:22:29.071Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T18:22:29.074Z",
+    "updatedAt": "2026-11-10T18:22:29.074Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1051",
+    "invoiceId": "INV-AICQB-2026-1051",
+    "paymentId": "pay_1794335081737_xtc814",
+    "candidateUid": "usr_super_admin_001",
+    "candidateName": "Super Admin",
+    "candidateEmail": "admin@aicqb.org",
+    "amount": 5500,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Cybersecurity Specialist (AICQB-CY-301)",
+        "amount": 5500
+      }
+    ],
+    "date": "2026-11-10T18:24:41.749Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T18:24:41.752Z",
+    "updatedAt": "2026-11-10T18:24:41.752Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1052",
+    "invoiceId": "INV-AICQB-2026-1052",
+    "paymentId": "pay_1794335299778_6z1buw",
+    "candidateUid": "usr_1794333777300_uiz0wb",
+    "candidateName": "Rahul patil",
+    "candidateEmail": "rahul@gmail.com",
+    "amount": 5500,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Cybersecurity Specialist (AICQB-CY-301)",
+        "amount": 5500
+      }
+    ],
+    "date": "2026-11-10T18:28:19.787Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T18:28:19.789Z",
+    "updatedAt": "2026-11-10T18:28:19.789Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1054",
+    "invoiceId": "INV-AICQB-2026-1054",
+    "paymentId": "pay_1794336167709_x63377",
+    "candidateUid": "usr_1794324854411_7qjr1a",
+    "candidateName": "Pavan Desai",
+    "candidateEmail": "pavan@gmail.com",
+    "amount": 9999,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Software Tester (AICQB-ST-CP)",
+        "amount": 9999
+      }
+    ],
+    "date": "2026-11-10T18:42:47.730Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T18:42:47.735Z",
+    "updatedAt": "2026-11-10T18:42:47.735Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1056",
+    "invoiceId": "INV-AICQB-2026-1056",
+    "paymentId": "pay_1794336560168_uch6t5",
+    "candidateUid": "usr_1794336518436_x0anqg",
+    "candidateName": "Ramesh patil",
+    "candidateEmail": "ramesh@gmail.com",
+    "amount": 9999,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Playwright Automation (AICQB-PW-CP)",
+        "amount": 9999
+      }
+    ],
+    "date": "2026-11-10T18:49:20.182Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T18:49:20.184Z",
+    "updatedAt": "2026-11-10T18:49:20.184Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1057",
+    "invoiceId": "INV-AICQB-2026-1057",
+    "paymentId": "pay_1794336600947_r31ae3",
+    "candidateUid": "usr_1794336518436_x0anqg",
+    "candidateName": "Ramesh patil",
+    "candidateEmail": "ramesh@gmail.com",
+    "amount": 9999,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Software Tester (AICQB-ST-CP)",
+        "amount": 9999
+      }
+    ],
+    "date": "2026-11-10T18:50:00.956Z",
+    "status": "Paid",
+    "createdAt": "2026-11-10T18:50:00.958Z",
+    "updatedAt": "2026-11-10T18:50:00.958Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1061",
+    "invoiceId": "INV-AICQB-2026-1061",
+    "paymentId": "pay_1794479218266_yty6iy",
+    "candidateUid": "usr_1794336518436_x0anqg",
+    "candidateName": "Ramesh patil",
+    "candidateEmail": "ramesh@gmail.com",
+    "amount": 4500,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified AI Professional (AICQB-AI-CP)",
+        "amount": 4500
+      }
+    ],
+    "date": "2026-11-12T10:26:58.281Z",
+    "status": "Paid",
+    "createdAt": "2026-11-12T10:26:58.290Z",
+    "updatedAt": "2026-11-12T10:26:58.290Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1062",
+    "invoiceId": "INV-AICQB-2026-1062",
+    "paymentId": "pay_1794929378058_8l2l0y",
+    "candidateUid": "usr_1794929332280_sjbw6a",
+    "candidateName": "Mahesh Patil",
+    "candidateEmail": "mahesh@gmail.com",
+    "amount": 9999,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Playwright Automation (AICQB-PW-CP)",
+        "amount": 9999
+      }
+    ],
+    "date": "2026-11-17T15:29:38.092Z",
+    "status": "Paid",
+    "createdAt": "2026-11-17T15:29:38.103Z",
+    "updatedAt": "2026-11-17T15:29:38.103Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1091",
+    "invoiceId": "INV-AICQB-2026-1091",
+    "paymentId": "pay_1795078815576_ali9kn",
+    "candidateUid": "guest_1795078827130",
+    "candidateName": "Candidate",
+    "candidateEmail": "candidate@aicqb.org",
+    "amount": 4500,
+    "currency": "INR",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified AI Professional (AICQB-AI-CP)",
+        "amount": 4500
+      }
+    ],
+    "date": "2026-11-19T09:00:27.131Z",
+    "status": "Paid",
+    "createdAt": "2026-11-19T09:00:27.140Z",
+    "updatedAt": "2026-11-19T09:00:27.140Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1097",
+    "invoice_id": "INV-AICQB-2026-1097",
+    "invoiceId": "INV-AICQB-2026-1097",
+    "payment_id": "pay_1795081056650_a78ppe",
+    "paymentId": "pay_1795081056650_a78ppe",
+    "enrollment_id": "ENR-AICQB-2026-974960",
+    "candidate_id": "AICQB-CAND-501530",
+    "candidateUid": "guest_1795081070016",
+    "candidate_name": "John Smith",
+    "candidateName": "John Smith",
+    "candidate_email": "john.smith@gmail.com",
+    "candidateEmail": "john.smith@gmail.com",
+    "country": "United States",
+    "amount": 79,
+    "currency": "USD",
+    "certification_name": "AICQB Certified AI Professional",
+    "certification_level": "Professional Level",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified AI Professional (Professional Level)",
+        "amount": 79
+      }
+    ],
+    "date": "2026-11-19T09:37:50.017Z",
+    "created_at": "2026-11-19T09:37:50.017Z",
+    "status": "Paid",
+    "createdAt": "2026-11-19T09:37:50.022Z",
+    "updatedAt": "2026-11-19T09:37:50.022Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1108",
+    "invoice_id": "INV-AICQB-2026-1108",
+    "invoiceId": "INV-AICQB-2026-1108",
+    "payment_id": "pay_1795083915764_80q268",
+    "paymentId": "pay_1795083915764_80q268",
+    "enrollment_id": "ENR-AICQB-2026-818620",
+    "candidate_id": "AICQB-1004590",
+    "candidateUid": "usr_1794336518436_x0anqg",
+    "candidate_name": "Ramesh patil",
+    "candidateName": "Ramesh patil",
+    "candidate_email": "ramesh@gmail.com",
+    "candidateEmail": "ramesh@gmail.com",
+    "country": "India",
+    "amount": 4502,
+    "currency": "INR",
+    "certification_name": "AICQB Certified Data Science Professional",
+    "certification_level": "Professional Level",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Data Science Professional (Professional Level)",
+        "amount": 4502
+      }
+    ],
+    "date": "2026-11-19T10:25:15.774Z",
+    "created_at": "2026-11-19T10:25:15.774Z",
+    "status": "Paid",
+    "createdAt": "2026-11-19T10:25:15.780Z",
+    "updatedAt": "2026-11-19T10:25:15.780Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1109",
+    "invoice_id": "INV-AICQB-2026-1109",
+    "invoiceId": "INV-AICQB-2026-1109",
+    "payment_id": "pay_1795083948633_3wnirn",
+    "paymentId": "pay_1795083948633_3wnirn",
+    "enrollment_id": "ENR-AICQB-2026-358862",
+    "candidate_id": "AICQB-1004590",
+    "candidateUid": "usr_1794336518436_x0anqg",
+    "candidate_name": "Ramesh patil",
+    "candidateName": "Ramesh patil",
+    "candidate_email": "ramesh@gmail.com",
+    "candidateEmail": "ramesh@gmail.com",
+    "country": "India",
+    "amount": 5500,
+    "currency": "INR",
+    "certification_name": "AICQB Certified Cybersecurity Specialist",
+    "certification_level": "Advanced Level",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Cybersecurity Specialist (Advanced Level)",
+        "amount": 5500
+      }
+    ],
+    "date": "2026-11-19T10:25:48.655Z",
+    "created_at": "2026-11-19T10:25:48.655Z",
+    "status": "Paid",
+    "createdAt": "2026-11-19T10:25:48.657Z",
+    "updatedAt": "2026-11-19T10:25:48.657Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1111",
+    "invoice_id": "INV-AICQB-2026-1111",
+    "invoiceId": "INV-AICQB-2026-1111",
+    "payment_id": "pay_1795085809621_kptlnl",
+    "paymentId": "pay_1795085809621_kptlnl",
+    "enrollment_id": "ENR-AICQB-2026-139593",
+    "candidate_id": "AICQB-CAND-246699",
+    "candidateUid": "guest_1795085823850",
+    "candidate_name": "Mahesh Patil",
+    "candidateName": "Mahesh Patil",
+    "candidate_email": "mahesh@gmail.com",
+    "candidateEmail": "mahesh@gmail.com",
+    "country": "India",
+    "amount": 4500,
+    "currency": "INR",
+    "certification_name": "AICQB Certified AI Professional",
+    "certification_level": "Professional Level",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified AI Professional (Professional Level)",
+        "amount": 4500
+      }
+    ],
+    "date": "2026-11-19T10:57:03.852Z",
+    "created_at": "2026-11-19T10:57:03.852Z",
+    "status": "Paid",
+    "createdAt": "2026-11-19T10:57:03.858Z",
+    "updatedAt": "2026-11-19T10:57:03.858Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1127",
+    "invoice_id": "INV-AICQB-2026-1127",
+    "invoiceId": "INV-AICQB-2026-1127",
+    "payment_id": "pay_1795162876134_stsuv1",
+    "paymentId": "pay_1795162876134_stsuv1",
+    "enrollment_id": "ENR-AICQB-2026-697908",
+    "candidate_id": "AICQB-CAND-129636",
+    "candidateUid": "guest_1795162875909",
+    "candidate_name": "Mahesh TestQR",
+    "candidateName": "Mahesh TestQR",
+    "candidate_email": "mahesh.testqr999@example.com",
+    "candidateEmail": "mahesh.testqr999@example.com",
+    "country": "India",
+    "amount": 4502,
+    "currency": "INR",
+    "certification_name": "AICQB Certified Data Science Professional",
+    "certification_level": "Professional Level",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified Data Science Professional (Professional Level)",
+        "amount": 4502
+      }
+    ],
+    "date": "2026-11-20T08:21:16.178Z",
+    "created_at": "2026-11-20T08:21:16.178Z",
+    "status": "Paid",
+    "createdAt": "2026-11-20T08:21:16.184Z",
+    "updatedAt": "2026-11-20T08:21:16.184Z"
+  },
+  {
+    "id": "INV-AICQB-2026-1128",
+    "invoice_id": "INV-AICQB-2026-1128",
+    "invoiceId": "INV-AICQB-2026-1128",
+    "payment_id": "pay_1795164945056_z3qbzv",
+    "paymentId": "pay_1795164945056_z3qbzv",
+    "enrollment_id": "ENR-AICQB-2026-847261",
+    "candidate_id": "AICQB-1004704",
+    "candidateUid": "usr_1795161584876_gigns6",
+    "candidate_name": "Gaurav Patil",
+    "candidateName": "Gaurav Patil",
+    "candidate_email": "gaurav@gmail.com",
+    "candidateEmail": "gaurav@gmail.com",
+    "country": "India",
+    "amount": 4500,
+    "currency": "INR",
+    "certification_name": "AICQB Certified AI Professional",
+    "certification_level": "Professional Level",
+    "items": [
+      {
+        "description": "AICQB Professional Certification: AICQB Certified AI Professional (Professional Level)",
+        "amount": 4500
+      }
+    ],
+    "date": "2026-11-20T08:55:56.481Z",
+    "created_at": "2026-11-20T08:55:56.481Z",
+    "status": "Paid",
+    "createdAt": "2026-11-20T08:55:56.485Z",
+    "updatedAt": "2026-11-20T08:55:56.485Z"
+  }
+]

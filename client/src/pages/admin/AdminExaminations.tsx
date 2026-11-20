@@ -1,0 +1,1875 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import { api } from '../../services/api';
+import {
+  CalendarCheck,
+  Plus,
+  Search,
+  Edit2,
+  Trash2,
+  Users,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  HelpCircle,
+  Shield,
+  Eye,
+  FileCheck2,
+  X,
+  Loader2,
+  RefreshCw,
+  Award,
+  Filter,
+  ShieldAlert,
+  Download,
+  Code2,
+  Copy,
+  Check,
+  AlertTriangle,
+  Radio,
+  FileText,
+  Video,
+} from 'lucide-react';
+
+interface CertificationOption {
+  code: string;
+  id: string;
+  name: string;
+}
+
+const CERTIFICATIONS: CertificationOption[] = [
+  { code: 'AICQB-AI-CP', id: 'cert_aicqb_ai_cp', name: 'AI Professional' },
+  { code: 'AICQB-DS-201', id: 'cert_aicqb_ds_201', name: 'Data Science Professional' },
+  { code: 'AICQB-ST-CP', id: 'cert_aicqb_st_cp', name: 'Software Tester' },
+  { code: 'AICQB-PW-CP', id: 'cert_aicqb_pw_cp', name: 'Playwright Automation' },
+  { code: 'AICQB-CY-301', id: 'cert_aicqb_cy_301', name: 'Cybersecurity Specialist' },
+];
+
+const SAMPLE_JSON_TEMPLATE = `[
+  {
+    "question": "Which evaluation metric is most appropriate for evaluating a binary classification model when dealing with severe class imbalance?",
+    "options": [
+      "Area Under ROC Curve (ROC-AUC) / Precision-Recall AUC",
+      "Overall Accuracy",
+      "Mean Squared Error (MSE)",
+      "Log-cosh Loss"
+    ],
+    "correctAnswer": 0,
+    "points": 10,
+    "difficulty": "Intermediate",
+    "certificationCode": "AICQB-AI-CP",
+    "rubric": "Understanding of imbalanced classification performance metrics."
+  },
+  {
+    "question": "In neural network optimization, what is the primary function of the Learning Rate parameter?",
+    "options": [
+      "Determines the step size taken towards the minimum of the loss function during gradient descent",
+      "Sets the total number of layers in the deep architecture",
+      "Controls the size of the mini-batch loaded into GPU RAM",
+      "Specifies the number of epochs to train before early stopping"
+    ],
+    "correctAnswer": 0,
+    "points": 10,
+    "difficulty": "Intermediate",
+    "certificationCode": "AICQB-AI-CP",
+    "rubric": "Gradient descent optimization and hyperparameter tuning fundamentals."
+  }
+]`;
+
+export const AdminExaminations: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'schedules' | 'questions' | 'monitoring' | 'results'>('schedules');
+  const [loading, setLoading] = useState(true);
+
+  // Real Database Collections
+  const [exams, setExams] = useState<any[]>([]);
+  const [questions, setQuestions] = useState<any[]>([]);
+  const [monitoringSessions, setMonitoringSessions] = useState<any[]>([]);
+  const [resultsList, setResultsList] = useState<any[]>([]);
+
+  // Search & Filter States
+  const [examSearch, setExamSearch] = useState('');
+  const [examStatusFilter, setExamStatusFilter] = useState('All');
+
+  const [questionSearch, setQuestionSearch] = useState('');
+  const [questionCertFilter, setQuestionCertFilter] = useState('All');
+
+  const [monitoringSearch, setMonitoringSearch] = useState('');
+  const [resultFilter, setResultFilter] = useState<'ALL' | 'PASSED' | 'FAILED'>('ALL');
+  const [resultSearch, setResultSearch] = useState('');
+
+  // Modals
+  const [showExamModal, setShowExamModal] = useState(false);
+  const [editingExam, setEditingExam] = useState<any>(null);
+
+  const [showQuestionModal, setShowQuestionModal] = useState(false);
+  const [editingQuestion, setEditingQuestion] = useState<any>(null);
+  const [previewQuestion, setPreviewQuestion] = useState<any>(null);
+
+  // Bulk JSON Import Modal
+  const [showJsonModal, setShowJsonModal] = useState(false);
+  const [jsonCode, setJsonCode] = useState(SAMPLE_JSON_TEMPLATE);
+  const [jsonTargetCert, setJsonTargetCert] = useState('AICQB-AI-CP');
+  const [copiedSample, setCopiedSample] = useState(false);
+  const [importingJson, setImportingJson] = useState(false);
+
+  // Result Preview Modal
+  const [selectedResult, setSelectedResult] = useState<any>(null);
+
+  // Action status
+  const [actionLoading, setActionLoading] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  // Toast Notification
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  // Exam Form
+  const [examForm, setExamForm] = useState({
+    examCode: 'AICQB-AI-CP-EXAM',
+    examName: 'AICQB Certified AI Professional Examination',
+    certificationCode: 'AICQB-AI-CP',
+    scheduledDate: '24 Nov 2026',
+    scheduledTime: '10:00 AM – 11:30 AM (IST)',
+    durationMinutes: 90,
+    passingCriteria: 70,
+    mode: 'Online (AI Proctored)',
+    status: 'Scheduled',
+    candidatesCount: 20,
+  });
+
+  // Question Form
+  const [questionForm, setQuestionForm] = useState({
+    certificationCode: 'AICQB-AI-CP',
+    type: 'mcq',
+    question: '',
+    optionA: '',
+    optionB: '',
+    optionC: '',
+    optionD: '',
+    correctAnswer: 0,
+    points: 10,
+    difficulty: 'Intermediate',
+  });
+
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3500);
+  };
+
+  const loadAllData = async () => {
+    try {
+      setLoading(true);
+      const [examsRes, questionsRes, monitoringRes, resultsRes] = await Promise.all([
+        api.getExams().catch(() => ({ success: false, exams: [] })),
+        api.getAdminQuestions().catch(() => ({ success: false, questions: [] })),
+        api.getAdminMonitoring().catch(() => ({ success: false, attempts: [], schedules: [] })),
+        api.getAdminResults().catch(() => ({ success: false, results: [] })),
+      ]);
+
+      if (examsRes.success && Array.isArray(examsRes.exams)) {
+        setExams(examsRes.exams);
+      }
+
+      if (questionsRes.success && Array.isArray(questionsRes.questions)) {
+        setQuestions(questionsRes.questions);
+      }
+
+      if (monitoringRes.success && Array.isArray(monitoringRes.attempts)) {
+        setMonitoringSessions(monitoringRes.attempts);
+      }
+
+      if (resultsRes.success && Array.isArray(resultsRes.results)) {
+        setResultsList(resultsRes.results);
+      }
+    } catch (err: any) {
+      console.error('Failed to load examinations data:', err);
+      showToast(err.message || 'Failed to load examination records', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadAllData();
+  }, []);
+
+  // Live JSON validation for Bulk Import
+  const jsonValidation = useMemo(() => {
+    if (!jsonCode.trim()) {
+      return { isValid: false, count: 0, error: 'JSON code cannot be empty.' };
+    }
+    try {
+      const parsed = JSON.parse(jsonCode);
+      const items = Array.isArray(parsed) ? parsed : [parsed];
+      if (items.length === 0) {
+        return { isValid: false, count: 0, error: 'JSON array is empty.' };
+      }
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (!item.question && !item.title) {
+          return { isValid: false, count: 0, error: `Item #${i + 1} is missing a "question" field.` };
+        }
+      }
+      return { isValid: true, count: items.length, error: null };
+    } catch (e: any) {
+      return { isValid: false, count: 0, error: e.message };
+    }
+  }, [jsonCode]);
+
+  // Bulk JSON Import Handler
+  const handleBulkImportJson = async () => {
+    if (!jsonValidation.isValid) {
+      showToast(jsonValidation.error || 'Please provide valid JSON code.', 'error');
+      return;
+    }
+
+    try {
+      setImportingJson(true);
+      const res = await api.bulkImportQuestionsAdmin({
+        questions: jsonCode,
+        defaultCertificationCode: jsonTargetCert,
+      });
+
+      if (res.success) {
+        showToast(`✓ Successfully added ${res.importedCount || jsonValidation.count} questions to Question Bank!`);
+        setShowJsonModal(false);
+        await loadAllData();
+      } else {
+        showToast(res.message || 'Bulk import failed.', 'error');
+      }
+    } catch (err: any) {
+      showToast(err.message || 'Failed to import JSON questions.', 'error');
+    } finally {
+      setImportingJson(false);
+    }
+  };
+
+  const handleCopySample = () => {
+    setJsonCode(SAMPLE_JSON_TEMPLATE);
+    navigator.clipboard?.writeText(SAMPLE_JSON_TEMPLATE);
+    setCopiedSample(true);
+    setTimeout(() => setCopiedSample(false), 2000);
+    showToast('Sample JSON template copied & loaded into editor!');
+  };
+
+  // Exam Form Handlers
+  const handleOpenAddExam = () => {
+    setEditingExam(null);
+    setExamForm({
+      examCode: 'AICQB-AI-CP-EXAM',
+      examName: 'AICQB Certified AI Professional Examination',
+      certificationCode: 'AICQB-AI-CP',
+      scheduledDate: '24 Nov 2026',
+      scheduledTime: '10:00 AM – 11:30 AM (IST)',
+      durationMinutes: 90,
+      passingCriteria: 70,
+      mode: 'Online (AI Proctored)',
+      status: 'Scheduled',
+      candidatesCount: 20,
+    });
+    setShowExamModal(true);
+  };
+
+  const handleOpenEditExam = (exam: any) => {
+    setEditingExam(exam);
+    setExamForm({
+      examCode: exam.examCode || exam.code || '',
+      examName: exam.examName || exam.name || '',
+      certificationCode: exam.certificationCode || 'AICQB-AI-CP',
+      scheduledDate: exam.dateFormatted || exam.scheduledDate || '24 Nov 2026',
+      scheduledTime: exam.timeFormatted || exam.scheduledTime || '10:00 AM – 11:30 AM (IST)',
+      durationMinutes: exam.durationMinutes || 90,
+      passingCriteria: exam.passingCriteria || 70,
+      mode: exam.mode || 'Online (AI Proctored)',
+      status: exam.status || 'Scheduled',
+      candidatesCount: exam.candidatesCount || 10,
+    });
+    setShowExamModal(true);
+  };
+
+  const handleSaveExam = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!examForm.examCode.trim() || !examForm.examName.trim()) {
+      showToast('Exam code and name are required', 'error');
+      return;
+    }
+
+    try {
+      setActionLoading(true);
+      if (editingExam) {
+        const res = await api.updateAdminExam(editingExam.id, examForm);
+        if (res.success) {
+          showToast(`Exam ${examForm.examCode} updated!`);
+          setShowExamModal(false);
+          await loadAllData();
+        }
+      } else {
+        const res = await api.createAdminExam(examForm);
+        if (res.success) {
+          showToast(`Exam ${examForm.examCode} scheduled!`);
+          setShowExamModal(false);
+          await loadAllData();
+        }
+      }
+    } catch (err: any) {
+      showToast(err.message || 'Failed to save exam window', 'error');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  // Direct Delete for Exams (Instant 1-Click, NO POPUP)
+  const handleDeleteExamDirect = async (id: string, name: string) => {
+    try {
+      setDeletingId(id);
+      setExams((prev) => prev.filter((e) => e.id !== id && e.examCode !== id));
+      showToast(`Deleted exam ${name}`);
+      const res = await api.deleteAdminExam(id);
+      if (!res.success) {
+        await loadAllData();
+        showToast(res.message || 'Failed to delete exam', 'error');
+      }
+    } catch (err: any) {
+      await loadAllData();
+      showToast(err.message || 'Failed to delete exam', 'error');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  // Direct Delete for Questions (Instant 1-Click, NO POPUP)
+  const handleDeleteQuestionDirect = async (id: string) => {
+    try {
+      setDeletingId(id);
+      setQuestions((prev) => prev.filter((q) => q.id !== id));
+      showToast(`Deleted question item`);
+      const res = await api.deleteAdminQuestion(id);
+      if (!res.success) {
+        await loadAllData();
+        showToast(res.message || 'Failed to delete question', 'error');
+      }
+    } catch (err: any) {
+      await loadAllData();
+      showToast(err.message || 'Failed to delete question', 'error');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  // Question Form Handlers
+  const handleOpenAddQuestion = () => {
+    setEditingQuestion(null);
+    setQuestionForm({
+      certificationCode: 'AICQB-AI-CP',
+      type: 'mcq',
+      question: '',
+      optionA: '',
+      optionB: '',
+      optionC: '',
+      optionD: '',
+      correctAnswer: 0,
+      points: 10,
+      difficulty: 'Intermediate',
+    });
+    setShowQuestionModal(true);
+  };
+
+  const handleOpenEditQuestion = (q: any) => {
+    setEditingQuestion(q);
+    setQuestionForm({
+      certificationCode: q.certificationCode || q.certificationId || 'AICQB-AI-CP',
+      type: q.questionType || q.type || 'mcq',
+      question: q.question || '',
+      optionA: q.options?.[0] || '',
+      optionB: q.options?.[1] || '',
+      optionC: q.options?.[2] || '',
+      optionD: q.options?.[3] || '',
+      correctAnswer: q.correctAnswer !== undefined ? q.correctAnswer : 0,
+      points: q.points || 10,
+      difficulty: q.difficulty || 'Intermediate',
+    });
+    setShowQuestionModal(true);
+  };
+
+  const handleSaveQuestion = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!questionForm.question.trim()) {
+      showToast('Please enter question prompt', 'error');
+      return;
+    }
+
+    const payload = {
+      certificationCode: questionForm.certificationCode,
+      type: questionForm.type,
+      question: questionForm.question.trim(),
+      options: [
+        questionForm.optionA.trim(),
+        questionForm.optionB.trim(),
+        questionForm.optionC.trim(),
+        questionForm.optionD.trim(),
+      ].filter(Boolean),
+      correctOptionIndex: Number(questionForm.correctAnswer),
+      points: Number(questionForm.points),
+      difficulty: questionForm.difficulty,
+    };
+
+    try {
+      setActionLoading(true);
+      if (editingQuestion) {
+        const res = await api.updateAdminQuestion(editingQuestion.id, payload);
+        if (res.success) {
+          showToast('Question updated!');
+          setShowQuestionModal(false);
+          await loadAllData();
+        }
+      } else {
+        const res = await api.createAdminQuestion(payload);
+        if (res.success) {
+          showToast('Question added to Question Bank!');
+          setShowQuestionModal(false);
+          await loadAllData();
+        }
+      }
+    } catch (err: any) {
+      showToast(err.message || 'Failed to save question', 'error');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  // Filtered Lists
+  const filteredExams = useMemo(() => {
+    return exams.filter((e) => {
+      const matchesSearch =
+        examSearch === '' ||
+        (e.examName || e.name || '').toLowerCase().includes(examSearch.toLowerCase()) ||
+        (e.examCode || e.code || '').toLowerCase().includes(examSearch.toLowerCase()) ||
+        (e.certificationCode || '').toLowerCase().includes(examSearch.toLowerCase());
+
+      const matchesStatus =
+        examStatusFilter === 'All' ||
+        e.status?.toLowerCase() === examStatusFilter.toLowerCase();
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [exams, examSearch, examStatusFilter]);
+
+  const filteredQuestions = useMemo(() => {
+    return questions.filter((q) => {
+      const certCode = q.certificationCode || q.certificationId || '';
+      const matchesCert = questionCertFilter === 'All' || certCode.includes(questionCertFilter);
+      const matchesSearch =
+        questionSearch === '' ||
+        q.question?.toLowerCase().includes(questionSearch.toLowerCase()) ||
+        certCode.toLowerCase().includes(questionSearch.toLowerCase()) ||
+        q.id?.toLowerCase().includes(questionSearch.toLowerCase());
+      return matchesCert && matchesSearch;
+    });
+  }, [questions, questionCertFilter, questionSearch]);
+
+  const filteredMonitoring = useMemo(() => {
+    return monitoringSessions.filter((s) => {
+      if (!monitoringSearch.trim()) return true;
+      const q = monitoringSearch.toLowerCase();
+      return (
+        (s.candidateName || '').toLowerCase().includes(q) ||
+        (s.candidateId || '').toLowerCase().includes(q) ||
+        (s.certificationName || '').toLowerCase().includes(q) ||
+        (s.certificationCode || '').toLowerCase().includes(q)
+      );
+    });
+  }, [monitoringSessions, monitoringSearch]);
+
+  const filteredResults = useMemo(() => {
+    return resultsList.filter((r) => {
+      const isPass = r.passed || r.percentage >= 70;
+      if (resultFilter === 'PASSED' && !isPass) return false;
+      if (resultFilter === 'FAILED' && isPass) return false;
+
+      if (resultSearch.trim()) {
+        const q = resultSearch.toLowerCase();
+        const candName = (r.candidateName || '').toLowerCase();
+        const candId = (r.candidateId || '').toLowerCase();
+        const certName = (r.certificationName || '').toLowerCase();
+        const certCode = (r.certificationCode || '').toLowerCase();
+        const email = (r.candidateEmail || '').toLowerCase();
+        return (
+          candName.includes(q) ||
+          candId.includes(q) ||
+          certName.includes(q) ||
+          certCode.includes(q) ||
+          email.includes(q)
+        );
+      }
+      return true;
+    });
+  }, [resultsList, resultFilter, resultSearch]);
+
+  return (
+    <div className="space-y-4 sm:space-y-6">
+      {/* Toast Notification */}
+      {toast && (
+        <div
+          className={`fixed top-4 right-4 sm:top-5 sm:right-5 z-50 px-4 py-3 rounded-xl shadow-xl flex items-center space-x-2 text-xs font-bold border transition-all max-w-[90vw] sm:max-w-md ${
+            toast.type === 'success'
+              ? 'bg-green-50 border-green-200 text-green-800'
+              : 'bg-red-50 border-red-200 text-red-800'
+          }`}
+        >
+          {toast.type === 'success' ? (
+            <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
+          ) : (
+            <ShieldAlert className="w-4 h-4 text-red-600 flex-shrink-0" />
+          )}
+          <span className="truncate">{toast.message}</span>
+        </div>
+      )}
+
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+        <div>
+          <div className="flex items-center flex-wrap gap-2">
+            <h1 className="text-xl sm:text-2xl font-black text-[#10264B]">
+              Examination & Assessment Management
+            </h1>
+            <span className="text-[11px] sm:text-xs bg-[#10264B]/10 text-[#10264B] px-2.5 py-0.5 rounded-full font-bold">
+              Super Admin
+            </span>
+          </div>
+          <p className="text-xs text-gray-500 mt-0.5">
+            Schedule proctored exam windows, manage the Question Bank, import questions via JSON, monitor live candidate sessions, and approve assessment results.
+          </p>
+        </div>
+
+        <div className="flex items-center space-x-2 self-stretch sm:self-auto">
+          <button
+            onClick={loadAllData}
+            disabled={loading}
+            className="p-2 sm:p-2.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-600 rounded-lg text-xs font-semibold shadow-xs transition-colors flex items-center justify-center cursor-pointer"
+            title="Refresh All"
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-[#F47716]' : ''}`} />
+          </button>
+
+          {activeTab === 'schedules' && (
+            <button
+              onClick={handleOpenAddExam}
+              className="flex-1 sm:flex-none px-4 py-2.5 bg-[#F47716] hover:bg-[#DC660E] text-white font-bold text-xs rounded-lg shadow-sm transition-all flex items-center justify-center space-x-1.5 cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Schedule New Exam</span>
+            </button>
+          )}
+
+          {activeTab === 'questions' && (
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setShowJsonModal(true)}
+                className="px-3.5 py-2.5 bg-[#10264B] hover:bg-[#1E3A6E] text-white font-bold text-xs rounded-lg shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer"
+                title="Add multiple questions using JSON code"
+              >
+                <Code2 className="w-4 h-4 text-[#F47716]" />
+                <span>Bulk Import JSON Code</span>
+              </button>
+              <button
+                onClick={handleOpenAddQuestion}
+                className="px-3.5 py-2.5 bg-[#F47716] hover:bg-[#DC660E] text-white font-bold text-xs rounded-lg shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Add Question</span>
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 4 Statistics Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div
+          onClick={() => setActiveTab('schedules')}
+          className={`bg-white rounded-xl p-3.5 sm:p-4 border shadow-xs flex items-center space-x-3.5 cursor-pointer transition-all ${
+            activeTab === 'schedules' ? 'border-[#F47716] ring-1 ring-[#F47716]' : 'border-gray-200 hover:border-gray-300'
+          }`}
+        >
+          <div className="w-10 h-10 rounded-xl bg-orange-50 text-[#F47716] flex items-center justify-center flex-shrink-0">
+            <CalendarCheck className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="text-xl sm:text-2xl font-black text-[#10264B] leading-tight font-mono">{exams.length}</div>
+            <div className="text-[10px] sm:text-[11px] font-bold text-gray-500 uppercase tracking-tight mt-0.5">
+              Scheduled Exams
+            </div>
+          </div>
+        </div>
+
+        <div
+          onClick={() => setActiveTab('questions')}
+          className={`bg-white rounded-xl p-3.5 sm:p-4 border shadow-xs flex items-center space-x-3.5 cursor-pointer transition-all ${
+            activeTab === 'questions' ? 'border-[#F47716] ring-1 ring-[#F47716]' : 'border-gray-200 hover:border-gray-300'
+          }`}
+        >
+          <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#10264B] flex items-center justify-center flex-shrink-0">
+            <HelpCircle className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="text-xl sm:text-2xl font-black text-[#10264B] leading-tight font-mono">{questions.length}</div>
+            <div className="text-[10px] sm:text-[11px] font-bold text-gray-500 uppercase tracking-tight mt-0.5">
+              Question Bank Items
+            </div>
+          </div>
+        </div>
+
+        <div
+          onClick={() => setActiveTab('monitoring')}
+          className={`bg-white rounded-xl p-3.5 sm:p-4 border shadow-xs flex items-center space-x-3.5 cursor-pointer transition-all ${
+            activeTab === 'monitoring' ? 'border-[#F47716] ring-1 ring-[#F47716]' : 'border-gray-200 hover:border-gray-300'
+          }`}
+        >
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+            <Shield className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="text-xl sm:text-2xl font-black text-emerald-700 leading-tight font-mono">{monitoringSessions.length}</div>
+            <div className="text-[10px] sm:text-[11px] font-bold text-gray-500 uppercase tracking-tight mt-0.5">
+              Live Proctored
+            </div>
+          </div>
+        </div>
+
+        <div
+          onClick={() => setActiveTab('results')}
+          className={`bg-white rounded-xl p-3.5 sm:p-4 border shadow-xs flex items-center space-x-3.5 cursor-pointer transition-all ${
+            activeTab === 'results' ? 'border-[#F47716] ring-1 ring-[#F47716]' : 'border-gray-200 hover:border-gray-300'
+          }`}
+        >
+          <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0">
+            <FileCheck2 className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="text-xl sm:text-2xl font-black text-purple-700 leading-tight font-mono">{resultsList.length}</div>
+            <div className="text-[10px] sm:text-[11px] font-bold text-gray-500 uppercase tracking-tight mt-0.5">
+              Approved Results
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Module Tabs Navigation */}
+      <div className="flex items-center space-x-2 border-b border-gray-200 bg-white px-2 sm:px-4 rounded-xl shadow-xs overflow-x-auto text-xs">
+        <button
+          onClick={() => setActiveTab('schedules')}
+          className={`flex items-center space-x-2 py-3 px-3 sm:px-4 font-bold border-b-2 whitespace-nowrap cursor-pointer transition-colors ${
+            activeTab === 'schedules' ? 'border-[#F47716] text-[#F47716]' : 'border-transparent text-gray-500 hover:text-[#10264B]'
+          }`}
+        >
+          <CalendarCheck className="w-4 h-4" />
+          <span>Scheduled Examinations ({exams.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('questions')}
+          className={`flex items-center space-x-2 py-3 px-3 sm:px-4 font-bold border-b-2 whitespace-nowrap cursor-pointer transition-colors ${
+            activeTab === 'questions' ? 'border-[#F47716] text-[#F47716]' : 'border-transparent text-gray-500 hover:text-[#10264B]'
+          }`}
+        >
+          <HelpCircle className="w-4 h-4" />
+          <span>Question Bank ({questions.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('monitoring')}
+          className={`flex items-center space-x-2 py-3 px-3 sm:px-4 font-bold border-b-2 whitespace-nowrap cursor-pointer transition-colors ${
+            activeTab === 'monitoring' ? 'border-[#F47716] text-[#F47716]' : 'border-transparent text-gray-500 hover:text-[#10264B]'
+          }`}
+        >
+          <Shield className="w-4 h-4" />
+          <span className="flex items-center space-x-1.5">
+            <span>Live Exam Monitoring</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          </span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('results')}
+          className={`flex items-center space-x-2 py-3 px-3 sm:px-4 font-bold border-b-2 whitespace-nowrap cursor-pointer transition-colors ${
+            activeTab === 'results' ? 'border-[#F47716] text-[#F47716]' : 'border-transparent text-gray-500 hover:text-[#10264B]'
+          }`}
+        >
+          <Award className="w-4 h-4" />
+          <span>Result Management & Scorecards ({resultsList.length})</span>
+        </button>
+      </div>
+
+      {/* ======================================================== */}
+      {/* TAB 1: SCHEDULED EXAMINATIONS                            */}
+      {/* ======================================================== */}
+      {activeTab === 'schedules' && (
+        <div className="space-y-4">
+          {/* Search & Filter Bar */}
+          <div className="bg-white rounded-xl border border-gray-200 p-3 sm:p-4 shadow-sm flex flex-col sm:flex-row gap-2.5 sm:gap-3 text-xs">
+            <div className="flex items-center space-x-2">
+              <Filter className="w-4 h-4 text-gray-400" />
+              <select
+                value={examStatusFilter}
+                onChange={(e) => setExamStatusFilter(e.target.value)}
+                className="w-full sm:w-auto px-3 py-2 bg-slate-50 border border-gray-300 rounded-lg font-bold text-gray-700 focus:outline-none cursor-pointer"
+              >
+                <option value="All">All Status ({exams.length})</option>
+                <option value="Scheduled">Scheduled</option>
+                <option value="Active">Active</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-2.5" />
+              <input
+                type="text"
+                value={examSearch}
+                onChange={(e) => setExamSearch(e.target.value)}
+                placeholder="Search examination name, code, or certification..."
+                className="w-full pl-9 pr-3.5 py-2 bg-slate-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#F47716] font-medium"
+              />
+            </div>
+            {examSearch && (
+              <button
+                onClick={() => setExamSearch('')}
+                className="text-xs font-bold text-gray-400 hover:text-red-600 self-center"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          {/* Mobile Card View (< md) */}
+          <div className="block md:hidden space-y-3">
+            {loading ? (
+              <div className="bg-white p-8 rounded-xl border border-gray-200 text-center text-gray-400">
+                <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#F47716]" />
+                <p className="font-semibold text-xs">Loading scheduled exams...</p>
+              </div>
+            ) : filteredExams.length === 0 ? (
+              <div className="bg-white p-8 rounded-xl border border-gray-200 text-center text-gray-500">
+                <p className="font-bold text-sm text-[#10264B]">No scheduled exams found</p>
+                <p className="text-xs text-gray-400 mt-1">Click "Schedule New Exam" to schedule an assessment window.</p>
+              </div>
+            ) : (
+              filteredExams.map((exam) => (
+                <div key={exam.id || exam.examCode} className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs space-y-3">
+                  <div className="flex items-start justify-between gap-2 border-b pb-2">
+                    <div>
+                      <span className="font-mono font-bold text-sm text-[#F47716] block">{exam.examCode}</span>
+                      <p className="font-bold text-[#10264B] text-xs mt-0.5">{exam.examName}</p>
+                    </div>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-[#10264B] border border-blue-200">
+                      {exam.status || 'Scheduled'}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
+                    <div>
+                      <p className="text-[10px] text-gray-400 font-medium">Date & Time</p>
+                      <p className="font-semibold">{exam.dateFormatted || exam.scheduledDate}</p>
+                      <p className="text-[11px] text-gray-400 font-mono">{exam.timeFormatted || exam.scheduledTime}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-gray-400 font-medium">Duration & Enrolled</p>
+                      <p className="font-semibold">{exam.durationMinutes || 90} Mins</p>
+                      <p className="text-[11px] text-[#F47716] font-bold">{exam.candidatesCount || 0} Candidates</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end space-x-2 pt-2 border-t">
+                    <button
+                      onClick={() => handleOpenEditExam(exam)}
+                      className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 text-xs font-semibold flex items-center space-x-1 cursor-pointer"
+                    >
+                      <Edit2 className="w-3.5 h-3.5" />
+                      <span>Edit</span>
+                    </button>
+                    <button
+                      onClick={() => handleDeleteExamDirect(exam.id, exam.examCode)}
+                      disabled={deletingId === exam.id}
+                      className="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 text-xs font-semibold flex items-center space-x-1 cursor-pointer"
+                    >
+                      {deletingId === exam.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                      <span>Delete</span>
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Desktop Table View (>= md) */}
+          <div className="hidden md:block bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 text-gray-600 font-bold uppercase tracking-wider text-[11px] border-b border-gray-200">
+                  <tr>
+                    <th className="py-3.5 px-6">Exam Code</th>
+                    <th className="py-3.5 px-6">Examination Title</th>
+                    <th className="py-3.5 px-6">Scheduled Date & Time</th>
+                    <th className="py-3.5 px-6">Duration</th>
+                    <th className="py-3.5 px-6">Candidates</th>
+                    <th className="py-3.5 px-6">Status</th>
+                    <th className="py-3.5 px-6 text-right">Actions (Direct CRUD)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {loading ? (
+                    <tr>
+                      <td colSpan={7} className="py-12 text-center text-gray-400">
+                        <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#F47716]" />
+                        <p className="font-semibold text-xs">Loading scheduled exams...</p>
+                      </td>
+                    </tr>
+                  ) : filteredExams.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="py-12 text-center text-gray-500">
+                        <p className="font-bold text-sm text-[#10264B]">No scheduled exams found</p>
+                        <p className="text-xs text-gray-400 mt-1">Click "Schedule New Exam" to create an assessment window.</p>
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredExams.map((exam) => (
+                      <tr key={exam.id || exam.examCode} className="hover:bg-slate-50/80 transition-colors">
+                        <td className="py-4 px-6 font-mono font-bold text-[#F47716]">{exam.examCode}</td>
+                        <td className="py-4 px-6">
+                          <div className="font-bold text-[#10264B] text-[13px]">{exam.examName}</div>
+                          <span className="text-[11px] text-gray-500 font-mono">{exam.certificationCode || 'AICQB-CERT'}</span>
+                        </td>
+                        <td className="py-4 px-6 text-gray-700 font-medium">
+                          <div>{exam.dateFormatted || exam.scheduledDate}</div>
+                          <div className="text-[11px] text-gray-400 font-mono">{exam.timeFormatted || exam.scheduledTime}</div>
+                        </td>
+                        <td className="py-4 px-6 font-mono font-bold text-gray-700">{exam.durationMinutes || 90} Mins</td>
+                        <td className="py-4 px-6 font-bold text-[#10264B]">
+                          <span className="px-2.5 py-1 bg-slate-100 rounded-lg">{exam.candidatesCount || 0} Enrolled</span>
+                        </td>
+                        <td className="py-4 px-6">
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-[#10264B] border border-blue-200">
+                            {exam.status || 'Scheduled'}
+                          </span>
+                        </td>
+                        <td className="py-4 px-6 text-right space-x-1 whitespace-nowrap">
+                          <button
+                            onClick={() => handleOpenEditExam(exam)}
+                            className="p-1.5 rounded-lg text-blue-600 hover:text-blue-800 hover:bg-blue-50 transition-colors inline-flex cursor-pointer"
+                            title="Edit Exam Window"
+                          >
+                            <Edit2 className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteExamDirect(exam.id, exam.examCode)}
+                            disabled={deletingId === exam.id}
+                            className="p-1.5 rounded-lg text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors inline-flex cursor-pointer"
+                            title="Delete Exam (Direct, no popup)"
+                          >
+                            {deletingId === exam.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* TAB 2: QUESTION BANK MANAGEMENT                          */}
+      {/* ======================================================== */}
+      {activeTab === 'questions' && (
+        <div className="space-y-4">
+          {/* Question Filter & Search Bar */}
+          <div className="bg-white rounded-xl border border-gray-200 p-3 sm:p-4 shadow-sm flex flex-col sm:flex-row gap-2.5 sm:gap-3 text-xs">
+            <div className="flex items-center space-x-2">
+              <Filter className="w-4 h-4 text-gray-400" />
+              <select
+                value={questionCertFilter}
+                onChange={(e) => setQuestionCertFilter(e.target.value)}
+                className="w-full sm:w-auto px-3 py-2 bg-slate-50 border border-gray-300 rounded-lg font-bold text-gray-700 focus:outline-none cursor-pointer"
+              >
+                <option value="All">All Certifications ({questions.length})</option>
+                <option value="AI-CP">AI Professional (AICQB-AI-CP)</option>
+                <option value="DS-201">Data Science (AICQB-DS-201)</option>
+                <option value="ST-CP">Software Tester (AICQB-ST-CP)</option>
+                <option value="PW-CP">Playwright Automation (AICQB-PW-CP)</option>
+                <option value="CY-301">Cybersecurity (AICQB-CY-301)</option>
+              </select>
+            </div>
+
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-2.5" />
+              <input
+                type="text"
+                value={questionSearch}
+                onChange={(e) => setQuestionSearch(e.target.value)}
+                placeholder="Search question prompt, keywords, or answers..."
+                className="w-full pl-9 pr-3.5 py-2 bg-slate-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#F47716] font-medium"
+              />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setShowJsonModal(true)}
+                className="px-3 py-2 bg-[#10264B] hover:bg-[#1E3A6E] text-white font-bold rounded-lg transition-colors flex items-center space-x-1.5 cursor-pointer"
+              >
+                <Code2 className="w-3.5 h-3.5 text-[#F47716]" />
+                <span>Bulk Import via JSON</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Randomization Security Notice */}
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start space-x-2.5 text-xs text-amber-800">
+            <Radio className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-bold">Algorithmic Question & Option Randomization Active</p>
+              <p className="text-[11px] text-amber-700 mt-0.5">
+                Every candidate session dynamically shuffles both the question sequence and answer choice options (A, B, C, D) using Fisher-Yates randomization. Correct keys are mapped dynamically per session.
+              </p>
+            </div>
+          </div>
+
+          {/* Mobile Question Cards (< md) */}
+          <div className="block md:hidden space-y-3">
+            {loading ? (
+              <div className="bg-white p-8 rounded-xl border border-gray-200 text-center text-gray-400">
+                <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#F47716]" />
+                <p className="font-semibold text-xs">Loading questions...</p>
+              </div>
+            ) : filteredQuestions.length === 0 ? (
+              <div className="bg-white p-8 rounded-xl border border-gray-200 text-center text-gray-500">
+                <p className="font-bold text-sm text-[#10264B]">No questions matched your search</p>
+                <p className="text-xs text-gray-400 mt-1">Use "Bulk Import via JSON" to add assessment questions.</p>
+              </div>
+            ) : (
+              filteredQuestions.map((q) => (
+                <div key={q.id} className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono font-bold text-xs text-[#F47716]">{q.id}</span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#10264B]/10 text-[#10264B] font-mono">
+                      {q.certificationCode || 'AICQB'}
+                    </span>
+                  </div>
+
+                  <p className="font-bold text-[#10264B] text-xs leading-relaxed">{q.question}</p>
+
+                  <div className="bg-slate-50 p-2 rounded-lg text-xs space-y-1">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="font-bold text-emerald-700">
+                        Correct: Option {String.fromCharCode(65 + (q.correctAnswer ?? 0))}
+                      </span>
+                      <span className="font-mono text-[#F47716] font-bold">+{q.points || 10} Marks</span>
+                    </div>
+                    <p className="text-[11px] text-gray-600 truncate">{q.options?.[q.correctAnswer ?? 0]}</p>
+                  </div>
+
+                  <div className="flex items-center justify-end space-x-2 pt-1 border-t">
+                    <button
+                      onClick={() => setPreviewQuestion(q)}
+                      className="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100 cursor-pointer"
+                      title="Preview"
+                    >
+                      <Eye className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleOpenEditQuestion(q)}
+                      className="p-1.5 rounded-lg text-blue-600 hover:bg-blue-50 cursor-pointer"
+                      title="Edit"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteQuestionDirect(q.id)}
+                      disabled={deletingId === q.id}
+                      className="p-1.5 rounded-lg text-red-600 hover:bg-red-50 cursor-pointer"
+                      title="Direct Delete"
+                    >
+                      {deletingId === q.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Desktop Table View (>= md) */}
+          <div className="hidden md:block bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 text-gray-600 font-bold uppercase tracking-wider text-[11px] border-b border-gray-200">
+                  <tr>
+                    <th className="py-3.5 px-6">ID & Program</th>
+                    <th className="py-3.5 px-6">Assessment Question Prompt</th>
+                    <th className="py-3.5 px-6">Type & Points</th>
+                    <th className="py-3.5 px-6">Correct Answer Key</th>
+                    <th className="py-3.5 px-6 text-right">Actions (Direct CRUD)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {loading ? (
+                    <tr>
+                      <td colSpan={5} className="py-12 text-center text-gray-400">
+                        <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#F47716]" />
+                        <p className="font-semibold text-xs">Loading Question Bank items...</p>
+                      </td>
+                    </tr>
+                  ) : filteredQuestions.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="py-12 text-center text-gray-500">
+                        <p className="font-bold text-sm text-[#10264B]">No questions found</p>
+                        <p className="text-xs text-gray-400 mt-1">Click "Bulk Import via JSON" to add questions.</p>
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredQuestions.map((q) => (
+                      <tr key={q.id} className="hover:bg-slate-50/80 transition-colors">
+                        <td className="py-4 px-6">
+                          <span className="font-mono font-bold text-[#F47716] block">{q.id}</span>
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#10264B]/10 text-[#10264B] font-mono mt-1 inline-block">
+                            {q.certificationCode || 'AICQB'}
+                          </span>
+                        </td>
+
+                        <td className="py-4 px-6 max-w-md">
+                          <p className="font-bold text-[#10264B] leading-relaxed text-[13px] line-clamp-2">{q.question}</p>
+                          <span className="text-[11px] text-gray-400 mt-1 block">
+                            {q.options?.length || 4} Randomized Answer Choices
+                          </span>
+                        </td>
+
+                        <td className="py-4 px-6">
+                          <span className="font-bold uppercase text-[10px] px-2.5 py-1 bg-slate-100 rounded-md text-slate-700 block w-max">
+                            {q.questionType || q.type || 'MCQ'}
+                          </span>
+                          <span className="font-mono text-xs text-[#F47716] font-bold mt-1 block">
+                            +{q.points || 10} Marks
+                          </span>
+                        </td>
+
+                        <td className="py-4 px-6">
+                          <span className="font-mono font-bold px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg inline-block">
+                            Option {String.fromCharCode(65 + (q.correctAnswer ?? 0))}
+                          </span>
+                          <p className="text-[11px] text-gray-600 truncate max-w-xs mt-1">
+                            {q.options?.[q.correctAnswer ?? 0]}
+                          </p>
+                        </td>
+
+                        <td className="py-4 px-6 text-right space-x-1 whitespace-nowrap">
+                          <button
+                            onClick={() => setPreviewQuestion(q)}
+                            className="p-1.5 rounded-lg text-slate-500 hover:text-[#10264B] hover:bg-slate-100 transition-colors cursor-pointer"
+                            title="Preview Question"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleOpenEditQuestion(q)}
+                            className="p-1.5 rounded-lg text-blue-600 hover:text-blue-800 hover:bg-blue-50 transition-colors cursor-pointer"
+                            title="Edit Question"
+                          >
+                            <Edit2 className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteQuestionDirect(q.id)}
+                            disabled={deletingId === q.id}
+                            className="p-1.5 rounded-lg text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors cursor-pointer"
+                            title="Delete Question (Direct, no popup)"
+                          >
+                            {deletingId === q.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="p-3 bg-slate-50 border-t border-gray-200 text-[11px] text-gray-500 flex items-center justify-between">
+              <span>Showing {filteredQuestions.length} of {questions.length} Question Bank Items</span>
+              <span className="text-gray-400">Auto-randomized on candidate sessions</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* TAB 3: LIVE EXAM MONITORING & PROCTORING                 */}
+      {/* ======================================================== */}
+      {activeTab === 'monitoring' && (
+        <div className="space-y-4">
+          <div className="bg-[#10264B] text-white p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div className="flex items-center space-x-3">
+              <span className="w-3 h-3 rounded-full bg-emerald-400 animate-ping flex-shrink-0"></span>
+              <div>
+                <h4 className="font-black text-sm text-white">AICQB AI-Proctoring Engine Online</h4>
+                <p className="text-slate-300">Continuous browser lock, full-screen verification, and biometric stream integrity monitoring.</p>
+              </div>
+            </div>
+            <span className="px-3 py-1 bg-[#1E3A6E] rounded-lg font-mono font-bold text-white text-[11px] border border-slate-700 self-start sm:self-auto">
+              {monitoringSessions.length} Active Sessions
+            </span>
+          </div>
+
+          <div className="bg-white rounded-xl border border-gray-200 p-3 sm:p-4 shadow-sm flex flex-col sm:flex-row gap-2.5 sm:gap-3 text-xs">
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-2.5" />
+              <input
+                type="text"
+                value={monitoringSearch}
+                onChange={(e) => setMonitoringSearch(e.target.value)}
+                placeholder="Search active candidate name, ID, or certification..."
+                className="w-full pl-9 pr-3.5 py-2 bg-slate-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#F47716] font-medium"
+              />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 text-gray-600 font-bold uppercase tracking-wider text-[11px] border-b border-gray-200">
+                  <tr>
+                    <th className="py-3.5 px-6">Candidate</th>
+                    <th className="py-3.5 px-6">Active Examination</th>
+                    <th className="py-3.5 px-6">Camera & AI Proctoring</th>
+                    <th className="py-3.5 px-6">Runtime Integrity</th>
+                    <th className="py-3.5 px-6">Status</th>
+                    <th className="py-3.5 px-6 text-right">Human Proctor Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {filteredMonitoring.slice(0, 30).map((s, idx) => (
+                    <tr key={s.id || idx} className="hover:bg-slate-50/80 transition-colors">
+                      <td className="py-4 px-6">
+                        <div className="font-bold text-[#10264B] text-[13px]">{s.candidateName}</div>
+                        <span className="font-mono text-gray-500 text-[11px]">{s.candidateId}</span>
+                      </td>
+
+                      <td className="py-4 px-6 font-bold text-[#10264B]">
+                        {s.certificationName}
+                        <span className="text-gray-400 font-normal block text-[11px]">
+                          Started: {new Date(s.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </td>
+
+                      <td className="py-4 px-6">
+                        <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-50 text-green-700 border border-green-200">
+                          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                          <span>Live HD Stream • AI Proctored</span>
+                        </span>
+                      </td>
+
+                      <td className="py-4 px-6">
+                        <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                          <span>Secure Locked Mode</span>
+                        </span>
+                      </td>
+
+                      <td className="py-4 px-6">
+                        <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#F47716]/10 text-[#F47716]">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#F47716] animate-pulse"></span>
+                          <span>In-Progress</span>
+                        </span>
+                      </td>
+
+                      <td className="py-4 px-6 text-right space-x-2">
+                        <button
+                          onClick={() => showToast(`Sent compliance warning to candidate ${s.candidateName}`)}
+                          className="px-2.5 py-1 text-[11px] font-bold rounded-lg border border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100 transition-colors cursor-pointer"
+                        >
+                          Send Warning
+                        </button>
+                        <button
+                          onClick={() => showToast(`Session verified and locked for candidate ${s.candidateName}`)}
+                          className="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-[#10264B] text-white hover:bg-[#1E3A6E] transition-colors cursor-pointer"
+                        >
+                          Audit Stream
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* TAB 4: RESULT MANAGEMENT & SCORECARDS                    */}
+      {/* ======================================================== */}
+      {activeTab === 'results' && (
+        <div className="space-y-4">
+          {/* Summary Stat Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs flex items-center justify-between">
+              <div>
+                <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Total Evaluated Results</p>
+                <h3 className="text-2xl font-black text-[#10264B] mt-1">{resultsList.length}</h3>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                <Users className="w-5 h-5" />
+              </div>
+            </div>
+            <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs flex items-center justify-between">
+              <div>
+                <p className="text-[11px] font-semibold text-emerald-600 uppercase tracking-wider">Passed (Score ≥ 70%)</p>
+                <h3 className="text-2xl font-black text-emerald-600 mt-1">
+                  {resultsList.filter((r) => r.passed || r.percentage >= 70).length}
+                </h3>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                <CheckCircle2 className="w-5 h-5" />
+              </div>
+            </div>
+            <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs flex items-center justify-between">
+              <div>
+                <p className="text-[11px] font-semibold text-red-600 uppercase tracking-wider">Failed (Score &lt; 70%)</p>
+                <h3 className="text-2xl font-black text-red-600 mt-1">
+                  {resultsList.filter((r) => !r.passed && r.percentage < 70).length}
+                </h3>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold">
+                <AlertCircle className="w-5 h-5" />
+              </div>
+            </div>
+          </div>
+
+          {/* Filter Bar */}
+          <div className="bg-white rounded-xl border border-gray-200 p-3 sm:p-4 shadow-sm flex flex-col sm:flex-row gap-2.5 sm:gap-3 text-xs">
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setResultFilter('ALL')}
+                className={`px-3 py-1.5 rounded-lg font-bold cursor-pointer transition-colors ${
+                  resultFilter === 'ALL' ? 'bg-[#10264B] text-white' : 'bg-slate-100 text-gray-700 hover:bg-slate-200'
+                }`}
+              >
+                All ({resultsList.length})
+              </button>
+              <button
+                onClick={() => setResultFilter('PASSED')}
+                className={`px-3 py-1.5 rounded-lg font-bold cursor-pointer transition-colors ${
+                  resultFilter === 'PASSED' ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
+                }`}
+              >
+                Passed ({resultsList.filter((r) => r.passed || r.percentage >= 70).length})
+              </button>
+              <button
+                onClick={() => setResultFilter('FAILED')}
+                className={`px-3 py-1.5 rounded-lg font-bold cursor-pointer transition-colors ${
+                  resultFilter === 'FAILED' ? 'bg-red-600 text-white' : 'bg-red-50 text-red-800 hover:bg-red-100'
+                }`}
+              >
+                Failed ({resultsList.filter((r) => !r.passed && r.percentage < 70).length})
+              </button>
+            </div>
+
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-2.5" />
+              <input
+                type="text"
+                value={resultSearch}
+                onChange={(e) => setResultSearch(e.target.value)}
+                placeholder="Search candidate name, candidate ID, certification, email..."
+                className="w-full pl-9 pr-3.5 py-2 bg-slate-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#F47716] font-medium"
+              />
+            </div>
+          </div>
+
+          {/* Results Table */}
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 text-gray-600 font-bold uppercase tracking-wider text-[11px] border-b border-gray-200">
+                  <tr>
+                    <th className="py-3.5 px-6">Candidate</th>
+                    <th className="py-3.5 px-6">Certification Exam</th>
+                    <th className="py-3.5 px-6">Score & Percentage</th>
+                    <th className="py-3.5 px-6">Passing Standard</th>
+                    <th className="py-3.5 px-6">Status</th>
+                    <th className="py-3.5 px-6">Certificate No.</th>
+                    <th className="py-3.5 px-6 text-right">Scorecard Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {filteredResults.slice(0, 50).map((r, idx) => {
+                    const isPass = r.passed || r.percentage >= 70;
+                    return (
+                      <tr key={r.id || idx} className="hover:bg-slate-50/80 transition-colors">
+                        <td className="py-4 px-6">
+                          <div className="font-bold text-[#10264B] text-[13px]">{r.candidateName}</div>
+                          <span className="font-mono text-gray-500 text-[11px]">{r.candidateId}</span>
+                        </td>
+
+                        <td className="py-4 px-6 font-bold text-[#10264B]">
+                          {r.certificationName}
+                          <span className="text-gray-400 font-mono block text-[11px]">{r.certificationCode}</span>
+                        </td>
+
+                        <td className="py-4 px-6">
+                          <span className="font-mono font-bold text-sm text-[#10264B]">
+                            {r.score !== undefined ? `${r.score} pts (${r.percentage}%)` : `${r.percentage}%`}
+                          </span>
+                          <span className="text-gray-400 font-semibold block text-[11px]">
+                            {r.grade || (r.percentage >= 90 ? 'Grade A+' : r.percentage >= 80 ? 'Grade A' : r.percentage >= 70 ? 'Grade B' : 'Fail')}
+                          </span>
+                        </td>
+
+                        <td className="py-4 px-6">
+                          <span className="font-bold text-gray-700">70% Required</span>
+                          <span className={`block text-[11px] font-semibold ${isPass ? 'text-emerald-600' : 'text-red-500'}`}>
+                            {isPass ? `Met (+${r.percentage - 70}%)` : `Short (${r.percentage - 70}%)`}
+                          </span>
+                        </td>
+
+                        <td className="py-4 px-6">
+                          {isPass ? (
+                            <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                              <span>PASSED (≥ 70%)</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-200">
+                              <AlertCircle className="w-3 h-3 text-red-500" />
+                              <span>FAILED (&lt; 70%)</span>
+                            </span>
+                          )}
+                        </td>
+
+                        <td className="py-4 px-6">
+                          {isPass ? (
+                            <span className="font-mono font-bold text-[#F47716]">{r.certificateNo || 'AICQB-CERT-ISSUED'}</span>
+                          ) : (
+                            <span className="text-amber-700 font-semibold text-[11px]">Retake Chance Active</span>
+                          )}
+                        </td>
+
+                        <td className="py-4 px-6 text-right">
+                          <button
+                            onClick={() => setSelectedResult(r)}
+                            className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 font-semibold text-xs inline-flex items-center space-x-1 cursor-pointer"
+                          >
+                            <FileText className="w-3.5 h-3.5" />
+                            <span>View Card</span>
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="p-3 bg-slate-50 border-t border-gray-200 text-[11px] text-gray-500 flex items-center justify-between">
+              <span>Showing {filteredResults.length} of {resultsList.length} Evaluated Examination Records</span>
+              <span className="text-gray-400">Strict Minimum 70% Assessment Verification</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL: BULK JSON QUESTION IMPORT                         */}
+      {/* ======================================================== */}
+      {showJsonModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-4 sm:p-6 space-y-4 shadow-2xl border border-gray-200 my-auto max-h-[92vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b pb-3">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-9 h-9 rounded-xl bg-[#10264B] text-[#F47716] flex items-center justify-center">
+                  <Code2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm text-[#10264B]">Bulk Import Questions via JSON Code</h3>
+                  <p className="text-[11px] text-gray-500">Paste JSON code of questions & answers to add to exam automatically</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowJsonModal(false)}
+                className="text-gray-400 hover:text-gray-600 p-1 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              {/* Target Certification Selector */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
+                <div className="flex items-center space-x-2">
+                  <label className="font-semibold text-gray-700 whitespace-nowrap">Target Exam / Certification:</label>
+                  <select
+                    value={jsonTargetCert}
+                    onChange={(e) => setJsonTargetCert(e.target.value)}
+                    className="p-1.5 bg-slate-50 border border-gray-300 rounded-lg font-bold text-gray-700 focus:outline-none"
+                  >
+                    {CERTIFICATIONS.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.name} ({c.code})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleCopySample}
+                  className="px-3 py-1.5 rounded-lg bg-orange-50 text-[#F47716] hover:bg-orange-100 font-bold flex items-center justify-center space-x-1.5 border border-orange-200 cursor-pointer"
+                >
+                  {copiedSample ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copiedSample ? 'Sample Loaded!' : 'Load Sample JSON Template'}</span>
+                </button>
+              </div>
+
+              {/* JSON Code Editor Textarea */}
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="font-semibold text-gray-700">Question Bank JSON Array *</label>
+                  <span className="text-[11px] text-gray-400 font-mono">Format: Array of objects with question, options, correctAnswer</span>
+                </div>
+                <textarea
+                  rows={12}
+                  value={jsonCode}
+                  onChange={(e) => setJsonCode(e.target.value)}
+                  placeholder="Paste JSON array here..."
+                  className="w-full p-3 font-mono text-[11px] bg-slate-900 text-emerald-400 border border-slate-700 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#F47716] leading-relaxed resize-y"
+                  spellCheck={false}
+                />
+              </div>
+
+              {/* Live JSON Validation Status */}
+              <div
+                className={`p-2.5 rounded-xl border flex items-center space-x-2 text-xs font-semibold ${
+                  jsonValidation.isValid
+                    ? 'bg-green-50 border-green-200 text-green-800'
+                    : 'bg-red-50 border-red-200 text-red-800'
+                }`}
+              >
+                {jsonValidation.isValid ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
+                    <span>✓ Valid JSON Syntax: Found <strong>{jsonValidation.count}</strong> questions ready to import into {jsonTargetCert}</span>
+                  </>
+                ) : (
+                  <>
+                    <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" />
+                    <span className="truncate">Syntax Error: {jsonValidation.error}</span>
+                  </>
+                )}
+              </div>
+
+              {/* Actions */}
+              <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-3 border-t">
+                <button
+                  type="button"
+                  onClick={() => setShowJsonModal(false)}
+                  className="w-full sm:w-auto px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleBulkImportJson}
+                  disabled={!jsonValidation.isValid || importingJson}
+                  className="w-full sm:w-auto px-6 py-2.5 bg-[#F47716] hover:bg-[#DC660E] disabled:bg-gray-300 text-white font-bold rounded-lg shadow-sm transition-colors flex items-center justify-center space-x-1.5 cursor-pointer"
+                >
+                  {importingJson ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Code2 className="w-3.5 h-3.5" />}
+                  <span>Import & Auto-Add to Exam ({jsonValidation.count} Questions)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL: ADD / EDIT SCHEDULED EXAMINATION                  */}
+      {/* ======================================================== */}
+      {showExamModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-4 sm:p-6 space-y-4 shadow-2xl border border-gray-200 my-auto max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b pb-3">
+              <h3 className="font-bold text-sm text-[#10264B] flex items-center space-x-2">
+                <CalendarCheck className="w-4 h-4 text-[#F47716]" />
+                <span>{editingExam ? 'Edit Examination Window' : 'Schedule New Examination Window'}</span>
+              </h3>
+              <button onClick={() => setShowExamModal(false)} className="text-gray-400 hover:text-gray-600 p-1 cursor-pointer">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveExam} className="space-y-3 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">Exam Code *</label>
+                  <input
+                    type="text"
+                    required
+                    value={examForm.examCode}
+                    onChange={(e) => setExamForm({ ...examForm, examCode: e.target.value })}
+                    className="w-full p-2.5 bg-slate-50 border border-gray-300 rounded-lg font-mono font-bold focus:ring-1 focus:ring-[#F47716] focus:outline-none"
+                    placeholder="AICQB-AI-CP-EXAM"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">Certification Program</label>
+                  <select
+                    value={examForm.certificationCode}
+                    onChange={(e) => setExamForm({ ...examForm, certificationCode: e.target.value })}
+                    className="w-full p-2.5 bg-slate-50 border border-gray-300 rounded-lg font-bold focus:outline-none"
+                  >
+                    {CERTIFICATIONS.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.name} ({c.code})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-gray-700 mb-1">Examination Title *</label>
+                <input
+                  type="text"
+                  required
+                  value={examForm.examName}
+                  onChange={(e) => setExamForm({ ...examForm, examName: e.target.value })}
+                  className="w-full p-2.5 bg-slate-50 border border-gray-300 rounded-lg font-bold focus:ring-1 focus:ring-[#F47716] focus:outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">Scheduled Date</label>
+                  <input
+                    type="text"
+                    value={examForm.scheduledDate}
+                    onChange={(e) => setExamForm({ ...examForm, scheduledDate: e.target.value })}
+                    className="w-full p-2.5 bg-slate-50 border border-gray-300 rounded-lg focus:outline-none"
+                    placeholder="24 Nov 2026"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">Time Slot Window</label>
+                  <input
+                    type="text"
+                    value={examForm.scheduledTime}
+                    onChange={(e) => setExamForm({ ...examForm, scheduledTime: e.target.value })}
+                    className="w-full p-2.5 bg-slate-50 border border-gray-300 rounded-lg focus:outline-none"
+                    placeholder="10:00 AM – 11:30 AM (IST)"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">Duration (Mins)</label>
+                  <input
+                    type="number"
+                    min={30}
+                    max={240}
+                    value={examForm.durationMinutes}
+                    onChange={(e) => setExamForm({ ...examForm, durationMinutes: Number(e.target.value) })}
+                    className="w-full p-2 bg-slate-50 border border-gray-300 rounded-lg font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">Pass Criteria (%)</label>
+                  <input
+                    type="number"
+                    min={50}
+                    max={95}
+                    value={examForm.passingCriteria}
+                    onChange={(e) => setExamForm({ ...examForm, passingCriteria: Number(e.target.value) })}
+                    className="w-full p-2 bg-slate-50 border border-gray-300 rounded-lg font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">Status</label>
+                  <select
+                    value={examForm.status}
+                    onChange={(e) => setExamForm({ ...examForm, status: e.target.value })}
+                    className="w-full p-2 bg-slate-50 border border-gray-300 rounded-lg font-bold"
+                  >
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="Active">Active</option>
+                    <option value="Completed">Completed</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-3 border-t">
+                <button
+                  type="button"
+                  onClick={() => setShowExamModal(false)}
+                  className="w-full sm:w-auto px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={actionLoading}
+                  className="w-full sm:w-auto px-6 py-2.5 bg-[#F47716] hover:bg-[#DC660E] text-white font-bold rounded-lg shadow-sm transition-colors flex items-center justify-center space-x-1.5 cursor-pointer"
+                >
+                  {actionLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CalendarCheck className="w-3.5 h-3.5" />}
+                  <span>{editingExam ? 'Update Exam Window' : 'Schedule Exam Window'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL: ADD / EDIT SINGLE QUESTION                        */}
+      {/* ======================================================== */}
+      {showQuestionModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-4 sm:p-6 space-y-4 shadow-2xl border border-gray-200 my-auto max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b pb-3">
+              <h3 className="font-bold text-sm text-[#10264B] flex items-center space-x-2">
+                <HelpCircle className="w-4 h-4 text-[#F47716]" />
+                <span>{editingQuestion ? 'Edit Question Item' : 'Add Question Item'}</span>
+              </h3>
+              <button onClick={() => setShowQuestionModal(false)} className="text-gray-400 hover:text-gray-600 p-1 cursor-pointer">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveQuestion} className="space-y-3 text-xs">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">Target Certification *</label>
+                  <select
+                    value={questionForm.certificationCode}
+                    onChange={(e) => setQuestionForm({ ...questionForm, certificationCode: e.target.value })}
+                    className="w-full p-2 bg-slate-50 border border-gray-300 rounded-lg font-bold"
+                  >
+                    {CERTIFICATIONS.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.name} ({c.code})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">Points / Marks</label>
+                  <input
+                    type="number"
+                    min={1}
+                    max={50}
+                    value={questionForm.points}
+                    onChange={(e) => setQuestionForm({ ...questionForm, points: Number(e.target.value) })}
+                    className="w-full p-2 bg-slate-50 border border-gray-300 rounded-lg font-bold"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-gray-700 mb-1">Question Prompt Text *</label>
+                <textarea
+                  rows={3}
+                  required
+                  value={questionForm.question}
+                  onChange={(e) => setQuestionForm({ ...questionForm, question: e.target.value })}
+                  placeholder="Enter assessment question statement..."
+                  className="w-full p-2.5 bg-slate-50 border border-gray-300 rounded-lg font-medium focus:ring-1 focus:ring-[#F47716] focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block font-semibold text-gray-700">Answer Options & Correct Key</label>
+                {[
+                  { label: 'Option A', field: 'optionA', idx: 0 },
+                  { label: 'Option B', field: 'optionB', idx: 1 },
+                  { label: 'Option C', field: 'optionC', idx: 2 },
+                  { label: 'Option D', field: 'optionD', idx: 3 },
+                ].map((opt) => (
+                  <div key={opt.label} className="flex items-center space-x-2">
+                    <span
+                      onClick={() => setQuestionForm({ ...questionForm, correctAnswer: opt.idx })}
+                      className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold font-mono cursor-pointer transition-all ${
+                        questionForm.correctAnswer === opt.idx
+                          ? 'bg-emerald-600 text-white ring-2 ring-emerald-400'
+                          : 'bg-slate-100 text-gray-600 hover:bg-slate-200'
+                      }`}
+                      title="Click to set as correct answer"
+                    >
+                      {String.fromCharCode(65 + opt.idx)}
+                    </span>
+                    <input
+                      type="text"
+                      required
+                      value={(questionForm as any)[opt.field]}
+                      onChange={(e) => setQuestionForm({ ...questionForm, [opt.field]: e.target.value })}
+                      placeholder={`Enter ${opt.label}...`}
+                      className="flex-1 p-2 bg-slate-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#F47716]"
+                    />
+                    {questionForm.correctAnswer === opt.idx && (
+                      <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded border border-emerald-200 whitespace-nowrap">
+                        ✓ Correct
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-3 border-t">
+                <button
+                  type="button"
+                  onClick={() => setShowQuestionModal(false)}
+                  className="w-full sm:w-auto px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={actionLoading}
+                  className="w-full sm:w-auto px-6 py-2.5 bg-[#F47716] hover:bg-[#DC660E] text-white font-bold rounded-lg shadow-sm transition-colors flex items-center justify-center space-x-1.5 cursor-pointer"
+                >
+                  {actionLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <HelpCircle className="w-3.5 h-3.5" />}
+                  <span>{editingQuestion ? 'Update Question' : 'Save Question'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL: PREVIEW QUESTION                                  */}
+      {/* ======================================================== */}
+      {previewQuestion && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl border border-gray-200 my-auto">
+            <div className="flex items-center justify-between border-b pb-3">
+              <div className="flex items-center space-x-2">
+                <span className="font-mono text-xs font-bold text-[#F47716] bg-orange-50 px-2 py-0.5 rounded border border-orange-200">
+                  {previewQuestion.id}
+                </span>
+                <span className="text-xs font-bold text-gray-600">{previewQuestion.certificationCode}</span>
+              </div>
+              <button onClick={() => setPreviewQuestion(null)} className="text-gray-400 hover:text-gray-600 p-1 cursor-pointer">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <h4 className="text-sm font-bold text-[#10264B] leading-relaxed">{previewQuestion.question}</h4>
+              <div className="space-y-2 pt-1 text-xs">
+                {previewQuestion.options?.map((opt: string, optIdx: number) => {
+                  const isCorrect = previewQuestion.correctAnswer === optIdx;
+                  return (
+                    <div
+                      key={optIdx}
+                      className={`p-2.5 rounded-lg border flex items-center space-x-2.5 ${
+                        isCorrect ? 'bg-emerald-50 border-emerald-300 text-emerald-950 font-semibold' : 'bg-slate-50 border-gray-200 text-gray-700'
+                      }`}
+                    >
+                      <span
+                        className={`w-6 h-6 rounded flex items-center justify-center font-bold font-mono text-[11px] ${
+                          isCorrect ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-600'
+                        }`}
+                      >
+                        {String.fromCharCode(65 + optIdx)}
+                      </span>
+                      <span className="flex-1">{opt}</span>
+                      {isCorrect && (
+                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
+                          Answer Key
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                onClick={() => setPreviewQuestion(null)}
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-lg text-xs cursor-pointer"
+              >
+                Close Preview
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL: CANDIDATE SCORECARD DETAILS                       */}
+      {/* ======================================================== */}
+      {selectedResult && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl border border-gray-200 my-auto text-xs">
+            <div className="flex items-center justify-between border-b pb-3">
+              <h3 className="font-bold text-sm text-[#10264B] flex items-center space-x-2">
+                <Award className="w-4 h-4 text-[#F47716]" />
+                <span>Candidate Assessment Scorecard</span>
+              </h3>
+              <button onClick={() => setSelectedResult(null)} className="text-gray-400 hover:text-gray-600 p-1 cursor-pointer">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <div className="bg-slate-50 p-3 rounded-xl border border-gray-200 space-y-1">
+                <p className="font-bold text-sm text-[#10264B]">{selectedResult.candidateName}</p>
+                <p className="text-gray-500 font-mono text-[11px]">{selectedResult.candidateId} • {selectedResult.candidateEmail || 'Candidate'}</p>
+                <p className="text-gray-700 font-medium text-xs mt-1">{selectedResult.certificationName}</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 text-center">
+                <div className="p-3 bg-blue-50 rounded-xl border border-blue-200">
+                  <p className="text-gray-500 text-[10px] font-bold uppercase">Assessment Score</p>
+                  <p className="text-2xl font-black text-[#10264B] font-mono mt-0.5">{selectedResult.percentage}%</p>
+                  <p className="text-[10px] text-gray-500 font-semibold">{selectedResult.score || 0} pts earned</p>
+                </div>
+
+                <div className={`p-3 rounded-xl border ${selectedResult.percentage >= 70 ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}`}>
+                  <p className="text-gray-500 text-[10px] font-bold uppercase">Passing Status</p>
+                  <p className={`text-xl font-black mt-1 ${selectedResult.percentage >= 70 ? 'text-emerald-700' : 'text-red-700'}`}>
+                    {selectedResult.percentage >= 70 ? 'PASSED' : 'FAILED'}
+                  </p>
+                  <p className="text-[10px] text-gray-500 font-semibold">Min 70% Standard</p>
+                </div>
+              </div>
+
+              {selectedResult.certificateNo && (
+                <div className="p-3 bg-green-50 border border-green-200 rounded-xl flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] text-green-700 font-bold uppercase">Digital Credential</p>
+                    <p className="font-mono font-bold text-green-900 text-xs">{selectedResult.certificateNo}</p>
+                  </div>
+                  <a
+                    href={`/verify?id=${encodeURIComponent(selectedResult.certificateNo)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-2.5 py-1 bg-green-600 text-white font-bold rounded text-[11px] hover:bg-green-700"
+                  >
+                    Verify
+                  </a>
+                </div>
+              )}
+            </div>
+
+            <div className="pt-2 flex justify-end border-t">
+              <button
+                onClick={() => setSelectedResult(null)}
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-lg cursor-pointer"
+              >
+                Close Scorecard
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

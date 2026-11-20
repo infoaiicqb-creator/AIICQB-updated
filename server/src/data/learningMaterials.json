@@ -1,0 +1,46 @@
+[
+  {
+    "id": "lms_1",
+    "courseCode": "LMS-AI-01",
+    "title": "AI & ML Fundamentals",
+    "domain": "AI & Machine Learning",
+    "type": "Course",
+    "status": "Active",
+    "modulesCount": 8,
+    "updatedAt": "2026-11-09T15:40:37.430Z",
+    "createdAt": "2026-11-09T15:40:37.430Z"
+  },
+  {
+    "id": "lms_2",
+    "courseCode": "LMS-DS-01",
+    "title": "Data Science Essentials",
+    "domain": "Data & Analytics",
+    "type": "Course",
+    "status": "Active",
+    "modulesCount": 6,
+    "updatedAt": "2026-11-09T15:40:37.431Z",
+    "createdAt": "2026-11-09T15:40:37.431Z"
+  },
+  {
+    "id": "lms_3",
+    "courseCode": "LMS-CY-01",
+    "title": "Cybersecurity Basics",
+    "domain": "Cybersecurity",
+    "type": "Course",
+    "status": "Active",
+    "modulesCount": 7,
+    "updatedAt": "2026-11-09T15:40:37.432Z",
+    "createdAt": "2026-11-09T15:40:37.432Z"
+  },
+  {
+    "id": "lms_4",
+    "courseCode": "LMS-PM-01",
+    "title": "Project Management Core",
+    "domain": "Management",
+    "type": "Course",
+    "status": "Active",
+    "modulesCount": 5,
+    "updatedAt": "2026-11-09T15:40:37.433Z",
+    "createdAt": "2026-11-09T15:40:37.433Z"
+  }
+]

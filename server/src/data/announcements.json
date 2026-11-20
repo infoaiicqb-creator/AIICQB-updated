@@ -1,0 +1,38 @@
+[
+  {
+    "id": "ann_1",
+    "title": "AICQB New Certifications Launched",
+    "audience": "All Users",
+    "status": "Published",
+    "scheduledDate": "07 Nov 2026",
+    "updatedAt": "2026-11-09T15:40:37.440Z",
+    "createdAt": "2026-11-09T15:40:37.440Z"
+  },
+  {
+    "id": "ann_2",
+    "title": "Exam Schedule – Nov 2026",
+    "audience": "Candidates",
+    "status": "Published",
+    "scheduledDate": "05 Nov 2026",
+    "updatedAt": "2026-11-09T15:40:37.441Z",
+    "createdAt": "2026-11-09T15:40:37.441Z"
+  },
+  {
+    "id": "ann_3",
+    "title": "Partner Onboarding Update",
+    "audience": "Training Partners",
+    "status": "Published",
+    "scheduledDate": "03 Nov 2026",
+    "updatedAt": "2026-11-09T15:40:37.442Z",
+    "createdAt": "2026-11-09T15:40:37.442Z"
+  },
+  {
+    "id": "ann_4",
+    "title": "Membership Renewal Reminder",
+    "audience": "Members",
+    "status": "Published",
+    "scheduledDate": "01 Nov 2026",
+    "updatedAt": "2026-11-09T15:40:37.443Z",
+    "createdAt": "2026-11-09T15:40:37.443Z"
+  }
+]

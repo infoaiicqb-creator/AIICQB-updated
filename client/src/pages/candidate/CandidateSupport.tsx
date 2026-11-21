@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { SupportTicket } from '../../types';
-import { Headphones, MessageSquare, HelpCircle, Plus, CheckCircle2, Clock, X, Send, Loader2 } from 'lucide-react';
+import { Headphones, MessageSquare, HelpCircle, Plus, CheckCircle2, Clock, X, Send, Loader2, Mail } from 'lucide-react';
 
 export const CandidateSupport: React.FC = () => {
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
@@ -61,6 +61,28 @@ export const CandidateSupport: React.FC = () => {
         <p className="text-xs text-gray-500 mt-0.5">
           Get help, raise a request or contact our support team.
         </p>
+      </div>
+
+      {/* Official Helpdesk Banner */}
+      <div className="bg-gradient-to-r from-[#10264B] to-[#1E3A6E] text-white p-4 sm:p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm border border-slate-700">
+        <div className="flex items-center space-x-3.5">
+          <div className="w-10 h-10 rounded-xl bg-orange-500/20 text-[#F47716] flex items-center justify-center flex-shrink-0 border border-orange-500/30">
+            <Mail className="w-5 h-5" />
+          </div>
+          <div>
+            <h4 className="font-bold text-sm text-white">Direct Candidate Email Support</h4>
+            <p className="text-xs text-slate-300">
+              For immediate inquiries regarding exams, certificates, or invoicing, reach our team directly at:
+            </p>
+          </div>
+        </div>
+        <a
+          href="mailto:support@aiicqb.org"
+          className="inline-flex items-center space-x-2 px-4 py-2 bg-[#F47716] hover:bg-[#E35D00] text-white rounded-xl text-xs font-bold transition-all shadow-md self-start sm:self-auto cursor-pointer flex-shrink-0"
+        >
+          <Mail className="w-3.5 h-3.5" />
+          <span>support@aiicqb.org</span>
+        </a>
       </div>
 
       {/* 3 Shortcut Action Cards matching Image 2 #9 */}

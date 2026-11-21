@@ -55,8 +55,12 @@ export const ContactUs: React.FC = () => {
               </div>
               <div>
                 <p className="text-gray-400 font-semibold uppercase text-[10px]">Email Addresses</p>
-                <p className="text-sm font-bold text-white mt-0.5">support@aicqb.org</p>
-                <p className="text-slate-300">contact@aicqb.org</p>
+                <a href="mailto:support@aiicqb.org" className="text-sm font-bold text-white mt-0.5 block hover:text-[#F47716] transition-colors">
+                  support@aiicqb.org
+                </a>
+                <a href="mailto:contact@aiicqb.org" className="text-slate-300 block hover:text-white transition-colors">
+                  contact@aiicqb.org
+                </a>
               </div>
             </div>
 

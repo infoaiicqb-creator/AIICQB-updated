@@ -904,6 +904,15 @@ export const RazorpayModal: React.FC<RazorpayModalProps> = ({
                     Cancel
                   </button>
                 </div>
+
+                <div className="text-center pt-1">
+                  <p className="text-[10.5px] text-slate-400">
+                    Payment inquiries & invoice assistance:{' '}
+                    <a href="mailto:support@aiicqb.org" className="text-[#F47716] font-semibold hover:underline">
+                      support@aiicqb.org
+                    </a>
+                  </p>
+                </div>
               </div>
             )}
           </form>

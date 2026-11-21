@@ -707,7 +707,7 @@ export async function getSystemSettings(req, res) {
       settings = {
         id: 'general',
         boardName: 'AI International Certification & Qualification Board (AICQB)',
-        supportEmail: 'support@aicqb.org',
+        supportEmail: 'support@aiicqb.org',
         officeAddress: 'AICQB Headquarters, Kharadi, Pune, Maharashtra - 411014, India',
         portalVersion: '2026.1.0-PROD',
         razorpayLiveMode: false,

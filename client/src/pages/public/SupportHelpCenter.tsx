@@ -59,16 +59,17 @@ export const SupportHelpCenter: React.FC = () => {
           <p className="text-xs text-gray-500">Submit a formal request directly to our technical support team.</p>
         </Link>
 
-        <Link
-          to="/contact"
+        <a
+          href="mailto:support@aiicqb.org"
           className="bg-white p-6 rounded-xl border border-gray-200 text-center space-y-3 shadow-sm hover:shadow-md transition-shadow block group"
         >
           <div className="w-12 h-12 rounded-xl bg-green-100 text-green-700 flex items-center justify-center mx-auto group-hover:scale-105 transition-transform">
             <Mail className="w-6 h-6" />
           </div>
-          <h3 className="font-bold text-sm text-[#10264B]">Contact Us</h3>
-          <p className="text-xs text-gray-500">Reach our global advisory representatives via email or phone.</p>
-        </Link>
+          <h3 className="font-bold text-sm text-[#10264B]">Email Support</h3>
+          <p className="text-xs text-[#F47716] font-bold">support@aiicqb.org</p>
+          <p className="text-[11px] text-gray-500">Direct response from our official international candidate helpdesk.</p>
+        </a>
       </div>
 
       {/* Accordion FAQs matching Image 3 #13 */}

@@ -36,7 +36,7 @@ export const AdminSettings: React.FC = () => {
     directorName: 'Dr. Neha Kulkarni',
     directorTitle: 'Director – Certification',
     boardName: 'AI International Certification & Qualification Board (AICQB)',
-    supportEmail: 'support@aicqb.org',
+    supportEmail: 'support@aiicqb.org',
     razorpayKeyId: 'rzp_test_AICQB2026Key',
     razorpayKeySecret: '••••••••••••••••',
   });
@@ -126,7 +126,7 @@ export const AdminSettings: React.FC = () => {
           directorName: res.settings.directorName || 'Dr. Neha Kulkarni',
           directorTitle: res.settings.directorTitle || 'Director – Certification',
           boardName: res.settings.boardName || 'AI International Certification & Qualification Board (AICQB)',
-          supportEmail: res.settings.supportEmail || 'support@aicqb.org',
+          supportEmail: res.settings.supportEmail || 'support@aiicqb.org',
           razorpayKeyId: res.settings.razorpayKeyId || 'rzp_test_AICQB2026Key',
           razorpayKeySecret: res.settings.razorpayKeySecret ? '••••••••••••••••' : '',
         });

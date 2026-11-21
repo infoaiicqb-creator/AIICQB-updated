@@ -23,7 +23,13 @@ export const Footer: React.FC = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="w-4 h-4 text-[#F47716] flex-shrink-0" />
-                <span>support@aicqb.org | contact@aicqb.org</span>
+                <a href="mailto:support@aiicqb.org" className="hover:text-white transition-colors">
+                  support@aiicqb.org
+                </a>
+                <span>|</span>
+                <a href="mailto:contact@aiicqb.org" className="hover:text-white transition-colors">
+                  contact@aiicqb.org
+                </a>
               </div>
               <div className="flex items-center space-x-2">
                 <Phone className="w-4 h-4 text-[#F47716] flex-shrink-0" />

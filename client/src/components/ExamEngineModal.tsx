@@ -777,6 +777,16 @@ export const ExamEngineModal: React.FC<ExamEngineModalProps> = ({ scheduleId, on
                 <span>Close & Return</span>
               </button>
             </div>
+
+            {/* Candidate Helpdesk Notice */}
+            <div className="pt-2 text-center">
+              <p className="text-[11px] text-slate-400">
+                For questions regarding results or score evaluation, contact{' '}
+                <a href="mailto:support@aiicqb.org" className="font-semibold text-[#F47716] hover:underline">
+                  support@aiicqb.org
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       )}

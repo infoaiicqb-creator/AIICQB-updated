@@ -580,7 +580,7 @@ export const RazorpayModal: React.FC<RazorpayModalProps> = ({
           /* Enrollment Form & Candidate Details */
           <form onSubmit={handleProceedToPayment} className="p-5 sm:p-6 space-y-4">
             {/* Certification Overview Box */}
-            <div className="bg-gradient-to-r from-slate-50 to-blue-50/40 p-4 rounded-xl border border-slate-200/80 flex items-center justify-between">
+            <div className="bg-gradient-to-r from-slate-50 to-blue-50/40 p-4 rounded-xl border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="min-w-0 pr-3">
                 <div className="flex items-center space-x-2">
                   <span className="px-2 py-0.5 bg-[#0A1D37] text-white text-[10px] font-mono font-bold rounded">

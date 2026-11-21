@@ -180,7 +180,7 @@ export const CandidateCertifications: React.FC = () => {
         </div>
 
         {/* Tab Pills matching Image 2 #3 - 100% Dynamic Counts & Real Filtering */}
-        <div className="flex items-center space-x-2 pt-1 border-t border-gray-100">
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-gray-100">
           <button
             onClick={() => setActiveTab('all')}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
@@ -324,7 +324,7 @@ export const CandidateCertifications: React.FC = () => {
                 </div>
 
                 {/* Right Side: Level, Price & Action matching Image 2 #3 */}
-                <div className="flex items-center justify-between md:justify-end space-x-4 pt-3 md:pt-0 border-t md:border-t-0 border-gray-100">
+                <div className="flex flex-wrap sm:flex-nowrap items-center justify-between sm:justify-end gap-3 pt-3 md:pt-0 border-t md:border-t-0 border-gray-100">
                   <span className="px-2.5 py-1 bg-purple-50 text-purple-700 text-[11px] font-semibold rounded-md border border-purple-200">
                     {cert.level}
                   </span>

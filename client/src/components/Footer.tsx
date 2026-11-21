@@ -21,7 +21,7 @@ export const Footer: React.FC = () => {
                 <MapPin className="w-4 h-4 text-[#F47716] flex-shrink-0" />
                 <span>Kharadi, Pune, Maharashtra – 411014, India</span>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex flex-wrap items-center gap-1.5">
                 <Mail className="w-4 h-4 text-[#F47716] flex-shrink-0" />
                 <a href="mailto:support@aiicqb.org" className="hover:text-white transition-colors">
                   support@aiicqb.org
@@ -167,7 +167,7 @@ export const Footer: React.FC = () => {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-between pt-4 border-t border-slate-700/60 text-xs">
             <p>© {new Date().getFullYear()} AICQB – AI International Certification & Qualification Board. All rights reserved.</p>
-            <div className="flex items-center space-x-4 mt-2 sm:mt-0 text-slate-400">
+            <div className="flex flex-wrap items-center justify-center sm:justify-end gap-2 sm:gap-4 mt-3 sm:mt-0 text-slate-400">
               <span className="hover:text-white cursor-pointer">Terms of Service</span>
               <span>•</span>
               <span className="hover:text-white cursor-pointer">Privacy Policy</span>

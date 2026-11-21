@@ -67,7 +67,7 @@ export const CandidateCertificates: React.FC = () => {
       </div>
 
       {/* Tabs matching Image 2 #6 */}
-      <div className="flex items-center space-x-2 border-b border-gray-200 pb-3">
+      <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 pb-3">
         <button
           onClick={() => setActiveTab('earned')}
           className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${

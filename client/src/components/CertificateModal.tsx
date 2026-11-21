@@ -152,11 +152,12 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
             <button
               onClick={handleDownloadPDF}
               disabled={isExporting}
-              className="inline-flex items-center space-x-1.5 text-xs bg-[#F47716] hover:bg-[#DC660E] disabled:opacity-60 text-white font-bold px-3.5 py-1.5 rounded-lg shadow-md transition-all cursor-pointer whitespace-nowrap font-montserrat"
+              className="inline-flex items-center space-x-1.5 text-xs bg-[#F47716] hover:bg-[#DC660E] disabled:opacity-60 text-white font-bold px-2.5 sm:px-3.5 py-1.5 rounded-lg shadow-md transition-all cursor-pointer whitespace-nowrap font-montserrat"
               title="Download high-resolution 300 DPI PDF"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>{isExporting ? 'Exporting...' : 'Download (PDF)'}</span>
+              <span className="hidden sm:inline">{isExporting ? 'Exporting...' : 'Download (PDF)'}</span>
+              <span className="sm:hidden">{isExporting ? '...' : 'PDF'}</span>
             </button>
             <button
               onClick={onClose}

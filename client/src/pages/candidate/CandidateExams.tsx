@@ -91,7 +91,7 @@ export const CandidateExams: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center space-x-2 border-b border-gray-200 pb-3">
+      <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 pb-3">
         <button
           onClick={() => setActiveTab('upcoming')}
           className={`px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
@@ -179,7 +179,7 @@ export const CandidateExams: React.FC = () => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex items-center space-x-3 pt-3 md:pt-0 border-t md:border-t-0 border-gray-100 flex-shrink-0">
+                <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 pt-3 md:pt-0 border-t md:border-t-0 border-gray-100 flex-shrink-0">
                   <button
                     onClick={() => {
                       setSelectedExamForGuidelines(exam);

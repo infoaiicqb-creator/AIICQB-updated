@@ -52,7 +52,7 @@ export const CandidatePayments: React.FC = () => {
       </div>
 
       {/* Tabs matching Image 2 #8 */}
-      <div className="flex items-center space-x-2 border-b border-gray-200 pb-3">
+      <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 pb-3">
         <button
           onClick={() => setActiveTab('history')}
           className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
@@ -89,7 +89,7 @@ export const CandidatePayments: React.FC = () => {
       {activeTab === 'history' && (
         <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+            <table className="w-full min-w-[620px] text-left text-xs">
               <thead className="bg-slate-50 text-gray-600 font-semibold uppercase tracking-wider text-[11px] border-b border-gray-200">
                 <tr>
                   <th className="py-3.5 px-6">Date</th>

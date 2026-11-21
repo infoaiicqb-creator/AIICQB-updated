@@ -558,7 +558,7 @@ export const CandidateLearning: React.FC = () => {
       </div>
 
       {/* Simple Navigation Tabs */}
-      <div className="flex items-center space-x-2">
+      <div className="flex flex-wrap items-center gap-2">
         <button
           onClick={() => setActiveTab('courses')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${

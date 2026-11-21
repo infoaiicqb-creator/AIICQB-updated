@@ -799,8 +799,8 @@ export const ExamEngineModal: React.FC<ExamEngineModalProps> = ({ scheduleId, on
             {/* Question Card Container */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
               {/* Question Header & Action Row */}
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                <div className="flex items-center space-x-3">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                   <span className="text-xs font-black uppercase tracking-wider text-white bg-[#10264B] px-3.5 py-1.5 rounded-lg shadow-sm">
                     Question {currentIndex + 1} of {questions.length}
                   </span>
@@ -916,7 +916,7 @@ export const ExamEngineModal: React.FC<ExamEngineModalProps> = ({ scheduleId, on
               </div>
 
               {/* Prev / Next Bottom Controls */}
-              <div className="flex items-center justify-between pt-6 border-t border-slate-100">
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-6 border-t border-slate-100">
                 <button
                   disabled={currentIndex === 0}
                   onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}

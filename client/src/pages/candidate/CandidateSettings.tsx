@@ -198,7 +198,7 @@ export const CandidateSettings: React.FC = () => {
         </div>
 
         {/* Language */}
-        <div className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors">
+        <div className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50 transition-colors">
           <div className="flex items-center space-x-4">
             <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
               <Languages className="w-5 h-5" />

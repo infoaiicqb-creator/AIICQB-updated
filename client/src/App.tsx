@@ -137,6 +137,12 @@ export const App: React.FC = () => {
       <Route path="/contact" element={<PublicLayout><ContactUs /></PublicLayout>} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
+      <Route path="/register" element={<SignUp />} />
+
+      {/* Aliases for direct URL navigation & refresh */}
+      <Route path="/dashboard" element={<Navigate to="/portal/dashboard" replace />} />
+      <Route path="/certificate" element={<Navigate to="/verify" replace />} />
+      <Route path="/exam" element={<Navigate to="/exams" replace />} />
 
       {/* 10 Candidate Portal Pages */}
       <Route

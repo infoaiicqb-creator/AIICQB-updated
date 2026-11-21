@@ -70,21 +70,19 @@ export const CandidateCertificates: React.FC = () => {
       <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 pb-3">
         <button
           onClick={() => setActiveTab('earned')}
-          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
-            activeTab === 'earned'
-              ? 'bg-[#F47716] text-white shadow-sm'
-              : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-          }`}
+          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeTab === 'earned'
+            ? 'bg-[#F47716] text-white shadow-sm'
+            : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+            }`}
         >
           Earned Certificates ({displayCertificates.length})
         </button>
         <button
           onClick={() => setActiveTab('progress')}
-          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'progress'
-              ? 'bg-[#F47716] text-white shadow-sm'
-              : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-          }`}
+          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === 'progress'
+            ? 'bg-[#F47716] text-white shadow-sm'
+            : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+            }`}
         >
           Enrolled / In Progress ({enrolledExams.length})
         </button>

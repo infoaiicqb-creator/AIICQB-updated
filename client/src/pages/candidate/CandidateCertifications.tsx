@@ -99,8 +99,8 @@ export const CandidateCertifications: React.FC = () => {
     activeTab === 'enrolled'
       ? enrolledCerts
       : activeTab === 'completed'
-      ? completedCerts
-      : certifications;
+        ? completedCerts
+        : certifications;
 
   return (
     <div className="space-y-6">
@@ -183,44 +183,39 @@ export const CandidateCertifications: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-gray-100">
           <button
             onClick={() => setActiveTab('all')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'all'
-                ? 'bg-[#F47716] text-white shadow-sm'
-                : 'bg-slate-100 text-gray-600 hover:bg-slate-200'
-            }`}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === 'all'
+              ? 'bg-[#F47716] text-white shadow-sm'
+              : 'bg-slate-100 text-gray-600 hover:bg-slate-200'
+              }`}
           >
             All Certifications ({certifications.length})
           </button>
           <button
             onClick={() => setActiveTab('enrolled')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 ${
-              activeTab === 'enrolled'
-                ? 'bg-[#10264B] text-white shadow-sm'
-                : 'bg-slate-100 text-gray-600 hover:bg-slate-200'
-            }`}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 ${activeTab === 'enrolled'
+              ? 'bg-[#10264B] text-white shadow-sm'
+              : 'bg-slate-100 text-gray-600 hover:bg-slate-200'
+              }`}
           >
             <span>Enrolled</span>
             <span
-              className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                activeTab === 'enrolled' ? 'bg-white/20 text-white' : 'bg-blue-100 text-blue-800'
-              }`}
+              className={`px-1.5 py-0.2 rounded-full text-[10px] ${activeTab === 'enrolled' ? 'bg-white/20 text-white' : 'bg-blue-100 text-blue-800'
+                }`}
             >
               {enrolledCerts.length}
             </span>
           </button>
           <button
             onClick={() => setActiveTab('completed')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 ${
-              activeTab === 'completed'
-                ? 'bg-emerald-700 text-white shadow-sm'
-                : 'bg-slate-100 text-gray-600 hover:bg-slate-200'
-            }`}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 ${activeTab === 'completed'
+              ? 'bg-emerald-700 text-white shadow-sm'
+              : 'bg-slate-100 text-gray-600 hover:bg-slate-200'
+              }`}
           >
             <span>Completed</span>
             <span
-              className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                activeTab === 'completed' ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-800'
-              }`}
+              className={`px-1.5 py-0.2 rounded-full text-[10px] ${activeTab === 'completed' ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-800'
+                }`}
             >
               {completedCerts.length}
             </span>
@@ -243,15 +238,15 @@ export const CandidateCertifications: React.FC = () => {
             {activeTab === 'enrolled'
               ? 'No enrolled certifications yet'
               : activeTab === 'completed'
-              ? 'No completed certifications yet'
-              : 'No matching certifications found'}
+                ? 'No completed certifications yet'
+                : 'No matching certifications found'}
           </h3>
           <p className="text-xs text-gray-500 max-w-md mx-auto">
             {activeTab === 'enrolled'
               ? 'Browse the All Certifications catalog and click "Enroll Now" to register for international exams.'
               : activeTab === 'completed'
-              ? 'Take your scheduled examinations to pass and unlock verifiable international digital credentials.'
-              : 'Try clearing your search query or selecting "All Categories" from the domain filter.'}
+                ? 'Take your scheduled examinations to pass and unlock verifiable international digital credentials.'
+                : 'Try clearing your search query or selecting "All Categories" from the domain filter.'}
           </p>
           {activeTab !== 'all' && (
             <button
@@ -272,23 +267,21 @@ export const CandidateCertifications: React.FC = () => {
             return (
               <div
                 key={cert.id}
-                className={`bg-white rounded-xl border p-5 shadow-xs hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 ${
-                  completed
-                    ? 'border-emerald-200 bg-emerald-50/10'
-                    : enrolled
+                className={`bg-white rounded-xl border p-5 shadow-xs hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 ${completed
+                  ? 'border-emerald-200 bg-emerald-50/10'
+                  : enrolled
                     ? 'border-blue-200 bg-blue-50/10'
                     : 'border-gray-200'
-                }`}
+                  }`}
               >
                 <div className="flex items-start space-x-4">
                   <div
-                    className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                      completed
-                        ? 'bg-emerald-100 text-emerald-700'
-                        : enrolled
+                    className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${completed
+                      ? 'bg-emerald-100 text-emerald-700'
+                      : enrolled
                         ? 'bg-blue-100 text-[#10264B]'
                         : 'bg-slate-100 text-[#10264B]'
-                    }`}
+                      }`}
                   >
                     <Award className="w-6 h-6 text-[#F47716]" />
                   </div>

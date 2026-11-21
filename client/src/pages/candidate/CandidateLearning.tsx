@@ -464,7 +464,7 @@ export const CandidateLearning: React.FC = () => {
                   }
                 }
               }
-            } catch (_) {}
+            } catch (_) { }
           }
 
           courseItems.push({
@@ -516,7 +516,7 @@ export const CandidateLearning: React.FC = () => {
         const userUid = user?.uid || user?.id || 'guest';
         try {
           localStorage.setItem(`aicqb_learn_${userUid}_${c.code}`, JSON.stringify(newModules.map(m => m.completed)));
-        } catch (_) {}
+        } catch (_) { }
 
         const updatedCourse: CourseItem = {
           ...c,
@@ -561,31 +561,28 @@ export const CandidateLearning: React.FC = () => {
       <div className="flex flex-wrap items-center gap-2">
         <button
           onClick={() => setActiveTab('courses')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'courses'
-              ? 'bg-[#10264B] text-white shadow-sm'
-              : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-          }`}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeTab === 'courses'
+            ? 'bg-[#10264B] text-white shadow-sm'
+            : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+            }`}
         >
           My Courses ({courses.length})
         </button>
         <button
           onClick={() => setActiveTab('materials')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'materials'
-              ? 'bg-[#10264B] text-white shadow-sm'
-              : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-          }`}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeTab === 'materials'
+            ? 'bg-[#10264B] text-white shadow-sm'
+            : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+            }`}
         >
           Study Materials
         </button>
         <button
           onClick={() => setActiveTab('tests')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'tests'
-              ? 'bg-[#10264B] text-white shadow-sm'
-              : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-          }`}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeTab === 'tests'
+            ? 'bg-[#10264B] text-white shadow-sm'
+            : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+            }`}
         >
           Practice Tests
         </button>
@@ -648,9 +645,8 @@ export const CandidateLearning: React.FC = () => {
                   <div className="flex items-center space-x-3 pt-1 max-w-sm">
                     <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
                       <div
-                        className={`h-full rounded-full ${
-                          course.progress === 100 ? 'bg-emerald-500' : 'bg-[#F47716]'
-                        }`}
+                        className={`h-full rounded-full ${course.progress === 100 ? 'bg-emerald-500' : 'bg-[#F47716]'
+                          }`}
                         style={{ width: `${course.progress}%` }}
                       ></div>
                     </div>
@@ -829,11 +825,10 @@ export const CandidateLearning: React.FC = () => {
                       <div
                         key={mod.id}
                         onClick={() => setActiveModuleIndex(idx)}
-                        className={`p-3.5 cursor-pointer transition-colors text-xs ${
-                          isCurrent
-                            ? 'bg-orange-50 border-l-4 border-[#F47716] font-bold text-[#10264B]'
-                            : 'hover:bg-gray-100 text-gray-700'
-                        }`}
+                        className={`p-3.5 cursor-pointer transition-colors text-xs ${isCurrent
+                          ? 'bg-orange-50 border-l-4 border-[#F47716] font-bold text-[#10264B]'
+                          : 'hover:bg-gray-100 text-gray-700'
+                          }`}
                       >
                         <div className="flex items-start space-x-2">
                           <span className="text-gray-400 font-mono text-[11px] mt-0.5">{idx + 1}.</span>
@@ -899,11 +894,10 @@ export const CandidateLearning: React.FC = () => {
                     <div className="pt-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
                       <button
                         onClick={() => handleToggleModuleComplete(activeCourseModal.id, activeModuleIndex)}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                          activeModule.completed
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-300'
-                            : 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                        }`}
+                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeModule.completed
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-300'
+                          : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                          }`}
                       >
                         {activeModule.completed ? 'Module Completed ✓' : 'Mark as Completed'}
                       </button>

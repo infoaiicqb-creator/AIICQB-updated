@@ -263,7 +263,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
               <div className="relative inline-flex items-center justify-center">
                 {/* Left Folded Ribbon Wing */}
                 <div className="hidden sm:block absolute -left-3.5 w-4 h-full bg-[#07162C] border-y border-l border-[#D4AF37] transform skew-y-6 -z-10 rounded-l-[1px]" />
-                
+
                 {/* Central Navy & Gold Ribbon Plate */}
                 <div className="bg-gradient-to-r from-[#07162C] via-[#0A1D37] to-[#07162C] border-y-2 border-[#D4AF37] px-6 sm:px-10 py-1 sm:py-1.5 shadow-md flex items-center justify-center rounded-[2px]">
                   <span className="font-montserrat font-bold text-amber-300 tracking-[0.24em] text-[10px] sm:text-xs md:text-sm lg:text-[16px] uppercase leading-none drop-shadow-xs whitespace-nowrap">

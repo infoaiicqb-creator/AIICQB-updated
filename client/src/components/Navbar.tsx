@@ -40,11 +40,10 @@ export const Navbar: React.FC = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive(item.path)
-                    ? 'text-[#F47716] font-semibold border-b-2 border-[#F47716]'
-                    : 'text-[#10264B] hover:text-[#F47716]'
-                }`}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive(item.path)
+                  ? 'text-[#F47716] font-semibold border-b-2 border-[#F47716]'
+                  : 'text-[#10264B] hover:text-[#F47716]'
+                  }`}
               >
                 {item.label}
               </Link>
@@ -191,11 +190,10 @@ export const Navbar: React.FC = () => {
                 key={item.path}
                 to={item.path}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`block px-3.5 py-2.5 rounded-xl text-base font-semibold transition-all ${
-                  isActive(item.path)
-                    ? 'bg-orange-50 text-[#F47716] font-bold border-l-4 border-[#F47716]'
-                    : 'text-[#10264B] hover:text-[#F47716] hover:bg-gray-50'
-                }`}
+                className={`block px-3.5 py-2.5 rounded-xl text-base font-semibold transition-all ${isActive(item.path)
+                  ? 'bg-orange-50 text-[#F47716] font-bold border-l-4 border-[#F47716]'
+                  : 'text-[#10264B] hover:text-[#F47716] hover:bg-gray-50'
+                  }`}
               >
                 {item.label}
               </Link>

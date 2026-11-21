@@ -46,9 +46,9 @@ export const CandidateExams: React.FC = () => {
     setActiveExamSession(examId);
     try {
       if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(() => {});
+        document.documentElement.requestFullscreen().catch(() => { });
       }
-    } catch (e) {}
+    } catch (e) { }
   };
 
   useEffect(() => {
@@ -94,31 +94,28 @@ export const CandidateExams: React.FC = () => {
       <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 pb-3">
         <button
           onClick={() => setActiveTab('upcoming')}
-          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'upcoming'
-              ? 'bg-[#F47716] text-white shadow-sm'
-              : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-          }`}
+          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === 'upcoming'
+            ? 'bg-[#F47716] text-white shadow-sm'
+            : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+            }`}
         >
           Upcoming Exams ({displayUpcoming.length})
         </button>
         <button
           onClick={() => setActiveTab('completed')}
-          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'completed'
-              ? 'bg-[#F47716] text-white shadow-sm'
-              : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-          }`}
+          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === 'completed'
+            ? 'bg-[#F47716] text-white shadow-sm'
+            : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+            }`}
         >
           Completed Exams ({displayCompleted.length})
         </button>
         <button
           onClick={() => setActiveTab('all')}
-          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'all'
-              ? 'bg-[#F47716] text-white shadow-sm'
-              : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-          }`}
+          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === 'all'
+            ? 'bg-[#F47716] text-white shadow-sm'
+            : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+            }`}
         >
           All Exams ({displayUpcoming.length + displayCompleted.length})
         </button>
@@ -167,7 +164,7 @@ export const CandidateExams: React.FC = () => {
                     </div>
                     <p className="text-xs font-mono text-[#F47716] font-semibold">({exam.certificationCode})</p>
                     <p className="text-[11px] text-gray-500">
-                      {exam.isRetake 
+                      {exam.isRetake
                         ? 'Second chance opportunity • Score 70% or higher to clear the test and unlock your official certificate'
                         : 'Enrolled Program • Passing score (70%) unlocks official QR-verifiable certificate'}
                     </p>
@@ -241,11 +238,10 @@ export const CandidateExams: React.FC = () => {
                 >
                   <div className="flex items-start space-x-5">
                     <div
-                      className={`w-16 h-16 rounded-xl flex flex-col items-center justify-center text-center flex-shrink-0 ${
-                        isCompPassed
-                          ? 'bg-emerald-50 border border-emerald-200'
-                          : 'bg-red-50 border border-red-200'
-                      }`}
+                      className={`w-16 h-16 rounded-xl flex flex-col items-center justify-center text-center flex-shrink-0 ${isCompPassed
+                        ? 'bg-emerald-50 border border-emerald-200'
+                        : 'bg-red-50 border border-red-200'
+                        }`}
                     >
                       {isCompPassed ? (
                         <Award className="w-8 h-8 text-emerald-600" />
@@ -256,11 +252,10 @@ export const CandidateExams: React.FC = () => {
                     <div className="space-y-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <span
-                          className={`px-2.5 py-0.5 font-bold text-[10px] rounded-full border ${
-                            isCompPassed
-                              ? 'bg-green-50 text-green-700 border-green-200'
-                              : 'bg-red-50 text-red-700 border-red-200'
-                          }`}
+                          className={`px-2.5 py-0.5 font-bold text-[10px] rounded-full border ${isCompPassed
+                            ? 'bg-green-50 text-green-700 border-green-200'
+                            : 'bg-red-50 text-red-700 border-red-200'
+                            }`}
                         >
                           {isCompPassed
                             ? `Passed (${comp.percentage ?? comp.score}%)`
@@ -312,8 +307,8 @@ export const CandidateExams: React.FC = () => {
                               (comp.percentage ?? comp.score) >= 90
                                 ? 'Grade A+ (Distinction)'
                                 : (comp.percentage ?? comp.score) >= 80
-                                ? 'Grade A (Merit)'
-                                : 'Grade B (Pass)',
+                                  ? 'Grade A (Merit)'
+                                  : 'Grade B (Pass)',
                             issueDate: comp.scheduledDate || new Date().toISOString().split('T')[0],
                             expiryDate: new Date(Date.now() + 86400000 * 365 * 3).toISOString().split('T')[0],
                             ceoName: 'Pushpak Wani',
@@ -554,7 +549,7 @@ export const CandidateExams: React.FC = () => {
                       <span>Examination Result: Failed (Score Below 70%)</span>
                     </p>
                     <p className="text-[11px] text-red-700 leading-relaxed">
-                      Per official AICQB regulations, a minimum score of <strong>70%</strong> is required to pass. 
+                      Per official AICQB regulations, a minimum score of <strong>70%</strong> is required to pass.
                       <strong> No certificate has been generated for this exam.</strong> You have been granted a second chance to retake and clear this test.
                     </p>
                   </div>
@@ -616,8 +611,8 @@ export const CandidateExams: React.FC = () => {
                             (showScoreModal.percentage ?? showScoreModal.score) >= 90
                               ? 'Grade A+ (Distinction)'
                               : (showScoreModal.percentage ?? showScoreModal.score) >= 80
-                              ? 'Grade A (Merit)'
-                              : 'Grade B (Pass)',
+                                ? 'Grade A (Merit)'
+                                : 'Grade B (Pass)',
                           issueDate: showScoreModal.scheduledDate || new Date().toISOString().split('T')[0],
                           issueDateFormatted: showScoreModal.scheduledDateFormatted || 'Recent',
                           validUntil: new Date(Date.now() + 86400000 * 365 * 3).toISOString().split('T')[0],

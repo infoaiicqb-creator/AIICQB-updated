@@ -180,6 +180,9 @@ export const api = {
   replyAdminTicket: (id: string, body: { message: string; status?: string }) =>
     request(`/support/admin/tickets/${id}/reply`, { method: 'POST', body: JSON.stringify(body) }),
 
+  // Reports & Analytics
+  getReportsAnalytics: () => request('/admin/reports/analytics'),
+
   // Firebase Dynamic Cloud Integration
   getFirebaseStatus: () => request('/admin/firebase/status'),
   getFirebaseCollections: () => request('/admin/firebase/collections'),

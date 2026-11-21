@@ -32,6 +32,7 @@ import {
   getFirebaseCollectionsEndpoint,
   syncFirebaseSingleCollectionEndpoint,
   getFirebaseCollectionDataEndpoint,
+  getReportsAnalyticsEndpoint,
 } from '../controllers/adminController.js';
 import { authenticate, requireAdmin } from '../middleware/auth.js';
 
@@ -75,6 +76,9 @@ router.delete('/announcements/:id', deleteAnnouncement);
 router.get('/audit-logs', getAuditLogs);
 router.get('/settings', getSystemSettings);
 router.post('/settings', updateSystemSettings);
+
+// Reports & Institutional Analytics
+router.get('/reports/analytics', getReportsAnalyticsEndpoint);
 
 // Firebase Dynamic Cloud Integration Endpoints
 router.get('/firebase/status', getFirebaseStatusEndpoint);

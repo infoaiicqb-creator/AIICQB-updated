@@ -47,7 +47,7 @@ export const AdminSettings: React.FC = () => {
   const [firebaseTestResult, setFirebaseTestResult] = useState<any>(null);
   const [firebaseSyncResult, setFirebaseSyncResult] = useState<any>(null);
   const [firebaseForm, setFirebaseForm] = useState({
-    projectId: 'aicqb-prod',
+    projectId: 'aiicqb',
     clientEmail: '',
     privateKey: '',
   });
@@ -626,7 +626,7 @@ export const AdminSettings: React.FC = () => {
                   <span>Firebase Project Configuration & Service Account</span>
                 </span>
                 <span className="text-[10px] text-gray-500 font-mono">
-                  Active Project: {firebaseStatus?.projectId || 'aicqb-prod'}
+                  Active Project: {firebaseStatus?.projectId || 'aiicqb'}
                 </span>
               </div>
 
@@ -639,7 +639,7 @@ export const AdminSettings: React.FC = () => {
                     type="text"
                     value={firebaseForm.projectId}
                     onChange={(e) => setFirebaseForm({ ...firebaseForm, projectId: e.target.value })}
-                    placeholder="aicqb-prod or your-project-id"
+                    placeholder="aiicqb or your-project-id"
                     className="w-full px-3 py-2 bg-slate-50 border border-gray-300 rounded-lg font-mono text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#F47716]"
                   />
                 </div>

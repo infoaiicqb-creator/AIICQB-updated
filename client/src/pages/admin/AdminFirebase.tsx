@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api';
+import { firebaseConfig } from '../../config/firebase';
 import {
   Cloud,
   Database,
@@ -37,14 +38,14 @@ export const AdminFirebase: React.FC = () => {
   const [syncingSingle, setSyncingSingle] = useState<string | null>(null);
   const [testResult, setTestResult] = useState<any>(null);
   const [syncResult, setSyncResult] = useState<any>(null);
-  const [activeConfigTab, setActiveConfigTab] = useState<'json' | 'manual'>('json');
+  const [activeConfigTab, setActiveConfigTab] = useState<'web' | 'json' | 'manual'>('web');
   const [savingConfig, setSavingConfig] = useState(false);
   const [configSuccess, setConfigSuccess] = useState('');
 
   // Form states
   const [serviceAccountJson, setServiceAccountJson] = useState('');
   const [manualForm, setManualForm] = useState({
-    projectId: 'aicqb-prod',
+    projectId: 'aiicqb',
     clientEmail: '',
     privateKey: '',
   });
@@ -55,6 +56,7 @@ export const AdminFirebase: React.FC = () => {
   const [loadingCollectionData, setLoadingCollectionData] = useState(false);
   const [dataSearch, setDataSearch] = useState('');
   const [copiedKey, setCopiedKey] = useState(false);
+  const [copiedWebConfig, setCopiedWebConfig] = useState(false);
 
   useEffect(() => {
     loadAll();
@@ -292,8 +294,8 @@ export const AdminFirebase: React.FC = () => {
           </div>
           <div className="overflow-hidden">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Project ID</span>
-            <span className="text-sm sm:text-base font-black text-[#10264B] font-mono truncate block mt-0.5" title={status?.projectId || 'aicqb-prod'}>
-              {status?.projectId || 'aicqb-prod'}
+            <span className="text-sm sm:text-base font-black text-[#10264B] font-mono truncate block mt-0.5" title={status?.projectId || 'aiicqb'}>
+              {status?.projectId || 'aiicqb'}
             </span>
             <span className="text-[11px] text-slate-500 font-mono truncate block">
               {status?.clientEmail ? status.clientEmail.split('@')[0] : 'admin-service'}
@@ -504,11 +506,22 @@ export const AdminFirebase: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex items-center bg-slate-100 p-1 rounded-xl text-xs font-bold">
+          <div className="flex items-center bg-slate-100 p-1 rounded-xl text-xs font-bold gap-1 flex-wrap">
+            <button
+              type="button"
+              onClick={() => setActiveConfigTab('web')}
+              className={`px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${
+                activeConfigTab === 'web'
+                  ? 'bg-white text-[#10264B] shadow-xs'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              Web SDK Config (aiicqb)
+            </button>
             <button
               type="button"
               onClick={() => setActiveConfigTab('json')}
-              className={`px-4 py-1.5 rounded-lg transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${
                 activeConfigTab === 'json'
                   ? 'bg-white text-[#10264B] shadow-xs'
                   : 'text-slate-500 hover:text-slate-800'
@@ -519,7 +532,7 @@ export const AdminFirebase: React.FC = () => {
             <button
               type="button"
               onClick={() => setActiveConfigTab('manual')}
-              className={`px-4 py-1.5 rounded-lg transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${
                 activeConfigTab === 'manual'
                   ? 'bg-white text-[#10264B] shadow-xs'
                   : 'text-slate-500 hover:text-slate-800'
@@ -529,6 +542,93 @@ export const AdminFirebase: React.FC = () => {
             </button>
           </div>
         </div>
+
+        {/* Tab 0: Web Client SDK Configuration */}
+        {activeConfigTab === 'web' && (
+          <div className="space-y-4">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-4 sm:p-5 text-xs space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black text-xs">
+                    JS
+                  </div>
+                  <div>
+                    <h4 className="font-extrabold text-[#10264B] text-sm">
+                      Firebase Web Client JS SDK (v7+ / Modular v9-v11)
+                    </h4>
+                    <p className="text-[11px] text-slate-500">
+                      Live configuration linked to <strong className="text-[#10264B]">client/src/config/firebase.ts</strong>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[11px]">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Client SDK Active</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(JSON.stringify(firebaseConfig, null, 2));
+                      setCopiedWebConfig(true);
+                      setTimeout(() => setCopiedWebConfig(false), 3000);
+                    }}
+                    className="px-3 py-1.5 bg-white border border-slate-300 hover:border-slate-400 text-slate-700 font-bold text-xs rounded-lg shadow-xs flex items-center space-x-1.5 transition-all cursor-pointer"
+                  >
+                    {copiedWebConfig ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-slate-500" />}
+                    <span>{copiedWebConfig ? 'Copied!' : 'Copy Config'}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Grid of Key Config Attributes */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2">
+                <div className="bg-white/80 backdrop-blur-xs p-3 rounded-xl border border-blue-100">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Project ID</span>
+                  <span className="text-xs font-mono font-bold text-[#10264B] block mt-0.5">{firebaseConfig.projectId}</span>
+                </div>
+                <div className="bg-white/80 backdrop-blur-xs p-3 rounded-xl border border-blue-100">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Auth Domain</span>
+                  <span className="text-xs font-mono font-bold text-[#10264B] block mt-0.5">{firebaseConfig.authDomain}</span>
+                </div>
+                <div className="bg-white/80 backdrop-blur-xs p-3 rounded-xl border border-blue-100">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Storage Bucket</span>
+                  <span className="text-xs font-mono font-bold text-[#10264B] block mt-0.5">{firebaseConfig.storageBucket}</span>
+                </div>
+                <div className="bg-white/80 backdrop-blur-xs p-3 rounded-xl border border-blue-100">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Messaging Sender ID</span>
+                  <span className="text-xs font-mono font-bold text-[#10264B] block mt-0.5">{firebaseConfig.messagingSenderId}</span>
+                </div>
+                <div className="bg-white/80 backdrop-blur-xs p-3 rounded-xl border border-blue-100">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">App ID</span>
+                  <span className="text-xs font-mono font-bold text-[#10264B] block mt-0.5 truncate" title={firebaseConfig.appId}>{firebaseConfig.appId}</span>
+                </div>
+                <div className="bg-white/80 backdrop-blur-xs p-3 rounded-xl border border-blue-100">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Measurement ID (GA4)</span>
+                  <span className="text-xs font-mono font-bold text-[#10264B] block mt-0.5">{firebaseConfig.measurementId}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Code Block Snippet */}
+            <div className="space-y-1.5">
+              <span className="text-xs font-bold text-slate-700 block">Active Firebase Web SDK Configuration</span>
+              <pre className="p-4 rounded-2xl bg-slate-950 text-emerald-400 font-mono text-xs overflow-x-auto border border-slate-800">
+                {`// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "${firebaseConfig.apiKey}",
+  authDomain: "${firebaseConfig.authDomain}",
+  projectId: "${firebaseConfig.projectId}",
+  storageBucket: "${firebaseConfig.storageBucket}",
+  messagingSenderId: "${firebaseConfig.messagingSenderId}",
+  appId: "${firebaseConfig.appId}",
+  measurementId: "${firebaseConfig.measurementId}"
+};`}
+              </pre>
+            </div>
+          </div>
+        )}
 
         {/* Tab 1: Paste Service Account JSON */}
         {activeConfigTab === 'json' && (
@@ -564,7 +664,7 @@ export const AdminFirebase: React.FC = () => {
                 rows={7}
                 value={serviceAccountJson}
                 onChange={(e) => setServiceAccountJson(e.target.value)}
-                placeholder={`{\n  "type": "service_account",\n  "project_id": "aicqb-prod",\n  "private_key_id": "...",\n  "private_key": "-----BEGIN PRIVATE KEY-----\\n...\\n-----END PRIVATE KEY-----\\n",\n  "client_email": "firebase-adminsdk@aicqb-prod.iam.gserviceaccount.com"\n}`}
+                placeholder={`{\n  "type": "service_account",\n  "project_id": "aiicqb",\n  "private_key_id": "...",\n  "private_key": "-----BEGIN PRIVATE KEY-----\\n...\\n-----END PRIVATE KEY-----\\n",\n  "client_email": "firebase-adminsdk@aiicqb.iam.gserviceaccount.com"\n}`}
                 className="w-full p-4 font-mono text-xs bg-slate-950 text-emerald-400 rounded-2xl border border-slate-800 focus:border-[#F47716] focus:outline-none focus:ring-2 focus:ring-orange-200"
               />
             </div>
@@ -599,7 +699,7 @@ export const AdminFirebase: React.FC = () => {
                   type="text"
                   value={manualForm.projectId}
                   onChange={(e) => setManualForm({ ...manualForm, projectId: e.target.value })}
-                  placeholder="aicqb-prod"
+                  placeholder="aiicqb"
                   className="w-full text-xs font-mono px-3.5 py-2.5 border rounded-xl bg-white border-slate-200 focus:border-[#F47716] focus:outline-none"
                   required
                 />
@@ -611,7 +711,7 @@ export const AdminFirebase: React.FC = () => {
                   type="email"
                   value={manualForm.clientEmail}
                   onChange={(e) => setManualForm({ ...manualForm, clientEmail: e.target.value })}
-                  placeholder="firebase-adminsdk@aicqb-prod.iam.gserviceaccount.com"
+                  placeholder="firebase-adminsdk@aiicqb.iam.gserviceaccount.com"
                   className="w-full text-xs font-mono px-3.5 py-2.5 border rounded-xl bg-white border-slate-200 focus:border-[#F47716] focus:outline-none"
                   required
                 />

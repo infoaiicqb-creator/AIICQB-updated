@@ -12,7 +12,7 @@ let connectionStatus = {
   isConfigured: false,
   isConnected: false,
   mode: 'Local Persistent Hybrid Storage',
-  projectId: process.env.FIREBASE_PROJECT_ID || 'aicqb-prod',
+  projectId: process.env.FIREBASE_PROJECT_ID || 'aiicqb',
   clientEmail: process.env.FIREBASE_CLIENT_EMAIL || '',
   lastSyncAt: null,
   syncedCollectionsCount: 0,
@@ -23,7 +23,7 @@ export function initFirebase(customConfig = null) {
   try {
     const serviceAccountPath = path.resolve('server/src/config/serviceAccountKey.json');
     let credential = null;
-    let projectId = customConfig?.projectId || process.env.FIREBASE_PROJECT_ID || 'aicqb-prod';
+    let projectId = customConfig?.projectId || process.env.FIREBASE_PROJECT_ID || 'aiicqb';
     let clientEmail = customConfig?.clientEmail || process.env.FIREBASE_CLIENT_EMAIL || '';
     let privateKey = customConfig?.privateKey || process.env.FIREBASE_PRIVATE_KEY || '';
 

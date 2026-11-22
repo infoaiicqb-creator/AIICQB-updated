@@ -90,7 +90,7 @@ export const AuthLeftBanner: React.FC = () => {
   const currentDomain = DOMAINS.find((d) => d.id === selectedDomain) || DOMAINS[1];
 
   return (
-    <div className="relative w-full lg:w-[54%] xl:w-[55%] min-h-[620px] lg:min-h-screen flex flex-col justify-between p-5 sm:p-8 lg:p-10 select-none text-white z-10">
+    <div className="hidden lg:flex relative lg:w-[54%] xl:w-[55%] min-h-screen flex-col justify-between p-5 sm:p-8 lg:p-10 select-none text-white z-10">
       {/* TOP: Official AIICQB Full White Logo (Optimized for Dark Background) above Global Professional Certification */}
       <div className="flex flex-col items-center text-center pt-2">
         <Link to="/" className="group inline-flex flex-col items-center cursor-pointer">

@@ -106,7 +106,7 @@ export const SignUp: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen w-full flex flex-col lg:flex-row items-center justify-between relative bg-cover bg-center font-sans overflow-x-hidden"
+      className="min-h-screen w-full flex flex-col lg:flex-row items-center justify-center lg:justify-between relative bg-cover bg-center font-sans overflow-x-hidden"
       style={{ backgroundImage: `url('/login-bg-clean.jpg')` }}
     >
       {/* Dark Subtle Backdrop Overlay for Perfect Contrast */}

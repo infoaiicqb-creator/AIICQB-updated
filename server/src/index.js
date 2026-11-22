@@ -34,7 +34,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Health Check
-app.get('/api/health', (req, res) => {
+app.get(['/api/health', '/health'], (req, res) => {
   res.json({
     status: 'online',
     platform: 'AICQB - AI International Certification & Qualification Board',
@@ -43,22 +43,27 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Mount API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/certifications', certificationRoutes);
-app.use('/api/payment', paymentRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/exams', examRoutes);
-app.use('/api/certificates', certificateRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/support', supportRoutes);
+// Mount API Routes under both /api and root (to handle direct and rewritten requests seamlessly)
+const mountRoutes = (prefix = '') => {
+  app.use(`${prefix}/auth`, authRoutes);
+  app.use(`${prefix}/certifications`, certificationRoutes);
+  app.use(`${prefix}/payment`, paymentRoutes);
+  app.use(`${prefix}/payments`, paymentRoutes);
+  app.use(`${prefix}/exams`, examRoutes);
+  app.use(`${prefix}/certificates`, certificateRoutes);
+  app.use(`${prefix}/admin`, adminRoutes);
+  app.use(`${prefix}/support`, supportRoutes);
+};
+
+mountRoutes('/api');
+mountRoutes('');
 
 // Static Client Serving (Production or Built Client)
 const clientDist = path.resolve(__dirname, '../../client/dist');
 if (fs.existsSync(clientDist)) {
   app.use(express.static(clientDist));
   app.get('*', (req, res, next) => {
-    if (req.url.startsWith('/api')) return next();
+    if (req.url.startsWith('/api') || req.url.startsWith('/auth')) return next();
     res.sendFile(path.join(clientDist, 'index.html'));
   });
 }
@@ -74,13 +79,17 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, message: 'Internal server error', error: err.message });
 });
 
-app.listen(PORT, () => {
-  console.log(`====================================================`);
-  console.log(` AICQB International Certification Platform`);
-  console.log(` Running on: http://localhost:${PORT}`);
-  console.log(` Health Check: http://localhost:${PORT}/api/health`);
-  console.log(` Client Frontend served from: ${fs.existsSync(clientDist) ? clientDist : 'Vite Dev Server (Port 5173)'}`);
-  console.log(`====================================================`);
-});
+const isDirectRun = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
+
+if (isDirectRun && !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`====================================================`);
+    console.log(` AICQB International Certification Platform`);
+    console.log(` Running on: http://localhost:${PORT}`);
+    console.log(` Health Check: http://localhost:${PORT}/api/health`);
+    console.log(` Client Frontend served from: ${fs.existsSync(clientDist) ? clientDist : 'Vite Dev Server (Port 5173)'}`);
+    console.log(`====================================================`);
+  });
+}
 
 export default app;

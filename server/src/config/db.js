@@ -7,15 +7,38 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DATA_DIR = path.resolve(__dirname, '../data');
 
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+let effectiveDataDir = DATA_DIR;
+try {
+  if (!fs.existsSync(effectiveDataDir)) {
+    fs.mkdirSync(effectiveDataDir, { recursive: true });
+  }
+} catch (e) {
+  effectiveDataDir = path.resolve('/tmp/aicqb-data');
+  try {
+    if (!fs.existsSync(effectiveDataDir)) {
+      fs.mkdirSync(effectiveDataDir, { recursive: true });
+    }
+  } catch (_) {}
 }
 
 // In-memory cache + file sync
 const cache = {};
 
 function getFilePath(collectionName) {
-  return path.join(DATA_DIR, `${collectionName}.json`);
+  const localPath = path.join(effectiveDataDir, `${collectionName}.json`);
+  if (!fs.existsSync(localPath)) {
+    const bundledPath = path.join(DATA_DIR, `${collectionName}.json`);
+    if (fs.existsSync(bundledPath)) {
+      try {
+        const content = fs.readFileSync(bundledPath, 'utf-8');
+        try { fs.writeFileSync(localPath, content, 'utf-8'); } catch (_) {}
+        return localPath;
+      } catch (_) {
+        return bundledPath;
+      }
+    }
+  }
+  return localPath;
 }
 
 function loadCollection(collectionName) {
@@ -44,7 +67,10 @@ function saveCollection(collectionName, data) {
   try {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
   } catch (err) {
-    console.error(`Error writing ${collectionName}.json:`, err);
+    try {
+      const tmpPath = path.join('/tmp', `${collectionName}.json`);
+      fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8');
+    } catch (_) {}
   }
 }
 

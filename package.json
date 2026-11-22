@@ -2,12 +2,23 @@
   "name": "aicqb-platform",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "npm run build --prefix client",
     "install:all": "npm install && cd client && npm install && cd ../server && npm install",
     "client": "cd client && npm run dev",
     "server": "cd server && npm run dev",
     "seed": "cd server && npm run seed"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "firebase-admin": "^12.7.0",
+    "jsonwebtoken": "^9.0.2",
+    "pdfkit": "^0.15.1",
+    "qrcode": "^1.5.4",
+    "razorpay": "^2.9.5"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"

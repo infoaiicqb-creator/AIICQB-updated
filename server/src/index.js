@@ -13,10 +13,22 @@ import certificateRoutes from './routes/certificateRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import supportRoutes from './routes/supportRoutes.js';
 
-dotenv.config();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Load environment variables from cwd and from server/.env
+dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
+// Strict security check: Ensure JWT_SECRET is configured
+if (!process.env.JWT_SECRET) {
+  console.error('\n====================================================');
+  console.error('[FATAL SECURITY ERROR] JWT_SECRET environment variable is missing.');
+  console.error('The server cannot start without a securely configured JWT_SECRET.');
+  console.error('Please configure JWT_SECRET in server/.env or your deployment environment.');
+  console.error('====================================================\n');
+  process.exit(1);
+}
 
 const app = express();
 const PORT = process.env.PORT || 5000;

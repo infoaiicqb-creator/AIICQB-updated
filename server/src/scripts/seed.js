@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import bcrypt from 'bcryptjs';
 import db from '../config/db.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -18,7 +19,7 @@ async function runSeed() {
       email: 'admin@aicqb.org',
       fullName: 'Super Admin',
       phoneNumber: '+91 98765 00000',
-      password: 'Admin@123456',
+      password: bcrypt.hashSync('Admin@123456', 10),
       role: 'Super Admin',
       status: 'Active',
       emailVerified: true,
@@ -38,7 +39,7 @@ async function runSeed() {
       email: 'rahul.deshmukh@gmail.com',
       fullName: 'Rahul Deshmukh',
       phoneNumber: '+91 98765 43210',
-      password: 'Password@123',
+      password: bcrypt.hashSync('Password@123', 10),
       role: 'Candidate',
       candidateId,
       status: 'Active',

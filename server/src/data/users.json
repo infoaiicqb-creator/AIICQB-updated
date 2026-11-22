@@ -5,12 +5,12 @@
     "email": "admin@aicqb.org",
     "fullName": "Super Admin",
     "phoneNumber": "98765 00000",
-    "password": "Admin@123456",
+    "password": "$2b$10$YnelvbV8Mh541eUqtRM7Puc5b/2M3S4cgJ76zYTLYhZ6yVNV.j8x6",
     "role": "Super Admin",
     "status": "Active",
     "emailVerified": true,
     "createdAt": "2026-11-09T14:51:34.911Z",
-    "updatedAt": "2026-11-09T16:52:30.680Z"
+    "updatedAt": "2026-11-22T18:47:29.140Z"
   },
   {
     "uid": "usr_1794238898604_8636ld",
@@ -18,13 +18,13 @@
     "email": "pushpak@gmail.com",
     "fullName": "pushpak Wani",
     "phoneNumber": "+91 9834341830",
-    "password": "123456",
+    "password": "$2b$10$alAB9XPhuDLmdZV3FmX6SOvNwKhz20oJFYo8z7jmCH0GMSbEu.3Oe",
     "role": "Super Admin",
     "candidateId": "AICQB-1004581",
     "status": "Active",
     "emailVerified": false,
     "createdAt": "2026-11-09T15:41:38.604Z",
-    "updatedAt": "2026-11-10T09:05:03.445Z"
+    "updatedAt": "2026-11-22T18:47:29.277Z"
   },
   {
     "uid": "usr_1795161584876_gigns6",
@@ -35,13 +35,13 @@
     "country": "India",
     "organization": "",
     "employeeId": "",
-    "password": "123456",
+    "password": "$2b$10$yyg3ytL2ftFyS3DwP1ZFKuJZ98C5CSuySfowMsxnxM082CyMdgeZ2",
     "role": "Candidate",
     "candidateId": "AICQB-1004704",
     "status": "Active",
     "emailVerified": false,
     "createdAt": "2026-11-20T07:59:44.877Z",
-    "updatedAt": "2026-11-20T07:59:44.878Z"
+    "updatedAt": "2026-11-22T18:47:29.405Z"
   },
   {
     "uid": "usr_candidate_rahul_001",
@@ -49,12 +49,13 @@
     "email": "rahul.deshmukh@gmail.com",
     "fullName": "Rahul Deshmukh",
     "phoneNumber": "+91 98765 43210",
-    "password": "password123",
+    "password": "$2b$10$3fNWzBgYp2cP9/N2BDteme1/kk41AdokLlGJ4ZHHiNBGvZ30L.bG.",
     "role": "Candidate",
     "candidateId": "AICQB-1004587",
     "status": "Active",
     "emailVerified": true,
-    "createdAt": "2026-06-18T09:00:00.000Z"
+    "createdAt": "2026-06-18T09:00:00.000Z",
+    "updatedAt": "2026-11-22T18:47:29.561Z"
   },
   {
     "uid": "usr_rohan_sharma_1001",
@@ -62,12 +63,13 @@
     "email": "rohan.sharma@gmail.com",
     "fullName": "Rohan Sharma",
     "phoneNumber": "+91 98765 43210",
-    "password": "password123",
+    "password": "$2b$10$7XH7CBzDzzgonoCrg.wDuustJtG2WBueUKV2tGVsDCncRSRhY0zK2",
     "role": "Candidate",
     "candidateId": "AICQB-100567",
     "status": "Active",
     "emailVerified": true,
-    "createdAt": "2026-08-10T14:30:00.000Z"
+    "createdAt": "2026-08-10T14:30:00.000Z",
+    "updatedAt": "2026-11-22T18:47:29.709Z"
   },
   {
     "uid": "usr_khushboo_1004585",
@@ -75,12 +77,13 @@
     "email": "khushi@gmail.com",
     "fullName": "khushboo Wani",
     "phoneNumber": "+91 98765 43210",
-    "password": "password123",
+    "password": "$2b$10$ncyHnjfHHWxM.P.ZpsgYyOjI4K8HJvWBbgxrK7JvwlzUzBv2tqVPq",
     "role": "Candidate",
     "candidateId": "AICQB-1004585",
     "status": "Active",
     "emailVerified": true,
-    "createdAt": "2026-11-08T10:00:00.000Z"
+    "createdAt": "2026-11-08T10:00:00.000Z",
+    "updatedAt": "2026-11-22T18:47:29.862Z"
   },
   {
     "uid": "usr_pavan_1004586",
@@ -88,12 +91,13 @@
     "email": "pavan@gmail.com",
     "fullName": "Pavan Desai",
     "phoneNumber": "+91 98765 43210",
-    "password": "password123",
+    "password": "$2b$10$1A40VLm1KGI4eu.nwfPFZ.BfAsQwrkd0mI5EIlckxYiHtRPs6SyvC",
     "role": "Candidate",
     "candidateId": "AICQB-1004586",
     "status": "Active",
     "emailVerified": true,
-    "createdAt": "2026-11-08T12:00:00.000Z"
+    "createdAt": "2026-11-08T12:00:00.000Z",
+    "updatedAt": "2026-11-22T18:47:30.017Z"
   },
   {
     "uid": "usr_rahul_patil_1004604",
@@ -101,12 +105,13 @@
     "email": "rahul@gmail.com",
     "fullName": "Rahul patil",
     "phoneNumber": "+91 98765 43210",
-    "password": "password123",
+    "password": "$2b$10$MRwN7hCTqJaKR8z7K0ZUmOR4Ix5W5h9tP1uSehOduSLf/7e0jb6hS",
     "role": "Candidate",
     "candidateId": "AICQB-1004604",
     "status": "Active",
     "emailVerified": true,
-    "createdAt": "2026-11-09T09:00:00.000Z"
+    "createdAt": "2026-11-09T09:00:00.000Z",
+    "updatedAt": "2026-11-22T18:47:30.174Z"
   },
   {
     "uid": "usr_ramesh_1004607",
@@ -114,12 +119,13 @@
     "email": "ramesh@gmail.com",
     "fullName": "Ramesh patil",
     "phoneNumber": "+91 98765 43210",
-    "password": "password123",
+    "password": "$2b$10$pke6xYKzBdXpVZKbzlIjBelLtdkXZ6R8fiiIVirJiE4FVUVXOC6sW",
     "role": "Candidate",
     "candidateId": "AICQB-1004607",
     "status": "Active",
     "emailVerified": true,
-    "createdAt": "2026-11-12T16:00:00.000Z"
+    "createdAt": "2026-11-12T16:00:00.000Z",
+    "updatedAt": "2026-11-22T18:47:30.332Z"
   },
   {
     "uid": "usr_mahesh_1004608",
@@ -127,11 +133,12 @@
     "email": "mahesh@gmail.com",
     "fullName": "Mahesh Patil",
     "phoneNumber": "+91 98765 43210",
-    "password": "password123",
+    "password": "$2b$10$XuIhhmfr.fMvbi6Kq0UEXeVZ7eYooJh.Q4aeuMt.3ziTpiVHlPTKK",
     "role": "Candidate",
     "candidateId": "AICQB-1004608",
     "status": "Active",
     "emailVerified": true,
-    "createdAt": "2026-11-15T11:00:00.000Z"
+    "createdAt": "2026-11-15T11:00:00.000Z",
+    "updatedAt": "2026-11-22T18:47:30.491Z"
   }
 ]

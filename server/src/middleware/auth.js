@@ -1,7 +1,22 @@
 import jwt from 'jsonwebtoken';
 import db from '../config/db.js';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'aicqb_super_secure_jwt_secret_key_2026_international_board';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+
+function getJwtSecret() {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET environment variable is missing.');
+  }
+  return secret;
+}
 
 export function authenticate(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -15,12 +30,15 @@ export function authenticate(req, res, next) {
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, getJwtSecret());
     req.user = decoded;
     
     // Refresh user role & status from db
     const userDoc = db.findOne('users', u => u.uid === decoded.uid || u.id === decoded.uid || (decoded.email && u.email?.toLowerCase() === decoded.email?.toLowerCase()));
     if (userDoc) {
+      if (userDoc.status === 'Suspended') {
+        return res.status(403).json({ success: false, message: 'Your account has been suspended. Please contact AICQB Support.' });
+      }
       req.user.fullName = userDoc.fullName;
       req.user.role = userDoc.role;
       req.user.status = userDoc.status;
@@ -35,7 +53,10 @@ export function authenticate(req, res, next) {
 
     next();
   } catch (err) {
-    return res.status(401).json({ success: false, message: 'Session expired or invalid token. Please log in again.' });
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ success: false, message: 'Session expired. Please log in again.', code: 'TOKEN_EXPIRED' });
+    }
+    return res.status(401).json({ success: false, message: 'Invalid authentication token. Please log in again.', code: 'TOKEN_INVALID' });
   }
 }
 
@@ -65,7 +86,7 @@ export function optionalAuthenticate(req, res, next) {
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, getJwtSecret());
     req.user = decoded;
 
     const userDoc = db.findOne('users', u => u.uid === decoded.uid || u.id === decoded.uid || (decoded.email && u.email?.toLowerCase() === decoded.email?.toLowerCase()));

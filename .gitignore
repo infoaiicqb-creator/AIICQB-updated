@@ -9,6 +9,12 @@ client/dist/
 
 # Environment and sensitive keys
 .env
+.env*
+*.env
+client/.env
+client/.env*
+server/.env
+server/.env*
 .env.local
 .env.*.local
 *.pem

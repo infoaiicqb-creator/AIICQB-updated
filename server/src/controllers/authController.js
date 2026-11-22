@@ -1,8 +1,28 @@
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 import db from '../config/db.js';
 import { logAudit } from '../middleware/auth.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'aicqb_super_secure_jwt_secret_key_2026_international_board';
+function getJwtSecret() {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET environment variable is missing. Authentication cannot proceed.');
+  }
+  return secret;
+}
+
+/**
+ * Verify provided password against stored password.
+ * Supports bcrypt hashes ($2a$, $2b$) with safe fallback to legacy plain-text for existing users.
+ */
+async function verifyPassword(providedPassword, storedPassword) {
+  if (!storedPassword || !providedPassword) return false;
+  const isBcrypt = typeof storedPassword === 'string' && /^\$2[abxy]\$\d+\$/.test(storedPassword);
+  if (isBcrypt) {
+    return await bcrypt.compare(providedPassword, storedPassword);
+  }
+  return storedPassword === providedPassword;
+}
 
 function generateCandidateId() {
   const existingCandidates = db.getCollection('candidates') || [];
@@ -70,6 +90,9 @@ export async function register(req, res) {
     const assignedEmpId = employeeId || '';
     const assignedCountry = country || 'India';
 
+    // Securely hash password with bcrypt (cost factor 10)
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = {
       uid,
       id: uid,
@@ -79,7 +102,7 @@ export async function register(req, res) {
       country: assignedCountry,
       organization: assignedOrg,
       employeeId: assignedEmpId,
-      password, // In real deployment with Firebase Auth, Firebase handles hash; here stored safely for auth check
+      password: hashedPassword, // Salted bcrypt hash, never plain text
       role: 'Candidate',
       candidateId,
       status: 'Active',
@@ -213,7 +236,7 @@ export async function register(req, res) {
 
     const token = jwt.sign(
       { uid, email: cleanEmail, role: 'Candidate', fullName: fullName.trim(), candidateId },
-      JWT_SECRET,
+      getJwtSecret(),
       { expiresIn: '7d' }
     );
 
@@ -261,8 +284,18 @@ export async function login(req, res) {
       return res.status(401).json({ success: false, message: 'Invalid credentials. Please check your Email ID/Mobile Number or password.' });
     }
 
-    if (user.password !== password) {
+    // Secure password comparison using bcrypt with backward-compatible plain-text fallback
+    const isPasswordValid = await verifyPassword(password, user.password);
+    if (!isPasswordValid) {
       return res.status(401).json({ success: false, message: 'Invalid email or password. Please check your credentials.' });
+    }
+
+    // Transparently upgrade legacy plain-text password to bcrypt hash in the database
+    const isBcrypt = typeof user.password === 'string' && /^\$2[abxy]\$\d+\$/.test(user.password);
+    if (!isBcrypt) {
+      const upgradedHash = await bcrypt.hash(password, 10);
+      db.updateDoc('users', user.uid, { password: upgradedHash });
+      user.password = upgradedHash;
     }
 
     if (user.status === 'Suspended') {
@@ -282,7 +315,7 @@ export async function login(req, res) {
         fullName: user.fullName,
         candidateId: user.candidateId || null,
       },
-      JWT_SECRET,
+      getJwtSecret(),
       { expiresIn: '7d' }
     );
 
@@ -462,7 +495,7 @@ export async function googleLogin(req, res) {
 
     const token = jwt.sign(
       { uid: user.uid, email: user.email, role: user.role, candidateId: user.candidateId },
-      JWT_SECRET,
+      getJwtSecret(),
       { expiresIn: '7d' }
     );
 
@@ -522,14 +555,18 @@ export async function changePassword(req, res) {
       return res.status(404).json({ success: false, message: 'User not found.' });
     }
 
-    // Verify current password
-    if (user.password !== currentPassword) {
+    // Verify current password with bcrypt
+    const isCurrentPasswordValid = await verifyPassword(currentPassword, user.password);
+    if (!isCurrentPasswordValid) {
       return res.status(400).json({ success: false, message: 'Current password is incorrect. Please check and try again.' });
     }
 
+    // Securely hash new password with bcrypt
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
     // Update password
     db.updateDoc('users', uid, {
-      password: newPassword,
+      password: hashedNewPassword,
       updatedAt: new Date().toISOString(),
     });
 

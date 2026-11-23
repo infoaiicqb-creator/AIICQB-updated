@@ -87,7 +87,7 @@ export const SignUp: React.FC = () => {
         selectedCertificationId,
       });
 
-      if (res.success) {
+      if (res && res.success) {
         const redirect = searchParams.get('redirect');
         if (redirect) {
           navigate(redirect);
@@ -96,6 +96,8 @@ export const SignUp: React.FC = () => {
         } else {
           navigate('/portal/dashboard');
         }
+      } else {
+        setError(res?.message || 'Registration failed. Please check your details.');
       }
     } catch (err: any) {
       setError(err.message || 'Registration failed. Please check your details.');

@@ -21,12 +21,35 @@ interface AuthContextType {
   updateCandidateState: (data: Partial<CandidateProfile>) => void;
 }
 
+const withTimeout = <T,>(p: Promise<T>, ms: number, fallback: T): Promise<T> => {
+  return Promise.race([
+    p,
+    new Promise<T>((resolve) => setTimeout(() => resolve(fallback), ms)),
+  ]);
+};
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [candidate, setCandidate] = useState<CandidateProfile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(() => {
+    try {
+      const cached = localStorage.getItem('aicqb_user');
+      return cached ? JSON.parse(cached) : null;
+    } catch (_) {
+      return null;
+    }
+  });
+  const [candidate, setCandidate] = useState<CandidateProfile | null>(() => {
+    try {
+      const cached = localStorage.getItem('aicqb_candidate');
+      return cached ? JSON.parse(cached) : null;
+    } catch (_) {
+      return null;
+    }
+  });
+  const [loading, setLoading] = useState<boolean>(() => {
+    return !!localStorage.getItem('aicqb_token') && !localStorage.getItem('aicqb_user');
+  });
 
   const refreshUser = async () => {
     const token = getAuthToken();
@@ -38,8 +61,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     try {
-      const data = await api.getMe();
-      if (data.success && data.user) {
+      const data = await withTimeout(api.getMe(), 4000, null as any);
+      if (data && data.success && data.user) {
         setUser(data.user);
         setCandidate(data.candidate || null);
         localStorage.setItem('aicqb_user', JSON.stringify(data.user));
@@ -80,10 +103,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       let userData: User | null = null;
       let candData: CandidateProfile | null = null;
       try {
-        const uDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
-        if (uDoc.exists()) userData = uDoc.data() as User;
-        const cDoc = await getDoc(doc(db, 'candidates', userCredential.user.uid));
-        if (cDoc.exists()) candData = cDoc.data() as CandidateProfile;
+        const uDoc = await withTimeout(getDoc(doc(db, 'users', userCredential.user.uid)), 3000, null as any);
+        if (uDoc && uDoc.exists && uDoc.exists()) userData = uDoc.data() as User;
+        const cDoc = await withTimeout(getDoc(doc(db, 'candidates', userCredential.user.uid)), 3000, null as any);
+        if (cDoc && cDoc.exists && cDoc.exists()) candData = cDoc.data() as CandidateProfile;
       } catch (_) {}
 
       if (!userData) {

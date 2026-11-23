@@ -39,6 +39,7 @@ const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
   'https://aiicqb.org',
   'https://www.aiicqb.org',
+  'https://aiicqb-new.vercel.app',
   'http://localhost:5173',
   'http://localhost:5000',
 ];
@@ -62,6 +63,15 @@ app.use(
 // Body parsing
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Vercel Serverless Function URL normalizer middleware
+app.use((req, res, next) => {
+  const originalUrl = req.headers['x-vercel-matched-path'] || req.headers['x-matched-path'] || req.headers['x-forwarded-uri'];
+  if (originalUrl && originalUrl.startsWith('/api') && (!req.url || req.url === '/' || req.url === '/api' || req.url.startsWith('/api?'))) {
+    req.url = originalUrl;
+  }
+  next();
+});
 
 // Health Check
 app.get(['/api/health', '/health'], (req, res) => {

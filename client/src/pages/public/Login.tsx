@@ -67,7 +67,7 @@ export const Login: React.FC = () => {
       setError('');
       setForgotSuccess('');
       const res = await login({ email, password });
-      if (res.success) {
+      if (res && res.success) {
         if (res.user.role === 'Super Admin' || res.user.role !== 'Candidate') {
           navigate('/admin/dashboard');
         } else if (redirect) {
@@ -75,6 +75,8 @@ export const Login: React.FC = () => {
         } else {
           navigate('/portal/dashboard');
         }
+      } else {
+        setError(res?.message || 'Invalid email or password. Please check your credentials.');
       }
     } catch (err: any) {
       setError(err.message || 'Invalid email or password. Please check your credentials.');
@@ -97,7 +99,7 @@ export const Login: React.FC = () => {
         fullName: googleName.trim() || googleEmail.split('@')[0],
       });
       setShowGoogleModal(false);
-      if (res.success) {
+      if (res && res.success) {
         if (res.user.role === 'Super Admin' || res.user.role !== 'Candidate') {
           navigate('/admin/dashboard');
         } else if (redirect) {
@@ -105,9 +107,11 @@ export const Login: React.FC = () => {
         } else {
           navigate('/portal/dashboard');
         }
+      } else {
+        setError(res?.message || 'Google sign-in failed. Please try again.');
       }
     } catch (err: any) {
-      setError(err.message || 'Google authentication failed. Please try again.');
+      setError(err.message || 'Google sign-in failed. Please try again.');
     } finally {
       setGoogleLoading(false);
     }

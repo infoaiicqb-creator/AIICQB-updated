@@ -68,14 +68,28 @@ const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 // Route Guards
 const ProtectedCandidateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
-  if (loading) return null;
+  if (loading && !user) {
+    return (
+      <div className="min-h-screen bg-[#F7F9FC] flex flex-col items-center justify-center space-y-3">
+        <div className="w-10 h-10 border-4 border-[#0B2040] border-t-[#F47716] rounded-full animate-spin"></div>
+        <p className="text-xs font-semibold text-gray-500">Loading Candidate Portal...</p>
+      </div>
+    );
+  }
   if (!user) return <Navigate to="/login" replace />;
   return <>{children}</>;
 };
 
 const ProtectedAdminRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading, login } = useAuth();
-  if (loading) return null;
+  if (loading && !user) {
+    return (
+      <div className="min-h-screen bg-[#10264B] flex flex-col items-center justify-center space-y-3">
+        <div className="w-10 h-10 border-4 border-white/20 border-t-[#F47716] rounded-full animate-spin"></div>
+        <p className="text-xs font-semibold text-slate-300">Loading Administrator Portal...</p>
+      </div>
+    );
+  }
   if (!user) {
     return <Navigate to="/login?role=admin&redirect=/admin/dashboard" replace />;
   }

@@ -16,6 +16,7 @@ async function request(endpoint: string, options: RequestInit = {}) {
   const token = getAuthToken();
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
     ...(options.headers as Record<string, string>),
   };
 
@@ -27,6 +28,14 @@ async function request(endpoint: string, options: RequestInit = {}) {
     ...options,
     headers,
   });
+
+  const contentType = res.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) {
+    if (!res.ok) {
+      throw new Error(`Server request failed with status ${res.status}`);
+    }
+    throw new Error('API server returned an invalid response format. Please try again.');
+  }
 
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {

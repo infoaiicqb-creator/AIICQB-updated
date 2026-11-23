@@ -1,7 +1,4 @@
-const rawBase = (import.meta.env.VITE_API_URL as string | undefined)?.trim();
-const API_BASE = rawBase
-  ? (rawBase.endsWith('/api') ? rawBase : `${rawBase.replace(/\/$/, '')}/api`)
-  : '/api';
+const API_BASE = '/api';
 
 export function getAuthToken(): string | null {
   return localStorage.getItem('aicqb_token');

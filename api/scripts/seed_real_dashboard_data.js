@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import QRCode from 'qrcode';
 
-const DATA_DIR = path.resolve('server/src/data');
+const DATA_DIR = path.resolve(__dirname, '../data');
 
 // 1. Real Candidates with International Country Breakdown
 const candidates = [

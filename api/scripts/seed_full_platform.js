@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import QRCode from 'qrcode';
 
-const DATA_DIR = path.resolve('server/src/data');
+const DATA_DIR = path.resolve(__dirname, '../data');
 
 const certList = [
   { certNo: 'AICQB-ST-2026-000123', candId: 'AICQB-1004587', name: 'Rahul Deshmukh', email: 'rahul.deshmukh@gmail.com', country: 'India', certName: 'AICQB Certified Software Tester', certCode: 'AICQB-ST-CP', date: '10 Oct 2026', grade: 'Grade A (Merit)', status: 'Issued', score: 85 },

@@ -4,12 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node server/src/index.js",
+    "dev": "node api/app.js",
     "dev:frontend": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "start": "node server/src/index.js",
-    "seed": "node server/src/scripts/seed.js"
+    "start": "node api/app.js",
+    "seed": "node api/scripts/seed.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

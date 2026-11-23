@@ -18,47 +18,37 @@ A complete, production-ready, multi-industry professional certification platform
 
 ---
 
-## 2. Platform Architecture Overview (Single Integrated Structure)
+## 2. Platform Architecture Overview (Single Integrated Architecture)
 
 ```
 AICQB/
-├── src/                        # Single Integrated Frontend Source (React + TypeScript)
+├── api/                        # Serverless Backend & API Functions
+│   ├── auth/                   # Authentication endpoints
+│   ├── users/                  # User management endpoints
+│   ├── certificates/           # Certificate issue & verification endpoints
+│   ├── exams/                  # Examination engine endpoints
+│   ├── payments/               # Razorpay order creation & verification endpoints
+│   ├── admin/                  # Super Admin management endpoints
+│   ├── config/                 # DB abstraction, Razorpay SDK config, Firebase
+│   ├── controllers/            # Business logic controllers
+│   ├── middleware/             # RBAC, audit logging, JWT authentication
+│   ├── routes/                 # Express API REST endpoints
+│   ├── services/               # Certificate generator with QR code
+│   ├── data/                   # JSON persistence store & Firestore mirror
+│   ├── app.js                  # Unified Express application instance
+│   ├── index.js                # Vercel entry router
+│   └── [...path].js            # Catch-all API serverless handler
+│
+├── public/                     # Static assets, official seals, templates, and favicons
+├── src/                        # React + TypeScript Frontend Application
 │   ├── assets/                 # Brand logos and iconography
-│   ├── components/             # Reusable layouts, Navbar, Footer, Modals
-│   │   ├── Navbar.tsx          # Public Navigation
-│   │   ├── Footer.tsx          # Public Footer with legal disclaimers
-│   │   ├── CandidateLayout.tsx # Candidate Dashboard Layout
-│   │   ├── AdminLayout.tsx     # Super Admin 13-Module Layout
-│   │   ├── CertificateModal.tsx# Professional Certificate replica
-│   │   ├── RazorpayModal.tsx   # Razorpay Checkout & verification
-│   │   └── ExamEngineModal.tsx # Timed proctored online exam engine
-│   ├── context/
-│   │   └── AuthContext.tsx     # Centralized authentication & user state
-│   ├── pages/
-│   │   ├── public/             # 17 Public Website Pages
-│   │   ├── candidate/          # 10 Candidate Portal Pages
-│   │   └── admin/              # 13 Super Admin Modules
-│   ├── services/
-│   │   └── api.ts              # Unified REST API client with JWT
+│   ├── components/             # Reusable UI layouts, Navbar, Footer, Modals
+│   ├── context/                # Centralized authentication & user state
+│   ├── pages/                  # Public, Candidate, and Admin pages
+│   ├── services/               # Unified REST API client (api.ts)
 │   ├── types/                  # Comprehensive TypeScript interfaces
 │   ├── App.tsx                 # Core React Router setup & protected routes
 │   └── main.tsx                # Client application root
-│
-├── public/                     # Static assets, official seals, templates, and favicons
-├── api/                        # Vercel Serverless Function Adapters
-│   ├── index.js                # API entry router
-│   └── [...path].js            # Catch-all API serverless handler
-│
-├── server/                     # Backend Logic & Endpoints
-│   ├── src/
-│   │   ├── config/             # DB abstraction, Razorpay SDK config, Firebase
-│   │   ├── controllers/        # Auth, Certifications, Exams, Payments, etc.
-│   │   ├── middleware/         # RBAC, audit logging, JWT authentication
-│   │   ├── routes/             # Express API REST endpoints
-│   │   ├── services/           # Certificate generator with QR code
-│   │   ├── scripts/            # Database seed script
-│   │   └── index.js            # Express application instance & server
-│   └── package.json
 │
 ├── dist/                       # Production build output
 ├── package.json                # Single root dependency & script configuration

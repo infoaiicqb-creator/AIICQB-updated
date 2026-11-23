@@ -1,4 +1,4 @@
-import app from '../server/src/index.js';
+import app from './app.js';
 
 export default function handler(req, res) {
   // If Vercel rewrote the URL and stripped the path, restore from headers

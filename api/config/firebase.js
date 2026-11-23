@@ -2,8 +2,12 @@ import admin from 'firebase-admin';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let firebaseApp = null;
 let firestoreDb = null;
@@ -21,7 +25,10 @@ let connectionStatus = {
 
 export function initFirebase(customConfig = null) {
   try {
-    const serviceAccountPath = path.resolve('server/src/config/serviceAccountKey.json');
+    const serviceAccountPath = [
+      path.resolve(__dirname, 'serviceAccountKey.json'),
+      path.resolve(process.cwd(), 'serviceAccountKey.json'),
+    ].find(p => fs.existsSync(p)) || path.resolve(__dirname, 'serviceAccountKey.json');
     let credential = null;
     let projectId = customConfig?.projectId || process.env.FIREBASE_PROJECT_ID || 'aiicqb';
     let clientEmail = customConfig?.clientEmail || process.env.FIREBASE_CLIENT_EMAIL || '';

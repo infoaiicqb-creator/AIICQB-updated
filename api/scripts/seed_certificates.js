@@ -107,7 +107,7 @@ async function run() {
     });
   }
 
-  const filePath = path.resolve('server/src/data/certificates.json');
+  const filePath = path.resolve(__dirname, '../data/certificates.json');
   fs.writeFileSync(filePath, JSON.stringify(certificates, null, 2), 'utf-8');
   console.log('Successfully updated certificates.json with', certificates.length, 'certificates.');
 }

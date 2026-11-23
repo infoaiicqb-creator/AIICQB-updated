@@ -157,15 +157,9 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
-        {/* Legal & Regulatory Disclaimer */}
-        <div className="pt-6 pb-4 text-xs text-slate-400 space-y-2 text-center md:text-left">
-          <p className="leading-relaxed bg-slate-800/50 p-3 rounded border border-slate-700/50 text-center md:text-left">
-            <span className="font-semibold text-slate-200">Legal Notice:</span> AICQB (AI International Certification &
-            Qualification Board) is an independent private international professional assessment and credentialing body.
-            AICQB certifications represent professional evaluation of competence under AICQB published syllabi and do not
-            purport to be government diplomas, state statutory licences, or university academic degrees.
-          </p>
-          <div className="flex flex-col md:flex-row items-center justify-center md:justify-between pt-4 border-t border-slate-700/60 text-xs text-center md:text-left">
+        {/* Copyright and Links */}
+        <div className="pt-6 pb-4 text-xs text-slate-400 text-center md:text-left">
+          <div className="flex flex-col md:flex-row items-center justify-center md:justify-between text-xs text-center md:text-left">
             <p className="text-center md:text-left">© {new Date().getFullYear()} AICQB – AI International Certification & Qualification Board. All rights reserved.</p>
             <div className="flex flex-wrap items-center justify-center md:justify-end gap-2 sm:gap-4 mt-3 md:mt-0 text-slate-400">
               <span className="hover:text-white cursor-pointer">Terms of Service</span>

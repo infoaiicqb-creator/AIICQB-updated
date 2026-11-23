@@ -7196,5 +7196,44 @@
     "id": "auditLogs_1795373809523_zctzs",
     "createdAt": "2026-11-22T18:56:49.523Z",
     "updatedAt": "2026-11-22T18:56:49.523Z"
+  },
+  {
+    "userId": "system",
+    "userEmail": "system",
+    "userRole": "System",
+    "action": "LOGIN",
+    "module": "Authentication",
+    "details": "User logged in: gaurav@gmail.com (Candidate)",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-23T13:51:41.145Z",
+    "id": "auditLogs_1795441901163_h38zv",
+    "createdAt": "2026-11-23T13:51:41.165Z",
+    "updatedAt": "2026-11-23T13:51:41.165Z"
+  },
+  {
+    "userId": "system",
+    "userEmail": "system",
+    "userRole": "System",
+    "action": "LOGIN",
+    "module": "Authentication",
+    "details": "User logged in: gaurav@gmail.com (Candidate)",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-23T15:45:08.244Z",
+    "id": "auditLogs_1795448708244_dcha6",
+    "createdAt": "2026-11-23T15:45:08.244Z",
+    "updatedAt": "2026-11-23T15:45:08.244Z"
+  },
+  {
+    "userId": "system",
+    "userEmail": "system",
+    "userRole": "System",
+    "action": "LOGIN",
+    "module": "Authentication",
+    "details": "User logged in: gaurav@gmail.com (Candidate)",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-23T16:23:48.382Z",
+    "id": "auditLogs_1795451028382_4p7s5",
+    "createdAt": "2026-11-23T16:23:48.386Z",
+    "updatedAt": "2026-11-23T16:23:48.386Z"
   }
 ]

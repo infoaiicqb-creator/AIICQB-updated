@@ -27,7 +27,9 @@ if (!process.env.JWT_SECRET) {
   console.error('The server cannot start without a securely configured JWT_SECRET.');
   console.error('Please configure JWT_SECRET in server/.env or your deployment environment.');
   console.error('====================================================\n');
-  process.exit(1);
+  if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
+    process.exit(1);
+  }
 }
 
 const app = express();

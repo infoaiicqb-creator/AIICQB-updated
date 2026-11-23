@@ -10,6 +10,7 @@ client/dist/
 # Environment and sensitive keys
 .env
 .env*
+!.env.example
 *.env
 client/.env
 client/.env*

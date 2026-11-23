@@ -99,7 +99,12 @@ mountRoutes('/api');
 mountRoutes('');
 
 // Static Client Serving (Production or Built Client)
-const clientDist = path.resolve(__dirname, '../../client/dist');
+const clientDist = [
+  path.resolve(process.cwd(), 'dist'),
+  path.resolve(__dirname, '../../dist'),
+  path.resolve(__dirname, '../../client/dist'),
+].find(p => fs.existsSync(p)) || path.resolve(process.cwd(), 'dist');
+
 if (fs.existsSync(clientDist)) {
   app.use(express.static(clientDist));
   app.get('*', (req, res, next) => {

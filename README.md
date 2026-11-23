@@ -1,7 +1,7 @@
 # AICQB – AI International Certification & Qualification Board
 ### Complete Multi-Industry International Certification Platform
 
-![AICQB Brand Logo](client/public/aicqb-logo.png)
+![AICQB Brand Logo](public/aicqb-logo.png)
 
 A complete, production-ready, multi-industry professional certification platform developed for **AICQB – AI International Certification & Qualification Board**.
 
@@ -18,43 +18,56 @@ A complete, production-ready, multi-industry professional certification platform
 
 ---
 
-## 2. Platform Architecture Overview
+## 2. Platform Architecture Overview (Single Integrated Structure)
 
 ```
 AICQB/
-├── client/                     # React + TypeScript + Vite + Tailwind CSS
-│   ├── public/                 # Favicon, official logo assets
-│   ├── src/
-│   │   ├── assets/             # Brand logos and iconography
-│   │   ├── components/         # Reusable layouts, Navbar, Footer, Modals
-│   │   │   ├── Navbar.tsx      # Public Navigation
-│   │   │   ├── Footer.tsx      # Public Footer with legal disclaimers
-│   │   │   ├── CandidateLayout.tsx # Candidate Dashboard Layout (Image 2)
-│   │   │   ├── AdminLayout.tsx     # Super Admin 13-Module Layout (Image 5)
-│   │   │   ├── CertificateModal.tsx # Professional Certificate replica (Image 4)
-│   │   │   ├── RazorpayModal.tsx    # Razorpay Checkout & verification
-│   │   │   └── ExamEngineModal.tsx  # Timed proctored online exam engine
-│   │   ├── context/
-│   │   │   └── AuthContext.tsx # Centralized authentication & user state
-│   │   ├── pages/
-│   │   │   ├── public/         # 17 Public Website Pages (Image 3)
-│   │   │   ├── candidate/      # 10 Candidate Portal Pages (Image 2)
-│   │   │   └── admin/          # 13 Super Admin Modules (Image 5)
-│   │   ├── services/
-│   │   │   └── api.ts          # Unified REST API client with JWT
-│   │   └── types/              # Comprehensive TypeScript interfaces
-│   └── dist/                   # Production build ready
+├── src/                        # Single Integrated Frontend Source (React + TypeScript)
+│   ├── assets/                 # Brand logos and iconography
+│   ├── components/             # Reusable layouts, Navbar, Footer, Modals
+│   │   ├── Navbar.tsx          # Public Navigation
+│   │   ├── Footer.tsx          # Public Footer with legal disclaimers
+│   │   ├── CandidateLayout.tsx # Candidate Dashboard Layout
+│   │   ├── AdminLayout.tsx     # Super Admin 13-Module Layout
+│   │   ├── CertificateModal.tsx# Professional Certificate replica
+│   │   ├── RazorpayModal.tsx   # Razorpay Checkout & verification
+│   │   └── ExamEngineModal.tsx # Timed proctored online exam engine
+│   ├── context/
+│   │   └── AuthContext.tsx     # Centralized authentication & user state
+│   ├── pages/
+│   │   ├── public/             # 17 Public Website Pages
+│   │   ├── candidate/          # 10 Candidate Portal Pages
+│   │   └── admin/              # 13 Super Admin Modules
+│   ├── services/
+│   │   └── api.ts              # Unified REST API client with JWT
+│   ├── types/                  # Comprehensive TypeScript interfaces
+│   ├── App.tsx                 # Core React Router setup & protected routes
+│   └── main.tsx                # Client application root
 │
-├── server/                     # Node.js + Express REST API Backend
+├── public/                     # Static assets, official seals, templates, and favicons
+├── api/                        # Vercel Serverless Function Adapters
+│   ├── index.js                # API entry router
+│   └── [...path].js            # Catch-all API serverless handler
+│
+├── server/                     # Backend Logic & Endpoints
 │   ├── src/
-│   │   ├── config/             # DB abstraction, Razorpay SDK config
+│   │   ├── config/             # DB abstraction, Razorpay SDK config, Firebase
 │   │   ├── controllers/        # Auth, Certifications, Exams, Payments, etc.
 │   │   ├── middleware/         # RBAC, audit logging, JWT authentication
-│   │   ├── routes/             # REST endpoints
+│   │   ├── routes/             # Express API REST endpoints
 │   │   ├── services/           # Certificate generator with QR code
 │   │   ├── scripts/            # Database seed script
-│   │   └── index.js            # Express server (Serves API & Frontend)
-│   └── .env                    # Configuration & secrets template
+│   │   └── index.js            # Express application instance & server
+│   └── package.json
+│
+├── dist/                       # Production build output
+├── package.json                # Single root dependency & script configuration
+├── tsconfig.json               # TypeScript configuration
+├── vite.config.ts              # Vite bundler configuration & dev server proxy
+├── tailwind.config.js          # Tailwind CSS styling configuration
+├── postcss.config.js           # PostCSS configuration
+├── vercel.json                 # Vercel SPA rewrite & Serverless routing
+├── .env.example                # Environment variables template
 └── README.md
 ```
 

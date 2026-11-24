@@ -7430,5 +7430,44 @@
     "id": "auditLogs_1795506996078_u56od",
     "createdAt": "2026-11-24T07:56:36.078Z",
     "updatedAt": "2026-11-24T07:56:36.078Z"
+  },
+  {
+    "userId": "system",
+    "userEmail": "system",
+    "userRole": "System",
+    "action": "LOGIN",
+    "module": "Authentication",
+    "details": "User logged in: admin@aicqb.org (Super Admin)",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-24T11:14:38.382Z",
+    "id": "auditLogs_1795518878386_7rf6b",
+    "createdAt": "2026-11-24T11:14:38.386Z",
+    "updatedAt": "2026-11-24T11:14:38.386Z"
+  },
+  {
+    "userId": "system",
+    "userEmail": "system",
+    "userRole": "System",
+    "action": "REGISTRATION",
+    "module": "Candidate Management",
+    "details": "New candidate registered: Test Candidate (AICQB-1004706)",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-24T11:14:51.458Z",
+    "id": "auditLogs_1795518891458_okuvl",
+    "createdAt": "2026-11-24T11:14:51.458Z",
+    "updatedAt": "2026-11-24T11:14:51.458Z"
+  },
+  {
+    "userId": "system",
+    "userEmail": "system",
+    "userRole": "System",
+    "action": "LOGIN",
+    "module": "Authentication",
+    "details": "User logged in: testcandidate123@aicqb.org (Candidate)",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-24T11:15:06.010Z",
+    "id": "auditLogs_1795518906010_hs8jl",
+    "createdAt": "2026-11-24T11:15:06.010Z",
+    "updatedAt": "2026-11-24T11:15:06.010Z"
   }
 ]

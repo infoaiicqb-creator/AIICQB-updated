@@ -149,5 +149,29 @@
     "coursesInProgressCount": 0,
     "createdAt": "2026-11-24T07:22:31.453Z",
     "updatedAt": "2026-11-24T07:22:31.454Z"
+  },
+  {
+    "id": "usr_1795518891287_gzwe8c",
+    "uid": "usr_1795518891287_gzwe8c",
+    "candidateId": "AICQB-1004706",
+    "fullName": "Test Candidate",
+    "email": "testcandidate123@aicqb.org",
+    "phoneNumber": "",
+    "country": "India",
+    "organization": "",
+    "employeeId": "",
+    "address": "",
+    "gender": "Not specified",
+    "dateOfBirth": "",
+    "aboutMe": "",
+    "profileCompletion": 45,
+    "emailVerified": false,
+    "rewardPoints": 100,
+    "activeCertificationsCount": 0,
+    "upcomingExamsCount": 0,
+    "certificatesEarnedCount": 0,
+    "coursesInProgressCount": 0,
+    "createdAt": "2026-11-24T11:14:51.457Z",
+    "updatedAt": "2026-11-24T11:14:51.457Z"
   }
 ]

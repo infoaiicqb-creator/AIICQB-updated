@@ -7274,5 +7274,31 @@
     "id": "auditLogs_1795463016619_pkj27",
     "createdAt": "2026-11-23T19:43:36.622Z",
     "updatedAt": "2026-11-23T19:43:36.622Z"
+  },
+  {
+    "userId": "system",
+    "userEmail": "system",
+    "userRole": "System",
+    "action": "LOGIN",
+    "module": "Authentication",
+    "details": "User logged in: gaurav@gmail.com (Candidate)",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-24T06:35:13.893Z",
+    "id": "auditLogs_1795502113911_wtir1",
+    "createdAt": "2026-11-24T06:35:13.913Z",
+    "updatedAt": "2026-11-24T06:35:13.913Z"
+  },
+  {
+    "userId": "system",
+    "userEmail": "system",
+    "userRole": "System",
+    "action": "QR_SCAN_PAYMENT_SUCCESS",
+    "module": "Finance & Payments",
+    "details": "Test QR code scanned & verified for AICQB Certified Software Tester (9999 INR)",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-24T06:35:27.277Z",
+    "id": "auditLogs_1795502127277_tbvgb",
+    "createdAt": "2026-11-24T06:35:27.277Z",
+    "updatedAt": "2026-11-24T06:35:27.277Z"
   }
 ]

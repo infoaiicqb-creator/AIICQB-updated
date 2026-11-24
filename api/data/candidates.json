@@ -24,9 +24,9 @@
     "status": "Active",
     "createdAt": "2026-11-20T07:59:44.879Z",
     "certificatesEarnedCount": 1,
-    "upcomingExamsCount": 0,
-    "updatedAt": "2026-11-20T11:30:49.792Z",
-    "activeCertificationsCount": 1
+    "upcomingExamsCount": 1,
+    "updatedAt": "2026-11-24T06:35:27.275Z",
+    "activeCertificationsCount": 2
   },
   {
     "id": "usr_candidate_rahul_001",

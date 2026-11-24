@@ -26,6 +26,9 @@ import { BlogInsights } from './pages/public/BlogInsights';
 import { ContactUs } from './pages/public/ContactUs';
 import { Login } from './pages/public/Login';
 import { SignUp } from './pages/public/SignUp';
+import { TermsOfService } from './pages/public/TermsOfService';
+import { PrivacyPolicy } from './pages/public/PrivacyPolicy';
+import { ExaminationCodeOfEthics } from './pages/public/ExaminationCodeOfEthics';
 
 // Candidate Portal Pages (10 Pages)
 import { CandidateDashboard } from './pages/candidate/CandidateDashboard';
@@ -152,6 +155,10 @@ export const App: React.FC = () => {
       <Route path="/support" element={<PublicLayout><SupportHelpCenter /></PublicLayout>} />
       <Route path="/blog" element={<PublicLayout><BlogInsights /></PublicLayout>} />
       <Route path="/contact" element={<PublicLayout><ContactUs /></PublicLayout>} />
+      <Route path="/terms" element={<PublicLayout><TermsOfService /></PublicLayout>} />
+      <Route path="/privacy" element={<PublicLayout><PrivacyPolicy /></PublicLayout>} />
+      <Route path="/code-of-ethics" element={<PublicLayout><ExaminationCodeOfEthics /></PublicLayout>} />
+      <Route path="/ethics" element={<Navigate to="/code-of-ethics" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/register" element={<SignUp />} />

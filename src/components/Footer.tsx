@@ -166,11 +166,17 @@ export const Footer: React.FC = () => {
           <div className="flex flex-col md:flex-row items-center justify-center md:justify-between text-xs text-center md:text-left">
             <p className="text-center md:text-left">© {new Date().getFullYear()} AICQB – AI International Certification & Qualification Board. All rights reserved.</p>
             <div className="flex flex-wrap items-center justify-center md:justify-end gap-2 sm:gap-4 mt-3 md:mt-0 text-slate-400">
-              <span className="hover:text-white cursor-pointer">Terms of Service</span>
+              <Link to="/terms" onClick={scrollToTop} className="hover:text-white transition-colors">
+                Terms of Service
+              </Link>
               <span>•</span>
-              <span className="hover:text-white cursor-pointer">Privacy Policy</span>
+              <Link to="/privacy" onClick={scrollToTop} className="hover:text-white transition-colors">
+                Privacy Policy
+              </Link>
               <span>•</span>
-              <span className="hover:text-white cursor-pointer">Examination Code of Ethics</span>
+              <Link to="/code-of-ethics" onClick={scrollToTop} className="hover:text-white transition-colors">
+                Examination Code of Ethics
+              </Link>
             </div>
           </div>
         </div>

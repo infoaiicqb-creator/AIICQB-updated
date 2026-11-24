@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ShieldCheck } from 'lucide-react';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
+import { ScrollToTop } from './components/ScrollToTop';
 import { CandidateLayout } from './components/CandidateLayout';
 import { AdminLayout } from './components/AdminLayout';
 import { useAuth } from './context/AuthContext';
@@ -132,7 +133,9 @@ const ProtectedAdminRoute: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const App: React.FC = () => {
   return (
-    <Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
       {/* 17 Public Pages */}
       <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
       <Route path="/about" element={<PublicLayout><AboutUs /></PublicLayout>} />
@@ -209,6 +212,7 @@ export const App: React.FC = () => {
       {/* 404 Catch-all */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </>
   );
 };
 

@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, ShieldCheck, CheckCircle2, Globe2 } from 'lucide-react';
 
 export const Footer: React.FC = () => {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  };
+
   return (
     <footer className="bg-[#10264B] text-white pt-14 pb-8 border-t-4 border-[#F47716]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -45,32 +49,32 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-2 text-xs text-slate-300 w-full text-center md:text-left">
               <li>
-                <Link to="/certifications?domain=AI+%26+Machine+Learning" className="hover:text-[#F47716] transition-colors">
+                <Link to="/certifications?domain=AI+%26+Machine+Learning" onClick={scrollToTop} className="hover:text-[#F47716] transition-colors">
                   AI & Machine Learning
                 </Link>
               </li>
               <li>
-                <Link to="/certifications?domain=Software+Testing" className="hover:text-[#F47716] transition-colors">
+                <Link to="/certifications?domain=Software+Testing" onClick={scrollToTop} className="hover:text-[#F47716] transition-colors">
                   Software Testing & QA
                 </Link>
               </li>
               <li>
-                <Link to="/certifications?domain=Data+Science" className="hover:text-[#F47716] transition-colors">
+                <Link to="/certifications?domain=Data+Science" onClick={scrollToTop} className="hover:text-[#F47716] transition-colors">
                   Data Science & Analytics
                 </Link>
               </li>
               <li>
-                <Link to="/certifications?domain=Cybersecurity" className="hover:text-[#F47716] transition-colors">
+                <Link to="/certifications?domain=Cybersecurity" onClick={scrollToTop} className="hover:text-[#F47716] transition-colors">
                   Cybersecurity Defense
                 </Link>
               </li>
               <li>
-                <Link to="/certifications?domain=Cloud+Computing" className="hover:text-[#F47716] transition-colors">
+                <Link to="/certifications?domain=Cloud+Computing" onClick={scrollToTop} className="hover:text-[#F47716] transition-colors">
                   Cloud & DevOps
                 </Link>
               </li>
               <li>
-                <Link to="/certifications?domain=Business+Analysis" className="hover:text-[#F47716] transition-colors">
+                <Link to="/certifications?domain=Business+Analysis" onClick={scrollToTop} className="hover:text-[#F47716] transition-colors">
                   Business Analysis & PM
                 </Link>
               </li>
@@ -84,33 +88,33 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-2 text-xs text-slate-300 w-full text-center md:text-left">
               <li>
-                <Link to="/verify" className="text-[#F47716] font-semibold hover:underline flex items-center justify-center md:justify-start">
+                <Link to="/verify" onClick={scrollToTop} className="text-[#F47716] font-semibold hover:underline flex items-center justify-center md:justify-start">
                   <ShieldCheck className="w-3.5 h-3.5 mr-1" />
                   Verify Certificate
                 </Link>
               </li>
               <li>
-                <Link to="/exams" className="hover:text-[#F47716] transition-colors">
+                <Link to="/exams" onClick={scrollToTop} className="hover:text-[#F47716] transition-colors">
                   Online Examinations
                 </Link>
               </li>
               <li>
-                <Link to="/learning" className="hover:text-[#F47716] transition-colors">
+                <Link to="/learning" onClick={scrollToTop} className="hover:text-[#F47716] transition-colors">
                   Learning Hub (LMS)
                 </Link>
               </li>
               <li>
-                <Link to="/pricing" className="hover:text-[#F47716] transition-colors">
+                <Link to="/pricing" onClick={scrollToTop} className="hover:text-[#F47716] transition-colors">
                   Pricing & Plans
                 </Link>
               </li>
               <li>
-                <Link to="/resources" className="hover:text-[#F47716] transition-colors">
+                <Link to="/resources" onClick={scrollToTop} className="hover:text-[#F47716] transition-colors">
                   Study Guides & Syllabi
                 </Link>
               </li>
               <li>
-                <Link to="/events" className="hover:text-[#F47716] transition-colors">
+                <Link to="/events" onClick={scrollToTop} className="hover:text-[#F47716] transition-colors">
                   Events & Webinars
                 </Link>
               </li>
@@ -124,32 +128,32 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-2 text-xs text-slate-300 w-full text-center md:text-left">
               <li>
-                <Link to="/about" className="hover:text-[#F47716] transition-colors">
+                <Link to="/about" onClick={scrollToTop} className="hover:text-[#F47716] transition-colors">
                   About AICQB
                 </Link>
               </li>
               <li>
-                <Link to="/partners" className="hover:text-[#F47716] transition-colors">
+                <Link to="/partners" onClick={scrollToTop} className="hover:text-[#F47716] transition-colors">
                   Training Partners
                 </Link>
               </li>
               <li>
-                <Link to="/careers" className="hover:text-[#F47716] transition-colors">
+                <Link to="/careers" onClick={scrollToTop} className="hover:text-[#F47716] transition-colors">
                   Careers at AICQB
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="hover:text-[#F47716] transition-colors">
+                <Link to="/blog" onClick={scrollToTop} className="hover:text-[#F47716] transition-colors">
                   Blog & Industry Insights
                 </Link>
               </li>
               <li>
-                <Link to="/support" className="hover:text-[#F47716] transition-colors">
+                <Link to="/support" onClick={scrollToTop} className="hover:text-[#F47716] transition-colors">
                   Help Center & Support
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="hover:text-[#F47716] transition-colors">
+                <Link to="/contact" onClick={scrollToTop} className="hover:text-[#F47716] transition-colors">
                   Contact Advisory Team
                 </Link>
               </li>

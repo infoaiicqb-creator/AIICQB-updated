@@ -27,6 +27,17 @@ export const Certifications: React.FC = () => {
   ];
 
   useEffect(() => {
+    const domainFromUrl = searchParams.get('domain');
+    if (domainFromUrl !== null) {
+      setSelectedDomain(domainFromUrl || 'All');
+    }
+    const qFromUrl = searchParams.get('q');
+    if (qFromUrl !== null) {
+      setSearchTerm(qFromUrl);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
     loadCertifications();
   }, [selectedDomain, searchTerm]);
 

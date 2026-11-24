@@ -15,7 +15,12 @@ export async function getCertifications(req, res) {
     }
 
     if (domain && domain !== 'All') {
-      list = list.filter(c => c.domain.toLowerCase() === domain.toLowerCase() || c.domainSlug === domain.toLowerCase());
+      const d = domain.toLowerCase().trim();
+      list = list.filter(c => {
+        const cd = (c.domain || '').toLowerCase();
+        const cs = (c.domainSlug || '').toLowerCase();
+        return cd === d || cs === d || cd.includes(d) || d.includes(cd);
+      });
     }
 
     if (level && level !== 'All') {

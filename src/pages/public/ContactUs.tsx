@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { api } from '../../services/api';
-import { Mail, Phone, MapPin, Send, CheckCircle2, Loader2 } from 'lucide-react';
+import { Mail, Clock, MapPin, Send, CheckCircle2, Loader2 } from 'lucide-react';
 
 export const ContactUs: React.FC = () => {
   const [name, setName] = useState('');
@@ -66,12 +66,12 @@ export const ContactUs: React.FC = () => {
 
             <div className="flex items-start space-x-4">
               <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 text-[#F47716]">
-                <Phone className="w-5 h-5" />
+                <Clock className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-gray-400 font-semibold uppercase text-[10px]">Candidate Helpline</p>
-                <p className="text-sm font-bold text-white mt-0.5">+91 98765 43210</p>
-                <p className="text-slate-300">Monday – Friday: 09:00 AM – 06:00 PM IST</p>
+                <p className="text-gray-400 font-semibold uppercase text-[10px]">Support Desk Hours</p>
+                <p className="text-sm font-bold text-white mt-0.5">24/7 Digital Support</p>
+                <p className="text-slate-300">Ticket & Email Support: Mon – Fri (09:00 AM – 06:00 PM IST)</p>
               </div>
             </div>
 

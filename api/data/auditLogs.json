@@ -7300,5 +7300,18 @@
     "id": "auditLogs_1795502127277_tbvgb",
     "createdAt": "2026-11-24T06:35:27.277Z",
     "updatedAt": "2026-11-24T06:35:27.277Z"
+  },
+  {
+    "userId": "system",
+    "userEmail": "system",
+    "userRole": "System",
+    "action": "LOGIN",
+    "module": "Authentication",
+    "details": "User logged in: gaurav@gmail.com (Candidate)",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-24T07:01:54.296Z",
+    "id": "auditLogs_1795503714296_g78oz",
+    "createdAt": "2026-11-24T07:01:54.296Z",
+    "updatedAt": "2026-11-24T07:01:54.296Z"
   }
 ]

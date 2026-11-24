@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, ShieldCheck, CheckCircle2, Globe2 } from 'lucide-react';
+import { Mail, MapPin, ShieldCheck, CheckCircle2, Globe2 } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const scrollToTop = () => {
@@ -34,10 +34,6 @@ export const Footer: React.FC = () => {
                 <a href="mailto:contact@aiicqb.org" className="hover:text-white transition-colors">
                   contact@aiicqb.org
                 </a>
-              </div>
-              <div className="flex items-center justify-center md:justify-start space-x-2">
-                <Phone className="w-4 h-4 text-[#F47716] flex-shrink-0" />
-                <span>+91 98765 43210</span>
               </div>
             </div>
           </div>

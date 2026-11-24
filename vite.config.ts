@@ -6,7 +6,7 @@ export default defineConfig({
   build: {
     target: 'es2020',
     cssCodeSplit: true,
-    chunkSizeWarningLimit: 700,
+    chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -14,11 +14,17 @@ export default defineConfig({
             if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
               return 'vendor-react';
             }
+            if (id.includes('firestore')) {
+              return 'vendor-firestore';
+            }
             if (id.includes('firebase')) {
               return 'vendor-firebase';
             }
             if (id.includes('jspdf')) {
               return 'vendor-pdf';
+            }
+            if (id.includes('html2canvas')) {
+              return 'vendor-html2canvas';
             }
             if (id.includes('lucide-react')) {
               return 'vendor-icons';

@@ -38,6 +38,7 @@ export async function getCertifications(req, res) {
       );
     }
 
+    res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
     return res.json({ success: true, count: list.length, certifications: list });
   } catch (err) {
     return res.status(500).json({ success: false, message: 'Failed to fetch certifications' });

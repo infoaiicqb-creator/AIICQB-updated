@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, Loader2 } from 'lucide-react';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { ScrollToTop } from './components/ScrollToTop';
@@ -8,55 +8,63 @@ import { CandidateLayout } from './components/CandidateLayout';
 import { AdminLayout } from './components/AdminLayout';
 import { useAuth } from './context/AuthContext';
 
-// Public Pages (17 Pages)
-import { Home } from './pages/public/Home';
-import { AboutUs } from './pages/public/AboutUs';
-import { Certifications } from './pages/public/Certifications';
-import { CertificationDetails } from './pages/public/CertificationDetails';
-import { Exams } from './pages/public/Exams';
-import { Learning } from './pages/public/Learning';
-import { VerifyCertificate } from './pages/public/VerifyCertificate';
-import { PricingPlans } from './pages/public/PricingPlans';
-import { EventsWebinars } from './pages/public/EventsWebinars';
-import { Partners } from './pages/public/Partners';
-import { Resources } from './pages/public/Resources';
-import { Careers } from './pages/public/Careers';
-import { SupportHelpCenter } from './pages/public/SupportHelpCenter';
-import { BlogInsights } from './pages/public/BlogInsights';
-import { ContactUs } from './pages/public/ContactUs';
-import { Login } from './pages/public/Login';
-import { SignUp } from './pages/public/SignUp';
-import { TermsOfService } from './pages/public/TermsOfService';
-import { PrivacyPolicy } from './pages/public/PrivacyPolicy';
-import { ExaminationCodeOfEthics } from './pages/public/ExaminationCodeOfEthics';
+// Lightweight, sleek Suspense fallback for route transitions
+const PageLoadingFallback: React.FC = () => (
+  <div className="min-h-[50vh] flex flex-col items-center justify-center space-y-3 py-16">
+    <div className="w-8 h-8 border-3 border-slate-200 border-t-[#F47716] rounded-full animate-spin"></div>
+    <span className="text-xs font-semibold text-slate-500 tracking-wider">Loading...</span>
+  </div>
+);
 
-// Candidate Portal Pages (10 Pages)
-import { CandidateDashboard } from './pages/candidate/CandidateDashboard';
-import { CandidateProfile } from './pages/candidate/CandidateProfile';
-import { CandidateCertifications } from './pages/candidate/CandidateCertifications';
-import { CandidateExams } from './pages/candidate/CandidateExams';
-import { CandidateLearning } from './pages/candidate/CandidateLearning';
-import { CandidateCertificates } from './pages/candidate/CandidateCertificates';
-import { CandidateVerify } from './pages/candidate/CandidateVerify';
-import { CandidatePayments } from './pages/candidate/CandidatePayments';
-import { CandidateSupport } from './pages/candidate/CandidateSupport';
-import { CandidateSettings } from './pages/candidate/CandidateSettings';
+// Public Pages (Lazy Loaded for high-speed bundle splitting)
+const Home = lazy(() => import('./pages/public/Home').then(m => ({ default: m.Home })));
+const AboutUs = lazy(() => import('./pages/public/AboutUs').then(m => ({ default: m.AboutUs })));
+const Certifications = lazy(() => import('./pages/public/Certifications').then(m => ({ default: m.Certifications })));
+const CertificationDetails = lazy(() => import('./pages/public/CertificationDetails').then(m => ({ default: m.CertificationDetails })));
+const Exams = lazy(() => import('./pages/public/Exams').then(m => ({ default: m.Exams })));
+const Learning = lazy(() => import('./pages/public/Learning').then(m => ({ default: m.Learning })));
+const VerifyCertificate = lazy(() => import('./pages/public/VerifyCertificate').then(m => ({ default: m.VerifyCertificate })));
+const PricingPlans = lazy(() => import('./pages/public/PricingPlans').then(m => ({ default: m.PricingPlans })));
+const EventsWebinars = lazy(() => import('./pages/public/EventsWebinars').then(m => ({ default: m.EventsWebinars })));
+const Partners = lazy(() => import('./pages/public/Partners').then(m => ({ default: m.Partners })));
+const Resources = lazy(() => import('./pages/public/Resources').then(m => ({ default: m.Resources })));
+const Careers = lazy(() => import('./pages/public/Careers').then(m => ({ default: m.Careers })));
+const SupportHelpCenter = lazy(() => import('./pages/public/SupportHelpCenter').then(m => ({ default: m.SupportHelpCenter })));
+const BlogInsights = lazy(() => import('./pages/public/BlogInsights').then(m => ({ default: m.BlogInsights })));
+const ContactUs = lazy(() => import('./pages/public/ContactUs').then(m => ({ default: m.ContactUs })));
+const Login = lazy(() => import('./pages/public/Login').then(m => ({ default: m.Login })));
+const SignUp = lazy(() => import('./pages/public/SignUp').then(m => ({ default: m.SignUp })));
+const TermsOfService = lazy(() => import('./pages/public/TermsOfService').then(m => ({ default: m.TermsOfService })));
+const PrivacyPolicy = lazy(() => import('./pages/public/PrivacyPolicy').then(m => ({ default: m.PrivacyPolicy })));
+const ExaminationCodeOfEthics = lazy(() => import('./pages/public/ExaminationCodeOfEthics').then(m => ({ default: m.ExaminationCodeOfEthics })));
 
-// Admin Portal Pages (13 Modules)
-import { AdminDashboard } from './pages/admin/AdminDashboard';
-import { AdminCertifications } from './pages/admin/AdminCertifications';
-import { AdminExaminations } from './pages/admin/AdminExaminations';
-import { AdminCandidates } from './pages/admin/AdminCandidates';
-import { AdminPartners } from './pages/admin/AdminPartners';
-import { AdminMemberships } from './pages/admin/AdminMemberships';
-import { AdminCertificates } from './pages/admin/AdminCertificates';
-import { AdminVerification } from './pages/admin/AdminVerification';
-import { AdminLMS } from './pages/admin/AdminLMS';
-import { AdminAnnouncements } from './pages/admin/AdminAnnouncements';
-import { AdminReports } from './pages/admin/AdminReports';
-import { AdminFinance } from './pages/admin/AdminFinance';
-import { AdminFirebase } from './pages/admin/AdminFirebase';
-import { AdminSettings } from './pages/admin/AdminSettings';
+// Candidate Portal Pages (Lazy Loaded)
+const CandidateDashboard = lazy(() => import('./pages/candidate/CandidateDashboard').then(m => ({ default: m.CandidateDashboard })));
+const CandidateProfile = lazy(() => import('./pages/candidate/CandidateProfile').then(m => ({ default: m.CandidateProfile })));
+const CandidateCertifications = lazy(() => import('./pages/candidate/CandidateCertifications').then(m => ({ default: m.CandidateCertifications })));
+const CandidateExams = lazy(() => import('./pages/candidate/CandidateExams').then(m => ({ default: m.CandidateExams })));
+const CandidateLearning = lazy(() => import('./pages/candidate/CandidateLearning').then(m => ({ default: m.CandidateLearning })));
+const CandidateCertificates = lazy(() => import('./pages/candidate/CandidateCertificates').then(m => ({ default: m.CandidateCertificates })));
+const CandidateVerify = lazy(() => import('./pages/candidate/CandidateVerify').then(m => ({ default: m.CandidateVerify })));
+const CandidatePayments = lazy(() => import('./pages/candidate/CandidatePayments').then(m => ({ default: m.CandidatePayments })));
+const CandidateSupport = lazy(() => import('./pages/candidate/CandidateSupport').then(m => ({ default: m.CandidateSupport })));
+const CandidateSettings = lazy(() => import('./pages/candidate/CandidateSettings').then(m => ({ default: m.CandidateSettings })));
+
+// Admin Portal Pages (Lazy Loaded)
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
+const AdminCertifications = lazy(() => import('./pages/admin/AdminCertifications').then(m => ({ default: m.AdminCertifications })));
+const AdminExaminations = lazy(() => import('./pages/admin/AdminExaminations').then(m => ({ default: m.AdminExaminations })));
+const AdminCandidates = lazy(() => import('./pages/admin/AdminCandidates').then(m => ({ default: m.AdminCandidates })));
+const AdminPartners = lazy(() => import('./pages/admin/AdminPartners').then(m => ({ default: m.AdminPartners })));
+const AdminMemberships = lazy(() => import('./pages/admin/AdminMemberships').then(m => ({ default: m.AdminMemberships })));
+const AdminCertificates = lazy(() => import('./pages/admin/AdminCertificates').then(m => ({ default: m.AdminCertificates })));
+const AdminVerification = lazy(() => import('./pages/admin/AdminVerification').then(m => ({ default: m.AdminVerification })));
+const AdminLMS = lazy(() => import('./pages/admin/AdminLMS').then(m => ({ default: m.AdminLMS })));
+const AdminAnnouncements = lazy(() => import('./pages/admin/AdminAnnouncements').then(m => ({ default: m.AdminAnnouncements })));
+const AdminReports = lazy(() => import('./pages/admin/AdminReports').then(m => ({ default: m.AdminReports })));
+const AdminFinance = lazy(() => import('./pages/admin/AdminFinance').then(m => ({ default: m.AdminFinance })));
+const AdminFirebase = lazy(() => import('./pages/admin/AdminFirebase').then(m => ({ default: m.AdminFirebase })));
+const AdminSettings = lazy(() => import('./pages/admin/AdminSettings').then(m => ({ default: m.AdminSettings })));
 
 // Public Layout Wrapper
 const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -138,7 +146,8 @@ export const App: React.FC = () => {
   return (
     <>
       <ScrollToTop />
-      <Routes>
+      <Suspense fallback={<PageLoadingFallback />}>
+        <Routes>
       {/* 17 Public Pages */}
       <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
       <Route path="/about" element={<PublicLayout><AboutUs /></PublicLayout>} />
@@ -219,6 +228,7 @@ export const App: React.FC = () => {
       {/* 404 Catch-all */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </Suspense>
     </>
   );
 };

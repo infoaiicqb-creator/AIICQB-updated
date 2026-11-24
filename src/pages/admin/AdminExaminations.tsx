@@ -77,13 +77,41 @@ const SAMPLE_JSON_TEMPLATE = `[
 
 export const AdminExaminations: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'schedules' | 'questions' | 'monitoring' | 'results'>('schedules');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // Real Database Collections
-  const [exams, setExams] = useState<any[]>([]);
-  const [questions, setQuestions] = useState<any[]>([]);
-  const [monitoringSessions, setMonitoringSessions] = useState<any[]>([]);
-  const [resultsList, setResultsList] = useState<any[]>([]);
+  const [exams, setExams] = useState<any[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_admin_exams');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [questions, setQuestions] = useState<any[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_admin_questions');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [monitoringSessions, setMonitoringSessions] = useState<any[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_admin_monitoring');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [resultsList, setResultsList] = useState<any[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_admin_results');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
 
   // Search & Filter States
   const [examSearch, setExamSearch] = useState('');
@@ -156,7 +184,7 @@ export const AdminExaminations: React.FC = () => {
 
   const loadAllData = async () => {
     try {
-      setLoading(true);
+      if (exams.length === 0 && questions.length === 0) setLoading(true);
       const [examsRes, questionsRes, monitoringRes, resultsRes] = await Promise.all([
         api.getExams().catch(() => ({ success: false, exams: [] })),
         api.getAdminQuestions().catch(() => ({ success: false, questions: [] })),
@@ -166,18 +194,22 @@ export const AdminExaminations: React.FC = () => {
 
       if (examsRes.success && Array.isArray(examsRes.exams)) {
         setExams(examsRes.exams);
+        try { localStorage.setItem('aicqb_admin_exams', JSON.stringify(examsRes.exams)); } catch (_) {}
       }
 
       if (questionsRes.success && Array.isArray(questionsRes.questions)) {
         setQuestions(questionsRes.questions);
+        try { localStorage.setItem('aicqb_admin_questions', JSON.stringify(questionsRes.questions)); } catch (_) {}
       }
 
       if (monitoringRes.success && Array.isArray(monitoringRes.attempts)) {
         setMonitoringSessions(monitoringRes.attempts);
+        try { localStorage.setItem('aicqb_admin_monitoring', JSON.stringify(monitoringRes.attempts)); } catch (_) {}
       }
 
       if (resultsRes.success && Array.isArray(resultsRes.results)) {
         setResultsList(resultsRes.results);
+        try { localStorage.setItem('aicqb_admin_results', JSON.stringify(resultsRes.results)); } catch (_) {}
       }
     } catch (err: any) {
       console.error('Failed to load examinations data:', err);

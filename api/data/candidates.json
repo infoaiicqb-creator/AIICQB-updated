@@ -125,5 +125,29 @@
     "certificatesEarnedCount": 1,
     "upcomingExamsCount": 1,
     "activeCertificationsCount": 1
+  },
+  {
+    "id": "usr_1795504951052_ca2dt6",
+    "uid": "usr_1795504951052_ca2dt6",
+    "candidateId": "AICQB-1004705",
+    "fullName": "bhushan",
+    "email": "bhushan@gmail.com",
+    "phoneNumber": "",
+    "country": "India",
+    "organization": "",
+    "employeeId": "",
+    "address": "",
+    "gender": "Not specified",
+    "dateOfBirth": "",
+    "aboutMe": "",
+    "profileCompletion": 45,
+    "emailVerified": false,
+    "rewardPoints": 100,
+    "activeCertificationsCount": 0,
+    "upcomingExamsCount": 0,
+    "certificatesEarnedCount": 0,
+    "coursesInProgressCount": 0,
+    "createdAt": "2026-11-24T07:22:31.453Z",
+    "updatedAt": "2026-11-24T07:22:31.454Z"
   }
 ]

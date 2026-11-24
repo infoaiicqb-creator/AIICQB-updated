@@ -30,9 +30,23 @@ import {
 } from 'lucide-react';
 
 export const AdminFirebase: React.FC = () => {
-  const [status, setStatus] = useState<any>(null);
-  const [collections, setCollections] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState<any>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_admin_fb_status');
+      return c ? JSON.parse(c) : null;
+    } catch (_) {
+      return null;
+    }
+  });
+  const [collections, setCollections] = useState<any[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_admin_fb_cols');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [loading, setLoading] = useState(false);
   const [testing, setTesting] = useState(false);
   const [syncingAll, setSyncingAll] = useState(false);
   const [syncingSingle, setSyncingSingle] = useState<string | null>(null);
@@ -63,7 +77,7 @@ export const AdminFirebase: React.FC = () => {
   }, []);
 
   const loadAll = async () => {
-    setLoading(true);
+    if (!status && collections.length === 0) setLoading(true);
     try {
       const [statusRes, colRes] = await Promise.all([
         api.getFirebaseStatus(),
@@ -72,6 +86,7 @@ export const AdminFirebase: React.FC = () => {
 
       if (statusRes?.success) {
         setStatus(statusRes.status);
+        try { localStorage.setItem('aicqb_admin_fb_status', JSON.stringify(statusRes.status)); } catch (_) { }
         setManualForm((prev) => ({
           ...prev,
           projectId: statusRes.status.projectId || prev.projectId,
@@ -81,6 +96,7 @@ export const AdminFirebase: React.FC = () => {
 
       if (colRes?.success && colRes.collections) {
         setCollections(colRes.collections);
+        try { localStorage.setItem('aicqb_admin_fb_cols', JSON.stringify(colRes.collections)); } catch (_) { }
       }
     } catch (err) {
       console.error('Failed to load Firebase status:', err);
@@ -378,11 +394,10 @@ export const AdminFirebase: React.FC = () => {
       {/* Diagnostic & Result Notifications */}
       {testResult && (
         <div
-          className={`p-4 rounded-2xl border text-xs sm:text-sm flex items-start space-x-3.5 animate-fadeIn ${
-            testResult.connected
-              ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
-              : 'bg-amber-50 border-amber-200 text-amber-950'
-          }`}
+          className={`p-4 rounded-2xl border text-xs sm:text-sm flex items-start space-x-3.5 animate-fadeIn ${testResult.connected
+            ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
+            : 'bg-amber-50 border-amber-200 text-amber-950'
+            }`}
         >
           {testResult.connected ? (
             <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
@@ -510,33 +525,30 @@ export const AdminFirebase: React.FC = () => {
             <button
               type="button"
               onClick={() => setActiveConfigTab('web')}
-              className={`px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${
-                activeConfigTab === 'web'
-                  ? 'bg-white text-[#10264B] shadow-xs'
-                  : 'text-slate-500 hover:text-slate-800'
-              }`}
+              className={`px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${activeConfigTab === 'web'
+                ? 'bg-white text-[#10264B] shadow-xs'
+                : 'text-slate-500 hover:text-slate-800'
+                }`}
             >
               Web SDK Config (aiicqb)
             </button>
             <button
               type="button"
               onClick={() => setActiveConfigTab('json')}
-              className={`px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${
-                activeConfigTab === 'json'
-                  ? 'bg-white text-[#10264B] shadow-xs'
-                  : 'text-slate-500 hover:text-slate-800'
-              }`}
+              className={`px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${activeConfigTab === 'json'
+                ? 'bg-white text-[#10264B] shadow-xs'
+                : 'text-slate-500 hover:text-slate-800'
+                }`}
             >
               Paste serviceAccountKey.json
             </button>
             <button
               type="button"
               onClick={() => setActiveConfigTab('manual')}
-              className={`px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${
-                activeConfigTab === 'manual'
-                  ? 'bg-white text-[#10264B] shadow-xs'
-                  : 'text-slate-500 hover:text-slate-800'
-              }`}
+              className={`px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${activeConfigTab === 'manual'
+                ? 'bg-white text-[#10264B] shadow-xs'
+                : 'text-slate-500 hover:text-slate-800'
+                }`}
             >
               Manual Key Fields
             </button>

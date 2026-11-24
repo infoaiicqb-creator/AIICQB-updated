@@ -23,13 +23,20 @@ import {
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
-  const [stats, setStats] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<any>(() => {
+    try {
+      const s = localStorage.getItem('aicqb_admin_stats');
+      return s ? JSON.parse(s) : null;
+    } catch (_) {
+      return null;
+    }
+  });
+  const [loading, setLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
 
   useEffect(() => {
-    loadDashboard();
+    loadDashboard(true);
     // Live dynamic polling every 15 seconds to ensure 100% synchronized state
     const interval = setInterval(() => {
       loadDashboard(true);
@@ -37,21 +44,22 @@ export const AdminDashboard: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const loadDashboard = async (silent = false) => {
+  const loadDashboard = async (silent = true) => {
     try {
-      if (!silent) setLoading(true);
+      if (!silent && !stats) setLoading(true);
       else setIsRefreshing(true);
 
       const res = await api.getAdminDashboard();
       if (res && res.success && res.stats) {
         setStats(res.stats);
         setLastRefreshed(new Date());
+        try { localStorage.setItem('aicqb_admin_stats', JSON.stringify(res.stats)); } catch (_) {}
       }
     } catch (err) {
       console.error('Failed to load admin stats:', err);
     } finally {
-      if (!silent) setLoading(false);
-      else setIsRefreshing(false);
+      setLoading(false);
+      setIsRefreshing(false);
     }
   };
 

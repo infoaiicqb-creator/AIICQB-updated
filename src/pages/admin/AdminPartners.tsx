@@ -38,8 +38,15 @@ interface TrainingPartner {
 }
 
 export const AdminPartners: React.FC = () => {
-  const [partners, setPartners] = useState<TrainingPartner[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [partners, setPartners] = useState<TrainingPartner[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_admin_partners');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
   // Filters
@@ -76,10 +83,11 @@ export const AdminPartners: React.FC = () => {
 
   const fetchPartners = async () => {
     try {
-      setLoading(true);
+      if (partners.length === 0) setLoading(true);
       const res = await api.getAdminPartners();
       if (res.success && Array.isArray(res.partners)) {
         setPartners(res.partners);
+        try { localStorage.setItem('aicqb_admin_partners', JSON.stringify(res.partners)); } catch (_) { }
       }
     } catch (err) {
       console.error('Failed to load training partners:', err);
@@ -227,11 +235,10 @@ export const AdminPartners: React.FC = () => {
       {/* Toast Notification */}
       {toast && (
         <div
-          className={`fixed bottom-6 right-6 z-[1000] px-5 py-3.5 rounded-2xl shadow-2xl border text-xs font-bold flex items-center space-x-2.5 animate-in slide-in-from-bottom duration-200 ${
-            toast.type === 'success'
-              ? 'bg-emerald-950 text-emerald-100 border-emerald-500/50 shadow-emerald-950/40'
-              : 'bg-red-950 text-red-100 border-red-500/50 shadow-red-950/40'
-          }`}
+          className={`fixed bottom-6 right-6 z-[1000] px-5 py-3.5 rounded-2xl shadow-2xl border text-xs font-bold flex items-center space-x-2.5 animate-in slide-in-from-bottom duration-200 ${toast.type === 'success'
+            ? 'bg-emerald-950 text-emerald-100 border-emerald-500/50 shadow-emerald-950/40'
+            : 'bg-red-950 text-red-100 border-red-500/50 shadow-red-950/40'
+            }`}
         >
           {toast.type === 'success' ? (
             <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
@@ -465,19 +472,17 @@ export const AdminPartners: React.FC = () => {
                     <td className="py-4 px-6">
                       <button
                         onClick={() => handleQuickToggleStatus(p)}
-                        className={`inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all cursor-pointer ${
-                          p.status === 'Active'
-                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
-                            : p.status === 'Pending'
+                        className={`inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all cursor-pointer ${p.status === 'Active'
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                          : p.status === 'Pending'
                             ? 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
                             : 'bg-slate-100 text-slate-600 border-slate-300 hover:bg-slate-200'
-                        }`}
+                          }`}
                         title="Click to toggle status"
                       >
                         <span
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            p.status === 'Active' ? 'bg-emerald-500' : 'bg-amber-500'
-                          }`}
+                          className={`w-1.5 h-1.5 rounded-full ${p.status === 'Active' ? 'bg-emerald-500' : 'bg-amber-500'
+                            }`}
                         />
                         <span>{p.status}</span>
                       </button>
@@ -760,9 +765,8 @@ export const AdminPartners: React.FC = () => {
                   </span>
                   <div className="mt-1 font-bold text-gray-800 flex items-center space-x-1.5">
                     <span
-                      className={`w-2 h-2 rounded-full ${
-                        viewingPartner.status === 'Active' ? 'bg-emerald-500' : 'bg-amber-500'
-                      }`}
+                      className={`w-2 h-2 rounded-full ${viewingPartner.status === 'Active' ? 'bg-emerald-500' : 'bg-amber-500'
+                        }`}
                     />
                     <span>{viewingPartner.status}</span>
                   </div>

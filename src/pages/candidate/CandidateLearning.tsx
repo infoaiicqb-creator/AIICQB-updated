@@ -378,15 +378,22 @@ export const CandidateLearning: React.FC = () => {
   const [showCertificateModal, setShowCertificateModal] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
 
-  const [courses, setCourses] = useState<CourseItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [courses, setCourses] = useState<CourseItem[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_my_courses');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [loading, setLoading] = useState(false);
 
   // Load candidate's real enrolled courses and certificates dynamically
   useEffect(() => {
     let isMounted = true;
     async function loadCourses() {
       try {
-        setLoading(true);
+        if (courses.length === 0) setLoading(true);
         const [schedRes, certRes] = await Promise.all([
           api.getMySchedules().catch(() => ({ schedules: [], upcoming: [], completed: [] })),
           api.getMyCertificates().catch(() => ({ certificates: [] })),
@@ -481,6 +488,7 @@ export const CandidateLearning: React.FC = () => {
         });
 
         setCourses(courseItems);
+        try { localStorage.setItem('aicqb_my_courses', JSON.stringify(courseItems)); } catch (_) {}
       } catch (err) {
         console.error('Failed to load candidate learning courses:', err);
       } finally {

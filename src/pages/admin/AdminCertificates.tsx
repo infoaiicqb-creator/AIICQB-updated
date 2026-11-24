@@ -71,8 +71,15 @@ const CERTIFICATION_OPTIONS: CertificationOption[] = [
 ];
 
 export const AdminCertificates: React.FC = () => {
-  const [certificates, setCertificates] = useState<Certificate[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [certificates, setCertificates] = useState<Certificate[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_admin_certificates');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'All Status' | 'Issued' | 'Revoked'>('All Status');
   const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
@@ -111,11 +118,12 @@ export const AdminCertificates: React.FC = () => {
 
   const loadCertificates = async () => {
     try {
-      setLoading(true);
+      if (certificates.length === 0) setLoading(true);
       const res = await api.getAdminCertificates();
       if (res.success && Array.isArray(res.certificates)) {
         setCertificates(res.certificates);
-      } else {
+        try { localStorage.setItem('aicqb_admin_certificates', JSON.stringify(res.certificates)); } catch (_) { }
+      } else if (certificates.length === 0) {
         setCertificates([]);
       }
     } catch (err: any) {
@@ -313,11 +321,10 @@ export const AdminCertificates: React.FC = () => {
       {/* Toast Notification */}
       {notification && (
         <div
-          className={`fixed top-4 right-4 sm:top-5 sm:right-5 z-50 px-4 py-3 rounded-xl shadow-xl flex items-center space-x-2 text-xs font-bold border transition-all max-w-[90vw] sm:max-w-md ${
-            notification.type === 'success'
-              ? 'bg-green-50 border-green-200 text-green-800'
-              : 'bg-red-50 border-red-200 text-red-800'
-          }`}
+          className={`fixed top-4 right-4 sm:top-5 sm:right-5 z-50 px-4 py-3 rounded-xl shadow-xl flex items-center space-x-2 text-xs font-bold border transition-all max-w-[90vw] sm:max-w-md ${notification.type === 'success'
+            ? 'bg-green-50 border-green-200 text-green-800'
+            : 'bg-red-50 border-red-200 text-red-800'
+            }`}
         >
           {notification.type === 'success' ? (
             <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
@@ -461,11 +468,10 @@ export const AdminCertificates: React.FC = () => {
                   )}
                 </div>
                 <span
-                  className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                    cert.status === 'Issued'
-                      ? 'bg-green-50 text-green-700 border border-green-200'
-                      : 'bg-red-50 text-red-700 border border-red-200'
-                  }`}
+                  className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${cert.status === 'Issued'
+                    ? 'bg-green-50 text-green-700 border border-green-200'
+                    : 'bg-red-50 text-red-700 border border-red-200'
+                    }`}
                 >
                   {cert.status}
                 </span>
@@ -639,11 +645,10 @@ export const AdminCertificates: React.FC = () => {
 
                     <td className="py-4 px-6">
                       <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                          cert.status === 'Issued'
-                            ? 'bg-green-50 text-green-700 border border-green-200'
-                            : 'bg-red-50 text-red-700 border border-red-200'
-                        }`}
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold ${cert.status === 'Issued'
+                          ? 'bg-green-50 text-green-700 border border-green-200'
+                          : 'bg-red-50 text-red-700 border border-red-200'
+                          }`}
                       >
                         {cert.status}
                       </span>

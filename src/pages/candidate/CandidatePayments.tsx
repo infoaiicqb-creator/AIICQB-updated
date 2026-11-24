@@ -6,8 +6,15 @@ import { CreditCard, Download, CheckCircle2, AlertCircle, Clock, FileText, Arrow
 
 export const CandidatePayments: React.FC = () => {
   const { user, candidate } = useAuth();
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [payments, setPayments] = useState<Payment[]>(() => {
+    try {
+      const p = localStorage.getItem('aicqb_my_payments');
+      return p ? JSON.parse(p) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'history' | 'invoices' | 'methods'>('history');
 
   const candidateId = candidate?.candidateId || user?.candidateId || 'AICQB-1004587';
@@ -20,10 +27,10 @@ export const CandidatePayments: React.FC = () => {
 
   const loadPayments = async () => {
     try {
-      setLoading(true);
       const res = await api.getCandidatePayments(candidateId);
       if (res.success && res.payments) {
         setPayments(res.payments);
+        try { localStorage.setItem('aicqb_my_payments', JSON.stringify(res.payments)); } catch (_) { }
       }
     } catch (err) {
       console.error('Failed to load payments:', err);
@@ -55,31 +62,28 @@ export const CandidatePayments: React.FC = () => {
       <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 pb-3">
         <button
           onClick={() => setActiveTab('history')}
-          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
-            activeTab === 'history'
-              ? 'bg-[#F47716] text-white shadow-sm'
-              : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-          }`}
+          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeTab === 'history'
+            ? 'bg-[#F47716] text-white shadow-sm'
+            : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+            }`}
         >
           Transaction History
         </button>
         <button
           onClick={() => setActiveTab('invoices')}
-          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
-            activeTab === 'invoices'
-              ? 'bg-[#F47716] text-white shadow-sm'
-              : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-          }`}
+          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeTab === 'invoices'
+            ? 'bg-[#F47716] text-white shadow-sm'
+            : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+            }`}
         >
           Invoices
         </button>
         <button
           onClick={() => setActiveTab('methods')}
-          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
-            activeTab === 'methods'
-              ? 'bg-[#F47716] text-white shadow-sm'
-              : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-          }`}
+          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeTab === 'methods'
+            ? 'bg-[#F47716] text-white shadow-sm'
+            : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+            }`}
         >
           Payment Methods
         </button>

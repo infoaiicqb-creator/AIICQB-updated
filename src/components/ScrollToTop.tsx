@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
  * Ensures the target section or top of the page is smoothly scrolled into view.
  */
 export const ScrollToTop: React.FC = () => {
-  const { pathname, search, hash } = useLocation();
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
     // If a hash exists (e.g. #target-section), scroll smoothly to that element
@@ -20,13 +20,13 @@ export const ScrollToTop: React.FC = () => {
       }
     }
 
-    // Otherwise, scroll window smoothly to top
+    // Scroll window smoothly to top only on pathname route transitions
     window.scrollTo({
       top: 0,
       left: 0,
       behavior: 'smooth',
     });
-  }, [pathname, search, hash]);
+  }, [pathname, hash]);
 
   return null;
 };

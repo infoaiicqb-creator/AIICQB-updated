@@ -4,8 +4,15 @@ import { CandidateProfile } from '../../types';
 import { Users, Plus, Search, Eye, Edit3, Trash2, Power, CheckCircle2, X, Loader2, Award, Calendar } from 'lucide-react';
 
 export const AdminCandidates: React.FC = () => {
-  const [candidates, setCandidates] = useState<CandidateProfile[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [candidates, setCandidates] = useState<CandidateProfile[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_admin_candidates');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [selectedDomain, setSelectedDomain] = useState('All Domains');
@@ -39,7 +46,7 @@ export const AdminCandidates: React.FC = () => {
 
   const loadCandidates = async () => {
     try {
-      setLoading(true);
+      if (candidates.length === 0) setLoading(true);
       const res = await api.getAdminCandidates({
         search: searchTerm,
         status: selectedStatus,
@@ -47,6 +54,7 @@ export const AdminCandidates: React.FC = () => {
       });
       if (res.success && res.candidates) {
         setCandidates(res.candidates);
+        try { localStorage.setItem('aicqb_admin_candidates', JSON.stringify(res.candidates)); } catch (_) {}
       }
     } catch (err) {
       console.error('Failed to load candidates:', err);

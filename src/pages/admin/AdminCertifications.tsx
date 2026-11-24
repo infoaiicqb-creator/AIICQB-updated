@@ -14,8 +14,15 @@ import {
 } from 'lucide-react';
 
 export const AdminCertifications: React.FC = () => {
-  const [certifications, setCertifications] = useState<Certification[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [certifications, setCertifications] = useState<Certification[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_admin_certifications');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDomain, setSelectedDomain] = useState('All');
   const [showAddModal, setShowAddModal] = useState(false);
@@ -38,13 +45,14 @@ export const AdminCertifications: React.FC = () => {
 
   const loadCertifications = async () => {
     try {
-      setLoading(true);
+      if (certifications.length === 0) setLoading(true);
       const res = await api.getCertifications({
         search: searchTerm,
         domain: selectedDomain,
       });
       if (res.success) {
         setCertifications(res.certifications);
+        try { localStorage.setItem('aicqb_admin_certifications', JSON.stringify(res.certifications)); } catch (_) {}
       }
     } catch (err) {
       console.error('Failed to load certifications:', err);

@@ -140,5 +140,22 @@
     "emailVerified": true,
     "createdAt": "2026-11-15T11:00:00.000Z",
     "updatedAt": "2026-11-22T18:47:30.491Z"
+  },
+  {
+    "uid": "usr_1795504951052_ca2dt6",
+    "id": "usr_1795504951052_ca2dt6",
+    "email": "bhushan@gmail.com",
+    "fullName": "bhushan",
+    "phoneNumber": "",
+    "country": "India",
+    "organization": "",
+    "employeeId": "",
+    "password": "$2b$10$XwKcc/c/cC1u94MKhIxeHuZKzaiZOAd.8GdUfjFnE3YZ4vhaHFBze",
+    "role": "Candidate",
+    "candidateId": "AICQB-1004705",
+    "status": "Active",
+    "emailVerified": false,
+    "createdAt": "2026-11-24T07:22:31.449Z",
+    "updatedAt": "2026-11-24T07:22:31.449Z"
   }
 ]

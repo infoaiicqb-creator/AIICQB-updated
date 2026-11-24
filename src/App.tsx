@@ -8,11 +8,10 @@ import { CandidateLayout } from './components/CandidateLayout';
 import { AdminLayout } from './components/AdminLayout';
 import { useAuth } from './context/AuthContext';
 
-// Lightweight, sleek Suspense fallback for route transitions
+// Sleek, zero-layout-shift Suspense fallback for route transitions
 const PageLoadingFallback: React.FC = () => (
-  <div className="min-h-[50vh] flex flex-col items-center justify-center space-y-3 py-16">
-    <div className="w-8 h-8 border-3 border-slate-200 border-t-[#F47716] rounded-full animate-spin"></div>
-    <span className="text-xs font-semibold text-slate-500 tracking-wider">Loading...</span>
+  <div className="fixed top-0 left-0 right-0 z-[9999] h-1 bg-transparent pointer-events-none overflow-hidden">
+    <div className="h-full bg-gradient-to-r from-transparent via-[#F47716] to-transparent animate-pulse w-full"></div>
   </div>
 );
 
@@ -68,10 +67,39 @@ const AdminSettings = lazy(() => import('./pages/admin/AdminSettings').then(m =>
 
 // Public Layout Wrapper
 const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Preload primary public pages on idle for instant silent navigation
+  React.useEffect(() => {
+    const prefetch = () => {
+      import('./pages/public/Home');
+      import('./pages/public/AboutUs');
+      import('./pages/public/Certifications');
+      import('./pages/public/Exams');
+      import('./pages/public/Learning');
+      import('./pages/public/VerifyCertificate');
+      import('./pages/public/PricingPlans');
+      import('./pages/public/EventsWebinars');
+      import('./pages/public/Partners');
+      import('./pages/public/Resources');
+      import('./pages/public/Careers');
+      import('./pages/public/SupportHelpCenter');
+      import('./pages/public/BlogInsights');
+      import('./pages/public/ContactUs');
+    };
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(prefetch);
+    } else {
+      setTimeout(prefetch, 250);
+    }
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-[#F7F9FC]">
       <Navbar />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1">
+        <Suspense fallback={<PageLoadingFallback />}>
+          {children}
+        </Suspense>
+      </main>
       <Footer />
     </div>
   );
@@ -80,30 +108,39 @@ const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 // Route Guards
 const ProtectedCandidateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
+  const location = useLocation();
+
   if (loading && !user) {
     return (
       <div className="min-h-screen bg-[#F7F9FC] flex flex-col items-center justify-center space-y-3">
-        <div className="w-10 h-10 border-4 border-[#0B2040] border-t-[#F47716] rounded-full animate-spin"></div>
-        <p className="text-xs font-semibold text-gray-500">Loading Candidate Portal...</p>
+        <div className="w-8 h-8 border-3 border-slate-300 border-t-[#F47716] rounded-full animate-spin"></div>
       </div>
     );
   }
-  if (!user) return <Navigate to="/login" replace />;
+
+  if (!user) {
+    const returnUrl = encodeURIComponent(location.pathname + location.search);
+    return <Navigate to={`/login?redirect=${returnUrl}`} replace />;
+  }
+
   return <>{children}</>;
 };
 
 const ProtectedAdminRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading, login } = useAuth();
+  const location = useLocation();
+
   if (loading && !user) {
     return (
       <div className="min-h-screen bg-[#10264B] flex flex-col items-center justify-center space-y-3">
-        <div className="w-10 h-10 border-4 border-white/20 border-t-[#F47716] rounded-full animate-spin"></div>
-        <p className="text-xs font-semibold text-slate-300">Loading Administrator Portal...</p>
+        <div className="w-8 h-8 border-3 border-slate-700 border-t-[#F47716] rounded-full animate-spin"></div>
       </div>
     );
   }
+
   if (!user) {
-    return <Navigate to="/login?role=admin&redirect=/admin/dashboard" replace />;
+    const returnUrl = encodeURIComponent(location.pathname + location.search);
+    return <Navigate to={`/login?role=admin&redirect=${returnUrl}`} replace />;
   }
   if (user.role === 'Candidate') {
     return (

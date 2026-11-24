@@ -41,8 +41,15 @@ interface Membership {
 }
 
 export const AdminMemberships: React.FC = () => {
-  const [memberships, setMemberships] = useState<Membership[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [memberships, setMemberships] = useState<Membership[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_admin_memberships');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -81,10 +88,11 @@ export const AdminMemberships: React.FC = () => {
 
   const fetchMemberships = async () => {
     try {
-      setLoading(true);
+      if (memberships.length === 0) setLoading(true);
       const res = await api.getAdminMemberships();
       if (res && res.success && Array.isArray(res.memberships)) {
         setMemberships(res.memberships);
+        try { localStorage.setItem('aicqb_admin_memberships', JSON.stringify(res.memberships)); } catch (_) { }
       } else {
         // Fallback default sample memberships matching user prompt
         setMemberships([
@@ -389,11 +397,10 @@ export const AdminMemberships: React.FC = () => {
       {/* Toast Notification */}
       {toast && (
         <div
-          className={`fixed bottom-6 right-6 z-[1000] px-5 py-3.5 rounded-2xl shadow-2xl border text-xs font-bold flex items-center space-x-2.5 animate-in slide-in-from-bottom duration-200 ${
-            toast.type === 'success'
-              ? 'bg-emerald-950 text-emerald-100 border-emerald-500/50 shadow-emerald-950/40'
-              : 'bg-red-950 text-red-100 border-red-500/50 shadow-red-950/40'
-          }`}
+          className={`fixed bottom-6 right-6 z-[1000] px-5 py-3.5 rounded-2xl shadow-2xl border text-xs font-bold flex items-center space-x-2.5 animate-in slide-in-from-bottom duration-200 ${toast.type === 'success'
+            ? 'bg-emerald-950 text-emerald-100 border-emerald-500/50 shadow-emerald-950/40'
+            : 'bg-red-950 text-red-100 border-red-500/50 shadow-red-950/40'
+            }`}
         >
           {toast.type === 'success' ? (
             <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
@@ -622,11 +629,10 @@ export const AdminMemberships: React.FC = () => {
                     {/* Type: Organization vs Individual */}
                     <td className="py-4 px-6">
                       <span
-                        className={`inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg font-bold text-xs ${
-                          m.type === 'Organization'
-                            ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                            : 'bg-purple-50 text-purple-700 border border-purple-200'
-                        }`}
+                        className={`inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg font-bold text-xs ${m.type === 'Organization'
+                          ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                          : 'bg-purple-50 text-purple-700 border border-purple-200'
+                          }`}
                       >
                         {m.type === 'Organization' ? (
                           <Building2 className="w-3.5 h-3.5 text-blue-600" />
@@ -656,17 +662,15 @@ export const AdminMemberships: React.FC = () => {
                     <td className="py-4 px-6">
                       <button
                         onClick={() => handleQuickToggleStatus(m)}
-                        className={`inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all cursor-pointer ${
-                          m.status === 'Active'
-                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
-                            : 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
-                        }`}
+                        className={`inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all cursor-pointer ${m.status === 'Active'
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                          : 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
+                          }`}
                         title="Click to toggle status (Active/Expired)"
                       >
                         <span
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            m.status === 'Active' ? 'bg-emerald-500' : 'bg-amber-500'
-                          }`}
+                          className={`w-1.5 h-1.5 rounded-full ${m.status === 'Active' ? 'bg-emerald-500' : 'bg-amber-500'
+                            }`}
                         />
                         <span>{m.status}</span>
                       </button>
@@ -956,9 +960,8 @@ export const AdminMemberships: React.FC = () => {
                   </span>
                   <div className="mt-1 font-bold text-gray-800 flex items-center space-x-1.5">
                     <span
-                      className={`w-2 h-2 rounded-full ${
-                        viewingMember.status === 'Active' ? 'bg-emerald-500' : 'bg-amber-500'
-                      }`}
+                      className={`w-2 h-2 rounded-full ${viewingMember.status === 'Active' ? 'bg-emerald-500' : 'bg-amber-500'
+                        }`}
                     />
                     <span>{viewingMember.status}</span>
                   </div>

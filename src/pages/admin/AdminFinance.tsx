@@ -27,8 +27,15 @@ import {
 } from 'lucide-react';
 
 export const AdminFinance: React.FC = () => {
-  const [financeData, setFinanceData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [financeData, setFinanceData] = useState<any>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_admin_finance');
+      return c ? JSON.parse(c) : null;
+    } catch (_) {
+      return null;
+    }
+  });
+  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [filterTab, setFilterTab] = useState<'all' | 'success' | 'failed' | 'pending' | 'inr' | 'usd'>('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -66,10 +73,11 @@ export const AdminFinance: React.FC = () => {
 
   const loadFinance = async () => {
     try {
-      setLoading(true);
+      if (!financeData) setLoading(true);
       const res = await api.getAdminPayments();
       if (res.success) {
         setFinanceData(res);
+        try { localStorage.setItem('aicqb_admin_finance', JSON.stringify(res)); } catch (_) {}
       }
     } catch (err) {
       console.error('Failed to load finance data:', err);

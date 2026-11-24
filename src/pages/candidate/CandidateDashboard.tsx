@@ -25,10 +25,24 @@ export const CandidateDashboard: React.FC = () => {
   const { user, candidate } = useAuth();
   const navigate = useNavigate();
 
-  const [activeCertificates, setActiveCertificates] = useState<Certificate[]>([]);
-  const [upcomingExams, setUpcomingExams] = useState<ExamSchedule[]>([]);
+  const [activeCertificates, setActiveCertificates] = useState<Certificate[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_my_certs');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [upcomingExams, setUpcomingExams] = useState<ExamSchedule[]>(() => {
+    try {
+      const s = localStorage.getItem('aicqb_my_schedules');
+      return s ? JSON.parse(s) : [];
+    } catch (_) {
+      return [];
+    }
+  });
   const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
@@ -36,7 +50,6 @@ export const CandidateDashboard: React.FC = () => {
 
   const loadDashboardData = async () => {
     try {
-      setLoading(true);
       const [certRes, examRes] = await Promise.all([
         api.getMyCertificates().catch(() => ({ success: true, certificates: [] })),
         api.getMySchedules().catch(() => ({ success: true, upcoming: [] })),
@@ -44,9 +57,11 @@ export const CandidateDashboard: React.FC = () => {
 
       if (certRes.success && certRes.certificates) {
         setActiveCertificates(certRes.certificates);
+        try { localStorage.setItem('aicqb_my_certs', JSON.stringify(certRes.certificates)); } catch (_) { }
       }
       if (examRes.success && examRes.upcoming) {
         setUpcomingExams(examRes.upcoming);
+        try { localStorage.setItem('aicqb_my_schedules', JSON.stringify(examRes.upcoming)); } catch (_) { }
       }
     } catch (err) {
       console.error('Failed to load candidate dashboard:', err);

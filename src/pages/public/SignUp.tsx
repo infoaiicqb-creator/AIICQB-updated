@@ -18,9 +18,19 @@ import {
 } from 'lucide-react';
 
 export const SignUp: React.FC = () => {
-  const { register } = useAuth();
+  const { user, register, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (user && !authLoading) {
+      navigate('/portal/dashboard', { replace: true });
+    }
+  }, [user, authLoading, navigate]);
+
+  if (user && !authLoading) {
+    return null;
+  }
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');

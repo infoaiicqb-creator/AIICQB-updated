@@ -8,9 +8,23 @@ import { Award, Download, Share2, Eye, CheckCircle2, ShieldCheck, Loader2, Chevr
 
 export const CandidateCertificates: React.FC = () => {
   const { user, candidate } = useAuth();
-  const [certificates, setCertificates] = useState<Certificate[]>([]);
-  const [enrolledExams, setEnrolledExams] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [certificates, setCertificates] = useState<Certificate[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_my_certs');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [enrolledExams, setEnrolledExams] = useState<any[]>(() => {
+    try {
+      const s = localStorage.getItem('aicqb_my_schedules');
+      return s ? JSON.parse(s) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [loading, setLoading] = useState(false);
   const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
   const [activeTab, setActiveTab] = useState<'earned' | 'progress'>('earned');
 
@@ -23,7 +37,6 @@ export const CandidateCertificates: React.FC = () => {
 
   const loadCertificates = async () => {
     try {
-      setLoading(true);
       const [resCert, resSched] = await Promise.all([
         api.getMyCertificates().catch(() => ({ success: false, certificates: [] })),
         api.getMySchedules().catch(() => ({ success: false, upcoming: [] })),
@@ -31,9 +44,11 @@ export const CandidateCertificates: React.FC = () => {
 
       if (resCert.success && resCert.certificates) {
         setCertificates(resCert.certificates);
+        try { localStorage.setItem('aicqb_my_certs', JSON.stringify(resCert.certificates)); } catch (_) {}
       }
       if (resSched.success && resSched.upcoming) {
         setEnrolledExams(resSched.upcoming);
+        try { localStorage.setItem('aicqb_my_schedules', JSON.stringify(resSched.upcoming)); } catch (_) {}
       }
     } catch (err) {
       console.error('Failed to load certificates:', err);

@@ -32,9 +32,23 @@ export const CandidateExams: React.FC = () => {
   const candidateId = user?.candidateId || candidate?.candidateId || (user?.id ? `AICQB-${user.id.slice(0, 6).toUpperCase()}` : '');
 
   const [activeTab, setActiveTab] = useState<'upcoming' | 'completed' | 'all'>('upcoming');
-  const [upcoming, setUpcoming] = useState<any[]>([]);
-  const [completed, setCompleted] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [upcoming, setUpcoming] = useState<any[]>(() => {
+    try {
+      const u = localStorage.getItem('aicqb_my_upcoming');
+      return u ? JSON.parse(u) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [completed, setCompleted] = useState<any[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_my_completed');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [loading, setLoading] = useState(false);
   const [activeExamSession, setActiveExamSession] = useState<string | null>(null);
   const [showGuidelinesModal, setShowGuidelinesModal] = useState(false);
   const [selectedExamForGuidelines, setSelectedExamForGuidelines] = useState<any>(null);
@@ -57,11 +71,14 @@ export const CandidateExams: React.FC = () => {
 
   const loadSchedules = async () => {
     try {
-      setLoading(true);
       const res = await api.getMySchedules();
       if (res.success) {
         setUpcoming(res.upcoming || []);
         setCompleted(res.completed || []);
+        try {
+          localStorage.setItem('aicqb_my_upcoming', JSON.stringify(res.upcoming || []));
+          localStorage.setItem('aicqb_my_completed', JSON.stringify(res.completed || []));
+        } catch (_) {}
       }
     } catch (err) {
       console.error('Failed to load schedules:', err);

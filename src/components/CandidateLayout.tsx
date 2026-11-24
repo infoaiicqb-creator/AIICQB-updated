@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -45,6 +45,27 @@ export const CandidateLayout: React.FC = () => {
   const displayName = user?.fullName || candidate?.fullName || 'Candidate';
   const candidateId = user?.candidateId || candidate?.candidateId || (user?.id ? `AICQB-${user.id.slice(0, 6).toUpperCase()}` : '');
 
+  // Preload all candidate portal modules in background for instant silent clicks
+  useEffect(() => {
+    const prefetch = () => {
+      import('../pages/candidate/CandidateDashboard');
+      import('../pages/candidate/CandidateProfile');
+      import('../pages/candidate/CandidateCertifications');
+      import('../pages/candidate/CandidateExams');
+      import('../pages/candidate/CandidateLearning');
+      import('../pages/candidate/CandidateCertificates');
+      import('../pages/candidate/CandidateVerify');
+      import('../pages/candidate/CandidatePayments');
+      import('../pages/candidate/CandidateSupport');
+      import('../pages/candidate/CandidateSettings');
+    };
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(prefetch);
+    } else {
+      setTimeout(prefetch, 200);
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#F7F9FC] flex flex-col md:flex-row">
       {/* Mobile Backdrop Overlay */}
@@ -85,9 +106,8 @@ export const CandidateLayout: React.FC = () => {
 
       {/* Candidate Left Sidebar: Slide-over drawer on mobile, sticky w-80 on desktop */}
       <aside
-        className={`fixed inset-y-0 left-0 w-80 max-w-[85vw] z-50 bg-[#10264B] text-white flex flex-col justify-between flex-shrink-0 select-none border-r border-slate-800 shadow-2xl transition-transform duration-300 ease-in-out ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:translate-x-0 md:static md:sticky md:top-0 md:h-screen md:w-80 md:shadow-xl`}
+        className={`fixed inset-y-0 left-0 w-80 max-w-[85vw] z-50 bg-[#10264B] text-white flex flex-col justify-between flex-shrink-0 select-none border-r border-slate-800 shadow-2xl transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          } md:translate-x-0 md:static md:sticky md:top-0 md:h-screen md:w-80 md:shadow-xl`}
       >
         {/* Top: AICQB Logo Header & Navigation */}
         <div className="flex flex-col flex-1 min-h-0 justify-start">
@@ -118,11 +138,10 @@ export const CandidateLayout: React.FC = () => {
                   key={item.path}
                   to={item.path}
                   onClick={() => setSidebarOpen(false)}
-                  className={`flex items-center space-x-3.5 px-4 py-2.5 rounded-xl text-sm sm:text-[15px] font-semibold transition-all ${
-                    active
-                      ? 'bg-[#F47716] text-white shadow-lg font-bold scale-[1.01]'
-                      : 'text-slate-300 hover:bg-[#1E3A6E] hover:text-white'
-                  }`}
+                  className={`flex items-center space-x-3.5 px-4 py-2.5 rounded-xl text-sm sm:text-[15px] font-semibold transition-all ${active
+                    ? 'bg-[#F47716] text-white shadow-lg font-bold scale-[1.01]'
+                    : 'text-slate-300 hover:bg-[#1E3A6E] hover:text-white'
+                    }`}
                 >
                   <Icon className={`w-5 h-5 flex-shrink-0 ${active ? 'text-white' : 'text-slate-400'}`} />
                   <span className="truncate tracking-wide">{item.label}</span>
@@ -179,7 +198,9 @@ export const CandidateLayout: React.FC = () => {
 
         {/* Page View Body */}
         <main className="flex-1 p-3.5 sm:p-6 lg:p-8">
-          <Outlet />
+          <Suspense fallback={<div className="h-0.5 w-full bg-gradient-to-r from-transparent via-[#F47716] to-transparent animate-pulse" />}>
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </div>

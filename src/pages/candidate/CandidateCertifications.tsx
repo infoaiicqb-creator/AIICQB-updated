@@ -21,15 +21,36 @@ import {
 export const CandidateCertifications: React.FC = () => {
   const navigate = useNavigate();
 
-  const [certifications, setCertifications] = useState<Certification[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [certifications, setCertifications] = useState<Certification[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_all_certifications');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDomain, setSelectedDomain] = useState('All');
   const [activeTab, setActiveTab] = useState<'all' | 'enrolled' | 'completed'>('all');
 
   // Candidate status (Enrolled & Completed)
-  const [enrolledCertIds, setEnrolledCertIds] = useState<string[]>([]);
-  const [completedCertIds, setCompletedCertIds] = useState<string[]>([]);
+  const [enrolledCertIds, setEnrolledCertIds] = useState<string[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_enrolled_cert_ids');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [completedCertIds, setCompletedCertIds] = useState<string[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_completed_cert_ids');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
   const [candidateCertificates, setCandidateCertificates] = useState<Certificate[]>([]);
 
   // Modals
@@ -43,7 +64,7 @@ export const CandidateCertifications: React.FC = () => {
 
   const loadData = async () => {
     try {
-      setLoading(true);
+      if (certifications.length === 0) setLoading(true);
       const [certRes, statusRes] = await Promise.all([
         api.getCertifications({
           search: searchTerm,
@@ -54,11 +75,16 @@ export const CandidateCertifications: React.FC = () => {
 
       if (certRes.success && Array.isArray(certRes.certifications)) {
         setCertifications(certRes.certifications);
+        try { localStorage.setItem('aicqb_all_certifications', JSON.stringify(certRes.certifications)); } catch (_) { }
       }
 
       if (statusRes.success) {
         setEnrolledCertIds(statusRes.enrolledCertIds || []);
         setCompletedCertIds(statusRes.completedCertIds || []);
+        try {
+          localStorage.setItem('aicqb_enrolled_cert_ids', JSON.stringify(statusRes.enrolledCertIds || []));
+          localStorage.setItem('aicqb_completed_cert_ids', JSON.stringify(statusRes.completedCertIds || []));
+        } catch (_) { }
         if (Array.isArray(statusRes.certificates)) {
           setCandidateCertificates(statusRes.certificates);
         }

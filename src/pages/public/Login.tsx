@@ -52,6 +52,11 @@ export const Login: React.FC = () => {
     }
   }, [user, authLoading, redirect, navigate]);
 
+  // Prevent flash of login screen if session is already active
+  if (user && !authLoading) {
+    return null;
+  }
+
   // Pre-load admin credentials if requested
   useEffect(() => {
     if (searchParams.get('role') === 'admin' || redirect?.startsWith('/admin')) {

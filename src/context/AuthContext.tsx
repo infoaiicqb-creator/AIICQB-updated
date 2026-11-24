@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { User, CandidateProfile } from '../types';
 import { api, setAuthToken, getAuthToken } from '../services/api';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
+  onAuthStateChanged,
 } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
@@ -48,20 +49,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   });
   const [loading, setLoading] = useState<boolean>(() => {
+    // Only true if token exists but no cached user profile in storage
     return !!localStorage.getItem('aicqb_token') && !localStorage.getItem('aicqb_user');
   });
 
-  const refreshUser = async () => {
+  const isRefreshingRef = useRef(false);
+
+  const refreshUser = async (silent = true) => {
+    if (isRefreshingRef.current) return;
+    isRefreshingRef.current = true;
+
     const token = getAuthToken();
     if (!token) {
       setUser(null);
       setCandidate(null);
       setLoading(false);
+      isRefreshingRef.current = false;
       return;
     }
 
+    if (!silent && !user) {
+      setLoading(true);
+    }
+
     try {
-      const data = await withTimeout(api.getMe(), 4000, null as any);
+      const data = await withTimeout(api.getMe(), 2500, null as any);
       if (data && data.success && data.user) {
         setUser(data.user);
         setCandidate(data.candidate || null);
@@ -70,28 +82,74 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setLoading(false);
         return;
       }
-    } catch (err) {
-      // Check cached user in localStorage
-      const cachedUser = localStorage.getItem('aicqb_user');
-      const cachedCand = localStorage.getItem('aicqb_candidate');
-      if (cachedUser) {
-        try {
-          setUser(JSON.parse(cachedUser));
-          if (cachedCand) setCandidate(JSON.parse(cachedCand));
-          setLoading(false);
-          return;
-        } catch (_) {}
+    } catch (err: any) {
+      // If server explicitly returned 401 Unauthorized, clear credentials
+      if (err?.message?.includes('401') || err?.message?.includes('Unauthorized') || err?.message?.includes('Session expired')) {
+        setAuthToken(null);
+        localStorage.removeItem('aicqb_user');
+        localStorage.removeItem('aicqb_candidate');
+        setUser(null);
+        setCandidate(null);
+      } else {
+        // Network timeout / offline: retain cached user to guarantee zero-flicker experience
+        const cachedUser = localStorage.getItem('aicqb_user');
+        const cachedCand = localStorage.getItem('aicqb_candidate');
+        if (cachedUser) {
+          try {
+            setUser(JSON.parse(cachedUser));
+            if (cachedCand) setCandidate(JSON.parse(cachedCand));
+          } catch (_) {}
+        }
       }
-      setAuthToken(null);
-      setUser(null);
-      setCandidate(null);
     } finally {
       setLoading(false);
+      isRefreshingRef.current = false;
     }
   };
 
   useEffect(() => {
-    refreshUser();
+    let isMounted = true;
+
+    // Fast session restoration via Firebase authStateReady if available
+    if (typeof (auth as any).authStateReady === 'function') {
+      (auth as any).authStateReady().then(() => {
+        if (!isMounted) return;
+        const currentFbUser = auth.currentUser;
+        if (currentFbUser) {
+          currentFbUser.getIdToken().then((tok) => {
+            if (tok && isMounted) setAuthToken(tok);
+          }).catch(() => {});
+        }
+      }).catch(() => {});
+    }
+
+    // Subscribe to Firebase auth persistence across browser refreshes
+    const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
+      if (!isMounted) return;
+      if (fbUser) {
+        try {
+          const tok = await fbUser.getIdToken();
+          if (tok) setAuthToken(tok);
+        } catch (_) {}
+        // Refresh silently in background
+        refreshUser(true);
+      } else {
+        const localToken = getAuthToken();
+        if (!localToken) {
+          setUser(null);
+          setCandidate(null);
+          setLoading(false);
+        }
+      }
+    });
+
+    // Run immediate silent validation in background
+    refreshUser(true);
+
+    return () => {
+      isMounted = false;
+      unsubscribe();
+    };
   }, []);
 
   const loginWithFirebase = async (credentials: any, originalErr?: any) => {

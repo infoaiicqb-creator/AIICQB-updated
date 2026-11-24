@@ -19,8 +19,15 @@ import {
 } from 'lucide-react';
 
 export const AdminReports: React.FC = () => {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<any>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_admin_reports');
+      return c ? JSON.parse(c) : null;
+    } catch (_) {
+      return null;
+    }
+  });
+  const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [hoveredBar, setHoveredBar] = useState<any | null>(null);
@@ -31,12 +38,13 @@ export const AdminReports: React.FC = () => {
 
   const loadReportsData = async (silent = false) => {
     try {
-      if (!silent) setLoading(true);
+      if (!silent && !data) setLoading(true);
       else setRefreshing(true);
 
       const res = await api.getReportsAnalytics();
       if (res && res.success && res.data) {
         setData(res.data);
+        try { localStorage.setItem('aicqb_admin_reports', JSON.stringify(res.data)); } catch (_) { }
         setLastUpdated(new Date());
       }
     } catch (err) {
@@ -234,11 +242,10 @@ export const AdminReports: React.FC = () => {
                       </span>
                       <div className="w-full bg-slate-100 h-40 rounded-t-lg flex items-end overflow-hidden p-0.5">
                         <div
-                          className={`w-full rounded-t-md transition-all duration-300 ${
-                            isHovered
-                              ? 'bg-gradient-to-t from-[#E35D00] to-[#F47716] shadow-md'
-                              : 'bg-gradient-to-t from-[#F47716] to-[#FA9142]'
-                          }`}
+                          className={`w-full rounded-t-md transition-all duration-300 ${isHovered
+                            ? 'bg-gradient-to-t from-[#E35D00] to-[#F47716] shadow-md'
+                            : 'bg-gradient-to-t from-[#F47716] to-[#FA9142]'
+                            }`}
                           style={{
                             height: `${Math.max(8, bar.barHeight || (bar.attempts > 0 ? 35 : 8))}%`,
                           }}

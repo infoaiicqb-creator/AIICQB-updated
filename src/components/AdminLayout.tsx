@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -50,6 +50,31 @@ export const AdminLayout: React.FC = () => {
     logout();
     navigate('/login');
   };
+
+  // Preload all admin portal modules in background for instant silent clicks
+  useEffect(() => {
+    const prefetch = () => {
+      import('../pages/admin/AdminDashboard');
+      import('../pages/admin/AdminCertifications');
+      import('../pages/admin/AdminExaminations');
+      import('../pages/admin/AdminCandidates');
+      import('../pages/admin/AdminPartners');
+      import('../pages/admin/AdminMemberships');
+      import('../pages/admin/AdminCertificates');
+      import('../pages/admin/AdminVerification');
+      import('../pages/admin/AdminLMS');
+      import('../pages/admin/AdminAnnouncements');
+      import('../pages/admin/AdminReports');
+      import('../pages/admin/AdminFinance');
+      import('../pages/admin/AdminFirebase');
+      import('../pages/admin/AdminSettings');
+    };
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(prefetch);
+    } else {
+      setTimeout(prefetch, 200);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#F7F9FC] flex flex-col md:flex-row">
@@ -183,7 +208,9 @@ export const AdminLayout: React.FC = () => {
 
         {/* Admin Page Content */}
         <main className="flex-1 p-3.5 sm:p-6 lg:p-8">
-          <Outlet />
+          <Suspense fallback={<div className="h-0.5 w-full bg-gradient-to-r from-transparent via-[#F47716] to-transparent animate-pulse" />}>
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </div>

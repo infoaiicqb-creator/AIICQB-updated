@@ -488,7 +488,7 @@ export const CandidateLearning: React.FC = () => {
         });
 
         setCourses(courseItems);
-        try { localStorage.setItem('aicqb_my_courses', JSON.stringify(courseItems)); } catch (_) {}
+        try { localStorage.setItem('aicqb_my_courses', JSON.stringify(courseItems)); } catch (_) { }
       } catch (err) {
         console.error('Failed to load candidate learning courses:', err);
       } finally {

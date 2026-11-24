@@ -194,22 +194,22 @@ export const AdminExaminations: React.FC = () => {
 
       if (examsRes.success && Array.isArray(examsRes.exams)) {
         setExams(examsRes.exams);
-        try { localStorage.setItem('aicqb_admin_exams', JSON.stringify(examsRes.exams)); } catch (_) {}
+        try { localStorage.setItem('aicqb_admin_exams', JSON.stringify(examsRes.exams)); } catch (_) { }
       }
 
       if (questionsRes.success && Array.isArray(questionsRes.questions)) {
         setQuestions(questionsRes.questions);
-        try { localStorage.setItem('aicqb_admin_questions', JSON.stringify(questionsRes.questions)); } catch (_) {}
+        try { localStorage.setItem('aicqb_admin_questions', JSON.stringify(questionsRes.questions)); } catch (_) { }
       }
 
       if (monitoringRes.success && Array.isArray(monitoringRes.attempts)) {
         setMonitoringSessions(monitoringRes.attempts);
-        try { localStorage.setItem('aicqb_admin_monitoring', JSON.stringify(monitoringRes.attempts)); } catch (_) {}
+        try { localStorage.setItem('aicqb_admin_monitoring', JSON.stringify(monitoringRes.attempts)); } catch (_) { }
       }
 
       if (resultsRes.success && Array.isArray(resultsRes.results)) {
         setResultsList(resultsRes.results);
-        try { localStorage.setItem('aicqb_admin_results', JSON.stringify(resultsRes.results)); } catch (_) {}
+        try { localStorage.setItem('aicqb_admin_results', JSON.stringify(resultsRes.results)); } catch (_) { }
       }
     } catch (err: any) {
       console.error('Failed to load examinations data:', err);
@@ -540,11 +540,10 @@ export const AdminExaminations: React.FC = () => {
       {/* Toast Notification */}
       {toast && (
         <div
-          className={`fixed top-4 right-4 sm:top-5 sm:right-5 z-50 px-4 py-3 rounded-xl shadow-xl flex items-center space-x-2 text-xs font-bold border transition-all max-w-[90vw] sm:max-w-md ${
-            toast.type === 'success'
-              ? 'bg-green-50 border-green-200 text-green-800'
-              : 'bg-red-50 border-red-200 text-red-800'
-          }`}
+          className={`fixed top-4 right-4 sm:top-5 sm:right-5 z-50 px-4 py-3 rounded-xl shadow-xl flex items-center space-x-2 text-xs font-bold border transition-all max-w-[90vw] sm:max-w-md ${toast.type === 'success'
+            ? 'bg-green-50 border-green-200 text-green-800'
+            : 'bg-red-50 border-red-200 text-red-800'
+            }`}
         >
           {toast.type === 'success' ? (
             <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
@@ -617,9 +616,8 @@ export const AdminExaminations: React.FC = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <div
           onClick={() => setActiveTab('schedules')}
-          className={`bg-white rounded-xl p-3.5 sm:p-4 border shadow-xs flex items-center space-x-3.5 cursor-pointer transition-all ${
-            activeTab === 'schedules' ? 'border-[#F47716] ring-1 ring-[#F47716]' : 'border-gray-200 hover:border-gray-300'
-          }`}
+          className={`bg-white rounded-xl p-3.5 sm:p-4 border shadow-xs flex items-center space-x-3.5 cursor-pointer transition-all ${activeTab === 'schedules' ? 'border-[#F47716] ring-1 ring-[#F47716]' : 'border-gray-200 hover:border-gray-300'
+            }`}
         >
           <div className="w-10 h-10 rounded-xl bg-orange-50 text-[#F47716] flex items-center justify-center flex-shrink-0">
             <CalendarCheck className="w-5 h-5" />
@@ -634,9 +632,8 @@ export const AdminExaminations: React.FC = () => {
 
         <div
           onClick={() => setActiveTab('questions')}
-          className={`bg-white rounded-xl p-3.5 sm:p-4 border shadow-xs flex items-center space-x-3.5 cursor-pointer transition-all ${
-            activeTab === 'questions' ? 'border-[#F47716] ring-1 ring-[#F47716]' : 'border-gray-200 hover:border-gray-300'
-          }`}
+          className={`bg-white rounded-xl p-3.5 sm:p-4 border shadow-xs flex items-center space-x-3.5 cursor-pointer transition-all ${activeTab === 'questions' ? 'border-[#F47716] ring-1 ring-[#F47716]' : 'border-gray-200 hover:border-gray-300'
+            }`}
         >
           <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#10264B] flex items-center justify-center flex-shrink-0">
             <HelpCircle className="w-5 h-5" />
@@ -651,9 +648,8 @@ export const AdminExaminations: React.FC = () => {
 
         <div
           onClick={() => setActiveTab('monitoring')}
-          className={`bg-white rounded-xl p-3.5 sm:p-4 border shadow-xs flex items-center space-x-3.5 cursor-pointer transition-all ${
-            activeTab === 'monitoring' ? 'border-[#F47716] ring-1 ring-[#F47716]' : 'border-gray-200 hover:border-gray-300'
-          }`}
+          className={`bg-white rounded-xl p-3.5 sm:p-4 border shadow-xs flex items-center space-x-3.5 cursor-pointer transition-all ${activeTab === 'monitoring' ? 'border-[#F47716] ring-1 ring-[#F47716]' : 'border-gray-200 hover:border-gray-300'
+            }`}
         >
           <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
             <Shield className="w-5 h-5" />
@@ -668,9 +664,8 @@ export const AdminExaminations: React.FC = () => {
 
         <div
           onClick={() => setActiveTab('results')}
-          className={`bg-white rounded-xl p-3.5 sm:p-4 border shadow-xs flex items-center space-x-3.5 cursor-pointer transition-all ${
-            activeTab === 'results' ? 'border-[#F47716] ring-1 ring-[#F47716]' : 'border-gray-200 hover:border-gray-300'
-          }`}
+          className={`bg-white rounded-xl p-3.5 sm:p-4 border shadow-xs flex items-center space-x-3.5 cursor-pointer transition-all ${activeTab === 'results' ? 'border-[#F47716] ring-1 ring-[#F47716]' : 'border-gray-200 hover:border-gray-300'
+            }`}
         >
           <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0">
             <FileCheck2 className="w-5 h-5" />
@@ -688,9 +683,8 @@ export const AdminExaminations: React.FC = () => {
       <div className="flex items-center space-x-2 border-b border-gray-200 bg-white px-2 sm:px-4 rounded-xl shadow-xs overflow-x-auto text-xs">
         <button
           onClick={() => setActiveTab('schedules')}
-          className={`flex items-center space-x-2 py-3 px-3 sm:px-4 font-bold border-b-2 whitespace-nowrap cursor-pointer transition-colors ${
-            activeTab === 'schedules' ? 'border-[#F47716] text-[#F47716]' : 'border-transparent text-gray-500 hover:text-[#10264B]'
-          }`}
+          className={`flex items-center space-x-2 py-3 px-3 sm:px-4 font-bold border-b-2 whitespace-nowrap cursor-pointer transition-colors ${activeTab === 'schedules' ? 'border-[#F47716] text-[#F47716]' : 'border-transparent text-gray-500 hover:text-[#10264B]'
+            }`}
         >
           <CalendarCheck className="w-4 h-4" />
           <span>Scheduled Examinations ({exams.length})</span>
@@ -698,9 +692,8 @@ export const AdminExaminations: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('questions')}
-          className={`flex items-center space-x-2 py-3 px-3 sm:px-4 font-bold border-b-2 whitespace-nowrap cursor-pointer transition-colors ${
-            activeTab === 'questions' ? 'border-[#F47716] text-[#F47716]' : 'border-transparent text-gray-500 hover:text-[#10264B]'
-          }`}
+          className={`flex items-center space-x-2 py-3 px-3 sm:px-4 font-bold border-b-2 whitespace-nowrap cursor-pointer transition-colors ${activeTab === 'questions' ? 'border-[#F47716] text-[#F47716]' : 'border-transparent text-gray-500 hover:text-[#10264B]'
+            }`}
         >
           <HelpCircle className="w-4 h-4" />
           <span>Question Bank ({questions.length})</span>
@@ -708,9 +701,8 @@ export const AdminExaminations: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('monitoring')}
-          className={`flex items-center space-x-2 py-3 px-3 sm:px-4 font-bold border-b-2 whitespace-nowrap cursor-pointer transition-colors ${
-            activeTab === 'monitoring' ? 'border-[#F47716] text-[#F47716]' : 'border-transparent text-gray-500 hover:text-[#10264B]'
-          }`}
+          className={`flex items-center space-x-2 py-3 px-3 sm:px-4 font-bold border-b-2 whitespace-nowrap cursor-pointer transition-colors ${activeTab === 'monitoring' ? 'border-[#F47716] text-[#F47716]' : 'border-transparent text-gray-500 hover:text-[#10264B]'
+            }`}
         >
           <Shield className="w-4 h-4" />
           <span className="flex items-center space-x-1.5">
@@ -721,9 +713,8 @@ export const AdminExaminations: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('results')}
-          className={`flex items-center space-x-2 py-3 px-3 sm:px-4 font-bold border-b-2 whitespace-nowrap cursor-pointer transition-colors ${
-            activeTab === 'results' ? 'border-[#F47716] text-[#F47716]' : 'border-transparent text-gray-500 hover:text-[#10264B]'
-          }`}
+          className={`flex items-center space-x-2 py-3 px-3 sm:px-4 font-bold border-b-2 whitespace-nowrap cursor-pointer transition-colors ${activeTab === 'results' ? 'border-[#F47716] text-[#F47716]' : 'border-transparent text-gray-500 hover:text-[#10264B]'
+            }`}
         >
           <Award className="w-4 h-4" />
           <span>Result Management & Scorecards ({resultsList.length})</span>
@@ -1278,25 +1269,22 @@ export const AdminExaminations: React.FC = () => {
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => setResultFilter('ALL')}
-                className={`px-3 py-1.5 rounded-lg font-bold cursor-pointer transition-colors ${
-                  resultFilter === 'ALL' ? 'bg-[#10264B] text-white' : 'bg-slate-100 text-gray-700 hover:bg-slate-200'
-                }`}
+                className={`px-3 py-1.5 rounded-lg font-bold cursor-pointer transition-colors ${resultFilter === 'ALL' ? 'bg-[#10264B] text-white' : 'bg-slate-100 text-gray-700 hover:bg-slate-200'
+                  }`}
               >
                 All ({resultsList.length})
               </button>
               <button
                 onClick={() => setResultFilter('PASSED')}
-                className={`px-3 py-1.5 rounded-lg font-bold cursor-pointer transition-colors ${
-                  resultFilter === 'PASSED' ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
-                }`}
+                className={`px-3 py-1.5 rounded-lg font-bold cursor-pointer transition-colors ${resultFilter === 'PASSED' ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
+                  }`}
               >
                 Passed ({resultsList.filter((r) => r.passed || r.percentage >= 70).length})
               </button>
               <button
                 onClick={() => setResultFilter('FAILED')}
-                className={`px-3 py-1.5 rounded-lg font-bold cursor-pointer transition-colors ${
-                  resultFilter === 'FAILED' ? 'bg-red-600 text-white' : 'bg-red-50 text-red-800 hover:bg-red-100'
-                }`}
+                className={`px-3 py-1.5 rounded-lg font-bold cursor-pointer transition-colors ${resultFilter === 'FAILED' ? 'bg-red-600 text-white' : 'bg-red-50 text-red-800 hover:bg-red-100'
+                  }`}
               >
                 Failed ({resultsList.filter((r) => !r.passed && r.percentage < 70).length})
               </button>
@@ -1476,11 +1464,10 @@ export const AdminExaminations: React.FC = () => {
 
               {/* Live JSON Validation Status */}
               <div
-                className={`p-2.5 rounded-xl border flex items-center space-x-2 text-xs font-semibold ${
-                  jsonValidation.isValid
-                    ? 'bg-green-50 border-green-200 text-green-800'
-                    : 'bg-red-50 border-red-200 text-red-800'
-                }`}
+                className={`p-2.5 rounded-xl border flex items-center space-x-2 text-xs font-semibold ${jsonValidation.isValid
+                  ? 'bg-green-50 border-green-200 text-green-800'
+                  : 'bg-red-50 border-red-200 text-red-800'
+                  }`}
               >
                 {jsonValidation.isValid ? (
                   <>
@@ -1725,11 +1712,10 @@ export const AdminExaminations: React.FC = () => {
                   <div key={opt.label} className="flex items-center space-x-2">
                     <span
                       onClick={() => setQuestionForm({ ...questionForm, correctAnswer: opt.idx })}
-                      className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold font-mono cursor-pointer transition-all ${
-                        questionForm.correctAnswer === opt.idx
-                          ? 'bg-emerald-600 text-white ring-2 ring-emerald-400'
-                          : 'bg-slate-100 text-gray-600 hover:bg-slate-200'
-                      }`}
+                      className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold font-mono cursor-pointer transition-all ${questionForm.correctAnswer === opt.idx
+                        ? 'bg-emerald-600 text-white ring-2 ring-emerald-400'
+                        : 'bg-slate-100 text-gray-600 hover:bg-slate-200'
+                        }`}
                       title="Click to set as correct answer"
                     >
                       {String.fromCharCode(65 + opt.idx)}
@@ -1799,14 +1785,12 @@ export const AdminExaminations: React.FC = () => {
                   return (
                     <div
                       key={optIdx}
-                      className={`p-2.5 rounded-lg border flex items-center space-x-2.5 ${
-                        isCorrect ? 'bg-emerald-50 border-emerald-300 text-emerald-950 font-semibold' : 'bg-slate-50 border-gray-200 text-gray-700'
-                      }`}
+                      className={`p-2.5 rounded-lg border flex items-center space-x-2.5 ${isCorrect ? 'bg-emerald-50 border-emerald-300 text-emerald-950 font-semibold' : 'bg-slate-50 border-gray-200 text-gray-700'
+                        }`}
                     >
                       <span
-                        className={`w-6 h-6 rounded flex items-center justify-center font-bold font-mono text-[11px] ${
-                          isCorrect ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-600'
-                        }`}
+                        className={`w-6 h-6 rounded flex items-center justify-center font-bold font-mono text-[11px] ${isCorrect ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-600'
+                          }`}
                       >
                         {String.fromCharCode(65 + optIdx)}
                       </span>

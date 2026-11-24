@@ -54,7 +54,7 @@ export const AdminCandidates: React.FC = () => {
       });
       if (res.success && res.candidates) {
         setCandidates(res.candidates);
-        try { localStorage.setItem('aicqb_admin_candidates', JSON.stringify(res.candidates)); } catch (_) {}
+        try { localStorage.setItem('aicqb_admin_candidates', JSON.stringify(res.candidates)); } catch (_) { }
       }
     } catch (err) {
       console.error('Failed to load candidates:', err);
@@ -160,11 +160,10 @@ export const AdminCandidates: React.FC = () => {
       {/* Toast Notification (Replaces Popups) */}
       {toast && (
         <div
-          className={`fixed bottom-6 right-6 z-[1000] px-5 py-3.5 rounded-2xl shadow-2xl border text-xs font-bold flex items-center space-x-2.5 animate-in slide-in-from-bottom duration-200 ${
-            toast.type === 'success'
-              ? 'bg-emerald-950 text-emerald-100 border-emerald-500/50 shadow-emerald-950/40'
-              : 'bg-red-950 text-red-100 border-red-500/50 shadow-red-950/40'
-          }`}
+          className={`fixed bottom-6 right-6 z-[1000] px-5 py-3.5 rounded-2xl shadow-2xl border text-xs font-bold flex items-center space-x-2.5 animate-in slide-in-from-bottom duration-200 ${toast.type === 'success'
+            ? 'bg-emerald-950 text-emerald-100 border-emerald-500/50 shadow-emerald-950/40'
+            : 'bg-red-950 text-red-100 border-red-500/50 shadow-red-950/40'
+            }`}
         >
           {toast.type === 'success' ? (
             <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />

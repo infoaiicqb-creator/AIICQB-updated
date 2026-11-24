@@ -1,7 +1,23 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Menu, X, Globe, User, LogOut, ChevronDown, Award } from 'lucide-react';
+import {
+  Menu,
+  X,
+  Globe,
+  User,
+  LogOut,
+  ChevronDown,
+  Award,
+  Home,
+  Monitor,
+  GraduationCap,
+  Users,
+  Headphones,
+  ChevronRight,
+  UserPlus,
+  BadgeCheck,
+} from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
@@ -11,12 +27,12 @@ export const Navbar: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const navLinks = [
-    { label: 'Home', path: '/' },
-    { label: 'Certifications', path: '/certifications' },
-    { label: 'Exams', path: '/exams' },
-    { label: 'Learning', path: '/learning' },
-    { label: 'About Us', path: '/about' },
-    { label: 'Support', path: '/support' },
+    { label: 'Home', path: '/', icon: Home },
+    { label: 'Certifications', path: '/certifications', icon: Award },
+    { label: 'Exams', path: '/exams', icon: Monitor },
+    { label: 'Learning', path: '/learning', icon: GraduationCap },
+    { label: 'About Us', path: '/about', icon: Users },
+    { label: 'Support', path: '/support', icon: Headphones },
   ];
 
   const isActive = (path: string) => {
@@ -164,13 +180,14 @@ export const Navbar: React.FC = () => {
             )}
           </div>
 
-          {/* Mobile menu button */}
-          <div className="flex md:hidden items-center space-x-2">
+          {/* Mobile menu button matching uploaded screenshot */}
+          <div className="flex md:hidden items-center">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-md text-[#10264B] hover:text-[#F47716] hover:bg-gray-100"
+              className="p-2 sm:p-2.5 rounded-xl border border-gray-300 hover:border-gray-400 bg-white text-[#10264B] hover:bg-gray-50 active:scale-95 transition-all shadow-xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#F47716]/40"
+              aria-label="Toggle navigation menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-6 h-6 text-[#10264B]" /> : <Menu className="w-6 h-6 text-[#10264B]" />}
             </button>
           </div>
         </div>
@@ -184,33 +201,64 @@ export const Navbar: React.FC = () => {
             onClick={() => setMobileMenuOpen(false)}
             aria-hidden="true"
           />
-          <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-200 px-4 pt-3 pb-6 space-y-2.5 z-50 shadow-2xl max-h-[85vh] overflow-y-auto">
-            {navLinks.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block px-3.5 py-2.5 rounded-xl text-base font-semibold transition-all ${isActive(item.path)
-                  ? 'bg-orange-50 text-[#F47716] font-bold border-l-4 border-[#F47716]'
-                  : 'text-[#10264B] hover:text-[#F47716] hover:bg-gray-50'
-                  }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+          <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-200 px-4 pt-3 pb-6 space-y-3 z-50 shadow-2xl max-h-[85vh] overflow-y-auto animate-in slide-in-from-top-2 duration-200">
+            {/* Navigation Links with Icons & Chevrons matching Image */}
+            <div className="space-y-1">
+              {navLinks.map((item) => {
+                const Icon = item.icon;
+                const active = isActive(item.path);
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`group flex items-center justify-between px-3.5 py-3 rounded-xl transition-all relative ${
+                      active
+                        ? 'bg-gradient-to-r from-orange-100/90 via-orange-50/50 to-transparent text-[#F47716] font-bold'
+                        : 'text-[#10264B] hover:bg-gray-50 font-semibold'
+                    } ${!active ? 'border-b border-gray-100' : ''}`}
+                  >
+                    {/* Active Left Indicator Pill */}
+                    {active && (
+                      <span className="absolute left-0 top-2 bottom-2 w-1.5 bg-[#F47716] rounded-r-md" />
+                    )}
+                    <div className="flex items-center space-x-3.5 pl-1">
+                      <Icon className={`w-5 h-5 flex-shrink-0 ${active ? 'text-[#F47716]' : 'text-[#10264B]'}`} />
+                      <span className="text-[15px] sm:text-base tracking-tight">{item.label}</span>
+                    </div>
+                    <ChevronRight
+                      className={`w-4 h-4 flex-shrink-0 transition-transform ${
+                        active
+                          ? 'opacity-0'
+                          : 'text-gray-400 group-hover:text-[#F47716] group-hover:translate-x-0.5'
+                      }`}
+                    />
+                  </Link>
+                );
+              })}
+            </div>
 
+            {/* Verify Certificate Featured Card matching Image */}
             <Link
               to="/verify"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center space-x-2 px-3.5 py-2.5 text-base font-bold text-[#10264B] bg-slate-100 hover:bg-slate-200 rounded-xl"
+              className="group flex items-center justify-between p-3.5 rounded-2xl border border-orange-200/90 bg-gradient-to-r from-orange-50/60 via-orange-50/30 to-orange-100/40 hover:from-orange-100/80 hover:to-orange-100 transition-all shadow-xs"
             >
-              <Award className="w-4 h-4 text-[#F47716]" />
-              <span>Verify Certificate</span>
+              <div className="flex items-center space-x-3.5">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#F47716] to-[#E06305] text-white flex items-center justify-center shadow-md shadow-orange-500/20 flex-shrink-0">
+                  <BadgeCheck className="w-5 h-5 text-white" />
+                </div>
+                <span className="font-bold text-[#10264B] text-[15px] tracking-tight">
+                  Verify Certificate
+                </span>
+              </div>
+              <ChevronRight className="w-4 h-4 text-[#F47716] group-hover:translate-x-0.5 transition-transform flex-shrink-0" />
             </Link>
 
+            {/* Bottom Actions Row matching Image */}
             {user ? (
-              <div className="pt-3 border-t border-gray-200 space-y-2">
-                <div className="px-3.5 py-2 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+              <div className="pt-2 border-t border-gray-200 space-y-2.5">
+                <div className="px-3.5 py-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
                   <div className="truncate pr-2">
                     <p className="text-xs font-bold text-[#10264B] truncate">{user.fullName || user.email}</p>
                     <p className="text-[10px] text-gray-500 font-medium">{user.role}</p>
@@ -234,27 +282,29 @@ export const Navbar: React.FC = () => {
                     logout();
                     navigate('/');
                   }}
-                  className="w-full text-center flex items-center justify-center space-x-2 py-2.5 px-4 text-xs font-bold text-red-600 hover:bg-red-50 rounded-xl border border-red-200"
+                  className="w-full text-center flex items-center justify-center space-x-2 py-2.5 px-4 text-xs font-bold text-red-600 hover:bg-red-50 rounded-xl border border-red-200 cursor-pointer"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   <span>Sign Out</span>
                 </button>
               </div>
             ) : (
-              <div className="pt-3 border-t border-gray-200 grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3 pt-2">
                 <Link
                   to="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-center py-2.5 px-4 rounded-xl font-bold text-sm text-[#10264B] border border-gray-300 hover:bg-gray-50"
+                  className="flex items-center justify-center space-x-2 py-3 px-4 rounded-xl font-bold text-sm text-[#10264B] bg-white border border-gray-300 hover:border-[#10264B] active:bg-gray-50 transition-all shadow-xs"
                 >
-                  Login
+                  <User className="w-4 h-4 text-[#10264B]" />
+                  <span>Login</span>
                 </Link>
                 <Link
                   to="/signup"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-center py-2.5 px-4 rounded-xl font-bold text-sm text-white bg-[#F47716] hover:bg-[#DC660E] shadow-sm"
+                  className="flex items-center justify-center space-x-2 py-3 px-4 rounded-xl font-bold text-sm text-white bg-[#F47716] hover:bg-[#DC660E] active:scale-[0.98] shadow-md shadow-orange-500/25 transition-all"
                 >
-                  Sign Up
+                  <UserPlus className="w-4 h-4 text-white" />
+                  <span>Sign Up</span>
                 </Link>
               </div>
             )}

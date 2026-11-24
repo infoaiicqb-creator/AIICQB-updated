@@ -42,7 +42,14 @@ export const SignUp: React.FC = () => {
   const [error, setError] = useState('');
 
   // New user program enrollment
-  const [certList, setCertList] = useState<any[]>([]);
+  const [certList, setCertList] = useState<any[]>(() => {
+    try {
+      const c = localStorage.getItem('aicqb_all_certifications');
+      return c ? JSON.parse(c) : [];
+    } catch (_) {
+      return [];
+    }
+  });
   const [selectedCertificationId, setSelectedCertificationId] = useState('');
 
   useEffect(() => {
@@ -275,17 +282,8 @@ export const SignUp: React.FC = () => {
               disabled={loading}
               className="w-full py-3 sm:py-3.5 px-4 bg-[#0A1E3D] hover:bg-[#102B52] active:bg-[#07162C] text-white font-semibold text-sm rounded-xl shadow-lg shadow-blue-950/20 flex items-center justify-center space-x-2 transition-all cursor-pointer disabled:opacity-70 mt-1"
             >
-              {loading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Registering Account...</span>
-                </>
-              ) : (
-                <>
-                  <span>Register Now</span>
-                  <ArrowRight className="w-4 h-4" />
-                </>
-              )}
+              <span>Register Now</span>
+              <ArrowRight className="w-4 h-4" />
             </button>
           </form>
 

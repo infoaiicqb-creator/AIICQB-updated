@@ -161,9 +161,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       let userData: User | null = null;
       let candData: CandidateProfile | null = null;
       try {
-        const uDoc = await withTimeout(getDoc(doc(db, 'users', userCredential.user.uid)), 3000, null as any);
+        const [uDoc, cDoc] = await Promise.all([
+          withTimeout(getDoc(doc(db, 'users', userCredential.user.uid)), 800, null as any),
+          withTimeout(getDoc(doc(db, 'candidates', userCredential.user.uid)), 800, null as any),
+        ]);
         if (uDoc && uDoc.exists && uDoc.exists()) userData = uDoc.data() as User;
-        const cDoc = await withTimeout(getDoc(doc(db, 'candidates', userCredential.user.uid)), 3000, null as any);
         if (cDoc && cDoc.exists && cDoc.exists()) candData = cDoc.data() as CandidateProfile;
       } catch (_) {}
 
@@ -286,8 +288,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
 
       try {
-        await setDoc(doc(db, 'users', userCredential.user.uid), newUser);
-        await setDoc(doc(db, 'candidates', userCredential.user.uid), newCand);
+        await Promise.all([
+          setDoc(doc(db, 'users', userCredential.user.uid), newUser),
+          setDoc(doc(db, 'candidates', userCredential.user.uid), newCand),
+        ]);
       } catch (firestoreErr) {
         console.warn('Firestore user doc sync warning:', firestoreErr);
       }

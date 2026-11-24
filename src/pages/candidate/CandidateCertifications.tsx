@@ -410,6 +410,64 @@ export const CandidateCertifications: React.FC = () => {
                 name: enrolledItem.name,
                 code: enrolledItem.code,
               });
+
+              // Instantly update local enrolled states
+              setEnrolledCertIds((prev) => {
+                const next = Array.from(new Set([...prev, enrolledItem.id, enrolledItem.code]));
+                try {
+                  localStorage.setItem('aicqb_enrolled_cert_ids', JSON.stringify(next));
+                } catch (_) {}
+                return next;
+              });
+
+              // Pre-populate upcoming exams in localStorage immediately so My Exams displays it on Frame 0
+              try {
+                const existingUpcoming = JSON.parse(localStorage.getItem('aicqb_my_upcoming') || '[]');
+                const alreadyThere = existingUpcoming.some(
+                  (u: any) => u.certificationId === enrolledItem.id || u.certificationCode === enrolledItem.code
+                );
+                if (!alreadyThere) {
+                  const examDate = new Date();
+                  examDate.setDate(examDate.getDate() + 7);
+                  const day = String(examDate.getDate()).padStart(2, '0');
+                  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                  const monthYear = `${monthNames[examDate.getMonth()]} ${examDate.getFullYear()}`;
+                  const newSchedule = {
+                    id: `sch_${Date.now()}`,
+                    scheduleId: `sch_${Date.now()}`,
+                    certificationId: enrolledItem.id,
+                    certificationName: enrolledItem.name,
+                    certificationCode: enrolledItem.code,
+                    examId: `exam_${enrolledItem.id}`,
+                    examName: enrolledItem.name,
+                    examCode: `${enrolledItem.code}-EXAM`,
+                    scheduledDate: examDate.toISOString().split('T')[0],
+                    scheduledDateDay: day,
+                    scheduledDateMonth: monthYear,
+                    scheduledDateFormatted: `${day} ${monthYear}`,
+                    scheduledTime: '10:00 AM – 11:30 AM (IST)',
+                    mode: 'Online Proctored',
+                    durationMinutes: enrolledItem.duration ? parseInt(enrolledItem.duration) : 90,
+                    status: 'scheduled',
+                    instructions: [
+                      'Ensure a stable high-speed internet connection.',
+                      'Keep your camera and microphone enabled for AI proctoring.',
+                      'No external tabs or notes permitted during the examination.',
+                      'Exam will auto-submit when the countdown timer reaches 00:00.',
+                    ],
+                  };
+                  localStorage.setItem('aicqb_my_upcoming', JSON.stringify([newSchedule, ...existingUpcoming]));
+                }
+              } catch (_) {}
+
+              // Refresh schedules from server in background
+              api.getMySchedules().then((res) => {
+                if (res?.success && res.upcoming) {
+                  try {
+                    localStorage.setItem('aicqb_my_upcoming', JSON.stringify(res.upcoming));
+                  } catch (_) {}
+                }
+              }).catch(() => {});
             }
             loadData();
           }}

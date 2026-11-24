@@ -7469,5 +7469,57 @@
     "id": "auditLogs_1795518906010_hs8jl",
     "createdAt": "2026-11-24T11:15:06.010Z",
     "updatedAt": "2026-11-24T11:15:06.010Z"
+  },
+  {
+    "userId": "guest_1795523188507",
+    "userEmail": "candidate@aicqb.org",
+    "userRole": "Candidate",
+    "action": "CANDIDATE_ENROLLED",
+    "module": "Certifications",
+    "details": "Candidate Candidate enrolled in AICQB Certified AI Professional (AICQB-AI-CP) and scheduled for examination.",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-24T12:26:28.534Z",
+    "id": "auditLogs_1795523188544_qfg8n",
+    "createdAt": "2026-11-24T12:26:28.544Z",
+    "updatedAt": "2026-11-24T12:26:28.544Z"
+  },
+  {
+    "userId": "guest_1795523217655",
+    "userEmail": "candidate@aicqb.org",
+    "userRole": "Candidate",
+    "action": "CANDIDATE_ENROLLED",
+    "module": "Certifications",
+    "details": "Candidate Candidate enrolled in AICQB Certified AI Professional (AICQB-AI-CP) and scheduled for examination.",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-24T12:26:57.655Z",
+    "id": "auditLogs_1795523217655_ilwl1",
+    "createdAt": "2026-11-24T12:26:57.655Z",
+    "updatedAt": "2026-11-24T12:26:57.655Z"
+  },
+  {
+    "userId": "system",
+    "userEmail": "system",
+    "userRole": "System",
+    "action": "REGISTRATION",
+    "module": "Candidate Management",
+    "details": "New candidate registered: Test Candidate (AICQB-1004707)",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-24T12:27:19.485Z",
+    "id": "auditLogs_1795523239485_8fzvh",
+    "createdAt": "2026-11-24T12:27:19.485Z",
+    "updatedAt": "2026-11-24T12:27:19.485Z"
+  },
+  {
+    "userId": "usr_1795523239237_5f9cyk",
+    "userEmail": "test_cand_20261124175719@aicqb.org",
+    "userRole": "Candidate",
+    "action": "CANDIDATE_ENROLLED",
+    "module": "Certifications",
+    "details": "Candidate Test Candidate enrolled in AICQB Certified AI Professional (AICQB-AI-CP) and scheduled for examination.",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-24T12:27:19.552Z",
+    "id": "auditLogs_1795523239552_k34is",
+    "createdAt": "2026-11-24T12:27:19.552Z",
+    "updatedAt": "2026-11-24T12:27:19.552Z"
   }
 ]

@@ -21,22 +21,26 @@ export async function getCandidateSchedules(req, res) {
     let schedules = db.find(
       'examSchedules',
       s =>
-        (s.candidateUid && s.candidateUid === uid) ||
-        (email && s.candidateEmail && s.candidateEmail.toLowerCase() === email)
+        (uid && s.candidateUid === uid) ||
+        (email && s.candidateEmail && s.candidateEmail.toLowerCase() === email) ||
+        (candidateId && (s.candidateId === candidateId || s.candidate_id === candidateId))
     );
 
     // 2. Fetch candidate's enrollments from payments/courses taken
     const enrollments = db.find(
       'enrollments',
       e =>
-        (e.candidateUid && e.candidateUid === uid) ||
-        (email && e.candidateEmail && e.candidateEmail.toLowerCase() === email)
+        (uid && e.candidateUid === uid) ||
+        (email && e.candidateEmail && e.candidateEmail.toLowerCase() === email) ||
+        (candidateId && (e.candidateId === candidateId || e.candidate_id === candidateId))
     );
 
     // 3. For any course enrollment without an exam schedule, automatically add it to My Exams!
     for (const enr of enrollments) {
       const alreadyScheduled = schedules.some(
-        s => s.certificationId === enr.certificationId || s.certificationCode === enr.certificationCode
+        s => (enr.certificationId && s.certificationId === enr.certificationId) ||
+             (enr.certificationCode && s.certificationCode === enr.certificationCode) ||
+             (enr.certificationId && s.examId === `exam_${enr.certificationId}`)
       );
 
       if (!alreadyScheduled) {
@@ -54,19 +58,20 @@ export async function getCandidateSchedules(req, res) {
         const autoSchedule = {
           id: `sch_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
           scheduleId: `sch_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
-          candidateUid: uid,
-          candidateEmail: email,
+          candidateUid: uid || enr.candidateUid,
+          candidateEmail: email || enr.candidateEmail,
           candidateId: candidateId || enr.candidateId || req.user.candidateId || 'AICQB-1004581',
           candidateName: req.user.fullName || enr.candidateName || 'Candidate',
-          certificationId: enr.certificationId,
+          certificationId: enr.certificationId || cert?.id,
           certificationName: enr.certificationName || cert?.name || 'Certification Exam',
           certificationCode: enr.certificationCode || cert?.code || 'AICQB-CERT',
-          examId: `exam_${enr.certificationId}`,
+          examId: `exam_${enr.certificationId || cert?.id}`,
           examName: enr.certificationName || cert?.name || 'Certification Exam',
-          examCode: `${enr.certificationCode || 'AICQB'}-EXAM`,
+          examCode: `${enr.certificationCode || cert?.code || 'AICQB'}-EXAM`,
           scheduledDate: examDate.toISOString().split('T')[0],
           scheduledDateDay: day,
           scheduledDateMonth: monthYear,
+          scheduledDateFormatted: `${day} ${monthYear}`,
           scheduledTime: '10:00 AM – 11:30 AM (IST)',
           mode: 'Online Proctored',
           durationMinutes: cert?.duration ? parseInt(cert.duration) : 90,

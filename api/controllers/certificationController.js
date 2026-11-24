@@ -73,35 +73,98 @@ export async function getCandidateCertificationStatus(req, res) {
   try {
     const uid = req.user?.uid;
     const email = req.user?.email?.toLowerCase();
+    const candidateId = req.user?.candidateId;
 
-    // Find candidate's enrollments
+    // Find candidate's enrollments (match by uid, email or candidateId)
     const enrollments = db.find('enrollments', e =>
       (uid && e.candidateUid === uid) ||
-      (email && e.candidateEmail?.toLowerCase() === email)
+      (email && e.candidateEmail?.toLowerCase() === email) ||
+      (candidateId && (e.candidateId === candidateId || e.candidate_id === candidateId))
     );
 
     // Find candidate's certificates
     const certificates = db.find('certificates', c =>
       (uid && c.candidateUid === uid) ||
-      (email && c.candidateEmail?.toLowerCase() === email)
+      (email && c.candidateEmail?.toLowerCase() === email) ||
+      (candidateId && (c.candidateId === candidateId || c.candidate_id === candidateId))
     );
 
     // Find candidate's active exam schedules
     const schedules = db.find('examSchedules', s =>
       ((uid && s.candidateUid === uid) ||
-      (email && s.candidateEmail?.toLowerCase() === email)) &&
+      (email && s.candidateEmail?.toLowerCase() === email) ||
+      (candidateId && (s.candidateId === candidateId || s.candidate_id === candidateId))) &&
       (s.status === 'scheduled' || s.status === 'in-progress')
     );
 
+    // Auto-create exam schedule for any enrolled certification that has no schedule yet
+    for (const enr of enrollments) {
+      const alreadyScheduled = schedules.some(
+        s => (enr.certificationId && s.certificationId === enr.certificationId) ||
+             (enr.certificationCode && s.certificationCode === enr.certificationCode) ||
+             (enr.certificationId && s.examId === `exam_${enr.certificationId}`)
+      );
+
+      if (!alreadyScheduled) {
+        const cert = db.findOne('certifications', c => c.id === enr.certificationId || c.code === enr.certificationCode);
+        const examDate = new Date();
+        examDate.setDate(examDate.getDate() + 7);
+        const day = String(examDate.getDate()).padStart(2, '0');
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const monthYear = `${monthNames[examDate.getMonth()]} ${examDate.getFullYear()}`;
+
+        const autoSchedule = {
+          id: `sch_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+          scheduleId: `sch_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+          candidateUid: uid || enr.candidateUid,
+          candidateEmail: email || enr.candidateEmail,
+          candidateId: candidateId || enr.candidateId || 'AICQB-CAND',
+          candidateName: req.user?.fullName || enr.candidateName || 'Candidate',
+          certificationId: enr.certificationId || cert?.id,
+          certificationName: enr.certificationName || cert?.name || 'Certification Exam',
+          certificationCode: enr.certificationCode || cert?.code || 'AICQB-CERT',
+          examId: `exam_${enr.certificationId || cert?.id}`,
+          examName: enr.certificationName || cert?.name || 'Certification Exam',
+          examCode: `${enr.certificationCode || cert?.code || 'AICQB'}-EXAM`,
+          scheduledDate: examDate.toISOString().split('T')[0],
+          scheduledDateDay: day,
+          scheduledDateMonth: monthYear,
+          scheduledTime: '10:00 AM – 11:30 AM (IST)',
+          mode: 'Online Proctored',
+          durationMinutes: cert?.duration ? parseInt(cert.duration) : 90,
+          status: 'scheduled',
+          enrollmentId: enr.id,
+          instructions: [
+            'Ensure a stable high-speed internet connection.',
+            'Keep your camera and microphone enabled for AI proctoring.',
+            'No external tabs or notes permitted during the examination.',
+            'Exam will auto-submit when the countdown timer reaches 00:00.',
+          ],
+          createdAt: new Date().toISOString(),
+        };
+
+        db.addDoc('examSchedules', autoSchedule);
+        schedules.push(autoSchedule);
+      }
+    }
+
     const completedCertIds = Array.from(new Set([
       ...certificates.filter(c => c.status === 'Issued').map(c => c.certificationId),
+      ...certificates.filter(c => c.status === 'Issued').map(c => c.certificationCode),
       ...enrollments.filter(e => e.status === 'completed').map(e => e.certificationId),
+      ...enrollments.filter(e => e.status === 'completed').map(e => e.certificationCode),
     ])).filter(Boolean);
 
-    // Only active enrollments or active scheduled exams that are not yet completed
+    // Active enrollments: enrolled, in-progress, PAID, active, success
+    const activeEnrollments = enrollments.filter(
+      e => !e.status || ['enrolled', 'in-progress', 'PAID', 'paid', 'active', 'success'].includes(e.status)
+    );
+
     const enrolledCertIds = Array.from(new Set([
-      ...enrollments.filter(e => e.status === 'enrolled' || e.status === 'in-progress').map(e => e.certificationId),
+      ...activeEnrollments.map(e => e.certificationId),
+      ...activeEnrollments.map(e => e.certificationCode),
       ...schedules.map(s => s.certificationId),
+      ...schedules.map(s => s.certificationCode),
     ])).filter(id => Boolean(id) && !completedCertIds.includes(id));
 
     return res.json({
@@ -115,6 +178,157 @@ export async function getCandidateCertificationStatus(req, res) {
     });
   } catch (err) {
     return res.status(500).json({ success: false, message: 'Failed to fetch candidate certification status' });
+  }
+}
+
+export async function enrollCertification(req, res) {
+  try {
+    const { certificationId } = req.body;
+    const uid = req.user?.uid || 'guest_user';
+    const email = req.user?.email || 'candidate@aicqb.org';
+    const candidateId = req.user?.candidateId || `AICQB-${Date.now().toString().slice(-7)}`;
+    const candidateName = req.user?.fullName || 'Candidate';
+
+    const cert = db.findOne('certifications', c => c.id === certificationId || c.code === certificationId);
+    if (!cert) {
+      return res.status(404).json({ success: false, message: 'Certification not found' });
+    }
+
+    // Check if already enrolled
+    let enrollment = db.findOne(
+      'enrollments',
+      e =>
+        ((uid && e.candidateUid === uid) || (email && e.candidateEmail?.toLowerCase() === email.toLowerCase()) || (candidateId && (e.candidateId === candidateId || e.candidate_id === candidateId))) &&
+        (e.certificationId === cert.id || e.certificationCode === cert.code)
+    );
+
+    const paidAt = new Date().toISOString();
+
+    if (!enrollment) {
+      const enrollmentId = `ENR-AICQB-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`;
+      enrollment = {
+        id: enrollmentId,
+        enrollment_id: enrollmentId,
+        enrollmentId,
+        candidate_id: candidateId,
+        candidateId,
+        candidateUid: uid,
+        candidate_name: candidateName,
+        candidateName,
+        candidate_email: email,
+        candidateEmail: email,
+        candidate_phone: req.user?.phoneNumber || req.user?.mobileNumber || '',
+        country: 'India',
+        certification_id: cert.id,
+        certificationId: cert.id,
+        certification_name: cert.name,
+        certificationName: cert.name,
+        certification_level: cert.level || 'Professional Level',
+        certificationLevel: cert.level || 'Professional Level',
+        certificationCode: cert.code,
+        domain: cert.domain || 'Technology',
+        enrollmentDate: paidAt,
+        enrolled_at: paidAt,
+        status: 'enrolled',
+        progressPercentage: 0,
+        payment_id: `enroll_${Date.now()}`,
+        paymentId: `enroll_${Date.now()}`,
+        amount: cert.examFee || 0,
+        currency: cert.currency || 'INR',
+        created_at: paidAt,
+        createdAt: paidAt,
+      };
+      db.addDoc('enrollments', enrollment);
+
+      // Increment cert enrolledCount
+      db.updateDoc('certifications', cert.id, {
+        enrolledCount: (cert.enrolledCount || 0) + 1,
+      });
+
+      // Update candidate profile counts
+      const cand = db.findOne('candidates', c => c.uid === uid || c.id === uid);
+      if (cand) {
+        db.updateDoc('candidates', cand.id, {
+          activeCertificationsCount: (cand.activeCertificationsCount || 0) + 1,
+          upcomingExamsCount: (cand.upcomingExamsCount || 0) + 1,
+        });
+      }
+    }
+
+    // Auto-create exam schedule if not exists
+    let schedule = db.findOne(
+      'examSchedules',
+      s =>
+        ((uid && s.candidateUid === uid) || (email && s.candidateEmail?.toLowerCase() === email.toLowerCase()) || (candidateId && (s.candidateId === candidateId || s.candidate_id === candidateId))) &&
+        (s.certificationId === cert.id || s.certificationCode === cert.code) &&
+        s.status === 'scheduled'
+    );
+
+    if (!schedule) {
+      const scheduleId = `SCH-AICQB-${Date.now().toString().slice(-6)}`;
+      const examDate = new Date();
+      examDate.setDate(examDate.getDate() + 7);
+      const day = String(examDate.getDate()).padStart(2, '0');
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const monthYear = `${monthNames[examDate.getMonth()]} ${examDate.getFullYear()}`;
+
+      schedule = {
+        id: scheduleId,
+        schedule_id: scheduleId,
+        scheduleId,
+        candidate_id: candidateId,
+        candidateId,
+        candidateUid: uid,
+        candidate_name: candidateName,
+        candidateName,
+        candidate_email: email,
+        candidateEmail: email,
+        certification_id: cert.id,
+        certificationId: cert.id,
+        certification_name: cert.name,
+        certificationName: cert.name,
+        certification_level: cert.level || 'Professional Level',
+        certificationCode: cert.code,
+        examId: `exam_${cert.id}`,
+        examName: cert.name,
+        examCode: `${cert.code}-EXAM`,
+        scheduledDate: examDate.toISOString().split('T')[0],
+        scheduledDateDay: day,
+        scheduledDateMonth: monthYear,
+        scheduledTime: '10:00 AM – 11:30 AM (IST)',
+        mode: 'Online Proctored',
+        durationMinutes: cert.duration ? parseInt(cert.duration) : 90,
+        status: 'scheduled',
+        enrollment_id: enrollment.id,
+        enrollmentId: enrollment.id,
+        instructions: [
+          'Ensure a stable high-speed internet connection.',
+          'Keep your camera and microphone enabled for AI proctoring.',
+          'No external tabs or notes permitted during the examination.',
+          'Exam will auto-submit when the countdown timer reaches 00:00.',
+        ],
+        createdAt: paidAt,
+        created_at: paidAt,
+      };
+      db.addDoc('examSchedules', schedule);
+    }
+
+    logAudit(
+      req,
+      'CANDIDATE_ENROLLED',
+      'Certifications',
+      `Candidate ${candidateName} enrolled in ${cert.name} (${cert.code}) and scheduled for examination.`
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: 'Enrolled successfully! Examination has been added to My Exams.',
+      enrollment,
+      schedule,
+    });
+  } catch (err) {
+    console.error('Enroll certification error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to enroll in certification' });
   }
 }
 

@@ -367,6 +367,8 @@ export async function verifyPayment(req, res) {
       candidateUid: effectiveUid,
       candidate_name: payment.candidate_name || payment.candidateName,
       candidateName: payment.candidate_name || payment.candidateName,
+      candidate_email: payment.candidate_email || payment.candidateEmail,
+      candidateEmail: payment.candidate_email || payment.candidateEmail,
       certification_id: cert.id,
       certificationId: cert.id,
       certification_name: cert.name,
@@ -379,6 +381,7 @@ export async function verifyPayment(req, res) {
       scheduledDate: examDate.toISOString().split('T')[0],
       scheduledDateDay: day,
       scheduledDateMonth: monthYear,
+      scheduledDateFormatted: `${day} ${monthYear}`,
       scheduledTime: '10:00 AM – 11:30 AM (IST)',
       mode: 'Online Proctored',
       durationMinutes: cert.duration ? parseInt(cert.duration) : 90,
@@ -397,6 +400,15 @@ export async function verifyPayment(req, res) {
       created_at: paidAt,
     };
     db.addDoc('examSchedules', scheduleRecord);
+
+    // Update candidate's upcoming exams count
+    const candUser = db.findOne('candidates', c => c.uid === effectiveUid || c.candidateId === effectiveCandidateId);
+    if (candUser) {
+      db.updateDoc('candidates', candUser.id, {
+        activeCertificationsCount: (candUser.activeCertificationsCount || 0) + 1,
+        upcomingExamsCount: (candUser.upcomingExamsCount || 0) + 1,
+      });
+    }
 
     // Update payment record to successful status
     const updatedPayment = db.updateDoc('payments', payment.id, {
@@ -808,6 +820,8 @@ export async function handleTestQrScan(req, res) {
         candidateUid: effectiveUid,
         candidate_name: payment.candidate_name || payment.candidateName,
         candidateName: payment.candidate_name || payment.candidateName,
+        candidate_email: payment.candidate_email || payment.candidateEmail,
+        candidateEmail: payment.candidate_email || payment.candidateEmail,
         certification_id: cert.id,
         certificationId: cert.id,
         certification_name: cert.name,
@@ -820,6 +834,7 @@ export async function handleTestQrScan(req, res) {
         scheduledDate: examDate.toISOString().split('T')[0],
         scheduledDateDay: day,
         scheduledDateMonth: monthYear,
+        scheduledDateFormatted: `${day} ${monthYear}`,
         scheduledTime: '10:00 AM – 11:30 AM (IST)',
         mode: 'Online Proctored',
         durationMinutes: cert.duration ? parseInt(cert.duration) : 90,
@@ -838,6 +853,15 @@ export async function handleTestQrScan(req, res) {
         created_at: paidAt,
       };
       db.addDoc('examSchedules', scheduleRecord);
+
+      // Update candidate's upcoming exams count
+      const candUser = db.findOne('candidates', c => c.uid === effectiveUid || c.candidateId === effectiveCandidateId);
+      if (candUser) {
+        db.updateDoc('candidates', candUser.id, {
+          activeCertificationsCount: (candUser.activeCertificationsCount || 0) + 1,
+          upcomingExamsCount: (candUser.upcomingExamsCount || 0) + 1,
+        });
+      }
 
       // 4. Update Payment Record
       payment = db.updateDoc('payments', payment.id, {

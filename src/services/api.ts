@@ -63,6 +63,8 @@ export const api = {
   },
   getCertificationById: (id: string) => request(`/certifications/${id}`),
   getCandidateCertificationStatus: () => request('/certifications/candidate-status'),
+  enrollCertification: (certificationId: string) =>
+    request('/certifications/enroll', { method: 'POST', body: JSON.stringify({ certificationId }) }),
 
   // Payments (Razorpay)
   createPaymentOrder: (payload: {

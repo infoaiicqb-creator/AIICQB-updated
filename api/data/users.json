@@ -174,5 +174,22 @@
     "emailVerified": false,
     "createdAt": "2026-11-24T11:14:51.455Z",
     "updatedAt": "2026-11-24T11:14:51.455Z"
+  },
+  {
+    "uid": "usr_1795523239237_5f9cyk",
+    "id": "usr_1795523239237_5f9cyk",
+    "email": "test_cand_20261124175719@aicqb.org",
+    "fullName": "Test Candidate",
+    "phoneNumber": "+91 9876543210",
+    "country": "India",
+    "organization": "",
+    "employeeId": "",
+    "password": "$2b$10$4gsxduHzYM/OCXFx.vsyq.kdo/cJdMcz1kpZoEaqbmMyTETxI23Ri",
+    "role": "Candidate",
+    "candidateId": "AICQB-1004707",
+    "status": "Active",
+    "emailVerified": false,
+    "createdAt": "2026-11-24T12:27:19.481Z",
+    "updatedAt": "2026-11-24T12:27:19.481Z"
   }
 ]

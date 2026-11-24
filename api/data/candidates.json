@@ -173,5 +173,29 @@
     "coursesInProgressCount": 0,
     "createdAt": "2026-11-24T11:14:51.457Z",
     "updatedAt": "2026-11-24T11:14:51.457Z"
+  },
+  {
+    "id": "usr_1795523239237_5f9cyk",
+    "uid": "usr_1795523239237_5f9cyk",
+    "candidateId": "AICQB-1004707",
+    "fullName": "Test Candidate",
+    "email": "test_cand_20261124175719@aicqb.org",
+    "phoneNumber": "+91 9876543210",
+    "country": "India",
+    "organization": "",
+    "employeeId": "",
+    "address": "",
+    "gender": "Not specified",
+    "dateOfBirth": "",
+    "aboutMe": "",
+    "profileCompletion": 45,
+    "emailVerified": false,
+    "rewardPoints": 100,
+    "activeCertificationsCount": 1,
+    "upcomingExamsCount": 1,
+    "certificatesEarnedCount": 0,
+    "coursesInProgressCount": 0,
+    "createdAt": "2026-11-24T12:27:19.483Z",
+    "updatedAt": "2026-11-24T12:27:19.548Z"
   }
 ]

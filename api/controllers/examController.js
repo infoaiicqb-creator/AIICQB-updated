@@ -39,8 +39,8 @@ export async function getCandidateSchedules(req, res) {
     for (const enr of enrollments) {
       const alreadyScheduled = schedules.some(
         s => (enr.certificationId && s.certificationId === enr.certificationId) ||
-             (enr.certificationCode && s.certificationCode === enr.certificationCode) ||
-             (enr.certificationId && s.examId === `exam_${enr.certificationId}`)
+          (enr.certificationCode && s.certificationCode === enr.certificationCode) ||
+          (enr.certificationId && s.examId === `exam_${enr.certificationId}`)
       );
 
       if (!alreadyScheduled) {
@@ -263,7 +263,7 @@ export async function startExam(req, res) {
     const candidateId = req.user?.candidateId || currentUser.candidateId || cand?.candidateId || 'AICQB-1004582';
 
     let schedule = db.findOne('examSchedules', s => s.id === scheduleId || s.scheduleId === scheduleId);
-    
+
     // Resilient fallback so candidate exam session always initializes cleanly
     if (!schedule) {
       const allCerts = db.getCollection('certifications');
@@ -392,8 +392,8 @@ export async function startExam(req, res) {
         typeof q.correctAnswer === 'number'
           ? q.correctAnswer
           : typeof q.correctOptionIndex === 'number'
-          ? q.correctOptionIndex
-          : 0;
+            ? q.correctOptionIndex
+            : 0;
 
       // Pair each option with whether it's the correct answer
       const indexedOptions = rawOptions.map((opt, i) => ({
@@ -643,7 +643,7 @@ export async function submitExam(req, res) {
       if (schedule) {
         db.updateDoc('examSchedules', schedule.id, {
           candidateUid: uid,
-          candidateId: effectiveCandidateId,
+          candidateId,
           candidateName,
           status: 'completed',
           passed: true,
@@ -679,7 +679,7 @@ export async function submitExam(req, res) {
           id: schedule ? schedule.id : retakeId,
           scheduleId: schedule ? schedule.id : retakeId,
           candidateUid: uid,
-          candidateId: effectiveCandidateId,
+          candidateId,
           candidateName,
           candidateEmail: req.user?.email || attempt.candidateEmail,
           certificationId: attempt.certificationId,
@@ -707,7 +707,7 @@ export async function submitExam(req, res) {
           // Keep the existing schedule in status 'scheduled' (Upcoming Exams only)
           db.updateDoc('examSchedules', schedule.id, {
             candidateUid: uid,
-            candidateId: effectiveCandidateId,
+            candidateId,
             candidateName,
             status: 'scheduled', // STRICTLY REMAIN IN UPCOMING EXAMS ONLY
             passed: false,
@@ -748,8 +748,8 @@ export async function submitExam(req, res) {
       message: passed
         ? 'Congratulations! You have successfully passed the AICQB International Certification exam! Your official verifiable certificate has been issued.'
         : retakeGranted
-        ? 'Your score did not meet the 70% passing threshold. No certificate has been generated. You have been granted a second chance to retake and clear this examination!'
-        : 'Your score did not meet the 70% passing threshold. Maximum examination attempts have been reached.',
+          ? 'Your score did not meet the 70% passing threshold. No certificate has been generated. You have been granted a second chance to retake and clear this examination!'
+          : 'Your score did not meet the 70% passing threshold. Maximum examination attempts have been reached.',
       results: {
         score: totalScore,
         maxScore,
@@ -758,7 +758,7 @@ export async function submitExam(req, res) {
         passed,
         passingThreshold: 70,
         candidateName,
-        candidateId: effectiveCandidateId,
+        candidateId,
         certificate: certificate || null,
         retakeGranted,
         retakeScheduleId: retakeScheduleRecord?.id || null,

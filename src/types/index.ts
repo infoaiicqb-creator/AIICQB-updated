@@ -11,6 +11,7 @@ export interface User {
   organization?: string;
   employeeId?: string;
   designation?: string;
+  preferences?: any;
 }
 
 export interface CandidateProfile {
@@ -35,6 +36,7 @@ export interface CandidateProfile {
   organization?: string;
   employeeId?: string;
   designation?: string;
+  preferences?: any;
 }
 
 export interface Certification {

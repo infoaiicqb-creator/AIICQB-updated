@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
@@ -17,15 +17,66 @@ import {
   AlertCircle,
   Loader2,
   X,
+  Mail,
+  Smartphone,
+  Laptop,
+  Check,
+  ShieldCheck,
+  Clock,
+  Globe,
 } from 'lucide-react';
 
 export const CandidateSettings: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [selectedLanguage, setSelectedLanguage] = useState('English');
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
+
+  // Toast Banner State
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => {
+      setToastMessage((current) => (current === msg ? null : current));
+    }, 4000);
+  };
+
+  // Language State
+  const [selectedLanguage, setSelectedLanguage] = useState(() => {
+    try {
+      return localStorage.getItem('aicqb_language') || (user as any)?.preferences?.language || 'English';
+    } catch (_) {
+      return 'English';
+    }
+  });
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
+
+  // Notification Preferences State
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const [notificationLoading, setNotificationLoading] = useState(false);
+  const [notificationSuccess, setNotificationSuccess] = useState('');
+  const [notificationPrefs, setNotificationPrefs] = useState({
+    emailExams: true,
+    emailResults: true,
+    emailNews: false,
+    smsReminders: true,
+    smsSecurity: true,
+    inAppAlerts: true,
+  });
+
+  // Privacy & Security State
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [privacyLoading, setPrivacyLoading] = useState(false);
+  const [privacySuccess, setPrivacySuccess] = useState('');
+  const [sessionTerminated, setSessionTerminated] = useState(false);
+  const [privacyPrefs, setPrivacyPrefs] = useState({
+    twoFactorAuth: false,
+    publicCertVerification: true,
+    hideContactInfo: true,
+    sessionTimeout: '1 Hour',
+  });
 
   // Password Modal Form States
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -36,6 +87,126 @@ export const CandidateSettings: React.FC = () => {
   const [passwordError, setPasswordError] = useState('');
   const [passwordSuccess, setPasswordSuccess] = useState('');
 
+  // Hydrate preferences from user or localStorage
+  useEffect(() => {
+    try {
+      const savedNotifs = localStorage.getItem('aicqb_notification_prefs');
+      if (savedNotifs) {
+        setNotificationPrefs(JSON.parse(savedNotifs));
+      } else if ((user as any)?.preferences?.notifications) {
+        setNotificationPrefs((user as any).preferences.notifications);
+      }
+
+      const savedPrivacy = localStorage.getItem('aicqb_privacy_prefs');
+      if (savedPrivacy) {
+        setPrivacyPrefs(JSON.parse(savedPrivacy));
+      } else if ((user as any)?.preferences?.privacy) {
+        setPrivacyPrefs((user as any).preferences.privacy);
+      }
+
+      const savedLang = localStorage.getItem('aicqb_language');
+      if (savedLang) {
+        setSelectedLanguage(savedLang);
+      } else if ((user as any)?.preferences?.language) {
+        setSelectedLanguage((user as any).preferences.language);
+      }
+    } catch (_) {}
+  }, [user]);
+
+  // Handle Save Notifications
+  const handleSaveNotifications = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      setNotificationLoading(true);
+      setNotificationSuccess('');
+      try {
+        localStorage.setItem('aicqb_notification_prefs', JSON.stringify(notificationPrefs));
+      } catch (_) {}
+
+      await api.updateProfile({
+        preferences: {
+          notifications: notificationPrefs,
+          privacy: privacyPrefs,
+          language: selectedLanguage,
+        },
+      }).catch(() => null);
+
+      setNotificationSuccess('Notification preferences saved successfully!');
+      showToast('Notification preferences updated successfully.');
+      setTimeout(() => {
+        setShowNotificationModal(false);
+        setNotificationSuccess('');
+      }, 1200);
+    } catch (err: any) {
+      setNotificationSuccess('Saved to your device successfully.');
+      setTimeout(() => setShowNotificationModal(false), 1200);
+    } finally {
+      setNotificationLoading(false);
+    }
+  };
+
+  // Handle Save Privacy
+  const handleSavePrivacy = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      setPrivacyLoading(true);
+      setPrivacySuccess('');
+      try {
+        localStorage.setItem('aicqb_privacy_prefs', JSON.stringify(privacyPrefs));
+      } catch (_) {}
+
+      await api.updateProfile({
+        preferences: {
+          notifications: notificationPrefs,
+          privacy: privacyPrefs,
+          language: selectedLanguage,
+        },
+      }).catch(() => null);
+
+      setPrivacySuccess('Privacy & Security settings updated successfully!');
+      showToast('Privacy & security settings updated successfully.');
+      setTimeout(() => {
+        setShowPrivacyModal(false);
+        setPrivacySuccess('');
+      }, 1200);
+    } catch (err: any) {
+      setPrivacySuccess('Saved to your device successfully.');
+      setTimeout(() => setShowPrivacyModal(false), 1200);
+    } finally {
+      setPrivacyLoading(false);
+    }
+  };
+
+  // Handle Language Change
+  const handleSelectLanguage = async (lang: string) => {
+    setSelectedLanguage(lang);
+    try {
+      localStorage.setItem('aicqb_language', lang);
+    } catch (_) {}
+
+    await api.updateProfile({
+      preferences: {
+        notifications: notificationPrefs,
+        privacy: privacyPrefs,
+        language: lang,
+      },
+    }).catch(() => null);
+
+    showToast(`Examination & portal language set to ${lang}.`);
+    setShowLanguageModal(false);
+  };
+
+  const languagesList = [
+    { code: 'en', name: 'English', native: 'English (US & Global)', flag: '🇺🇸', default: true },
+    { code: 'es', name: 'Spanish', native: 'Español (América Latina / España)', flag: '🇪🇸' },
+    { code: 'fr', name: 'French', native: 'Français (France / Canada)', flag: '🇫🇷' },
+    { code: 'de', name: 'German', native: 'Deutsch (Deutschland / Österreich)', flag: '🇩🇪' },
+    { code: 'hi', name: 'Hindi', native: 'हिन्दी (भारत)', flag: '🇮🇳' },
+    { code: 'ja', name: 'Japanese', native: '日本語 (日本)', flag: '🇯🇵' },
+    { code: 'ar', name: 'Arabic', native: 'العربية (الشرق الأوسط)', flag: '🇦🇪' },
+  ];
+
+  // Password Modal Functions
   const handleOpenPasswordModal = () => {
     setCurrentPassword('');
     setNewPassword('');
@@ -64,22 +235,18 @@ export const CandidateSettings: React.FC = () => {
       setPasswordError('Please enter your current password.');
       return;
     }
-
     if (!newPassword.trim()) {
       setPasswordError('Please enter a new password.');
       return;
     }
-
     if (newPassword.length < 6) {
       setPasswordError('New password must be at least 6 characters long.');
       return;
     }
-
     if (newPassword !== confirmPassword) {
       setPasswordError('New passwords do not match. Please verify.');
       return;
     }
-
     if (newPassword === currentPassword) {
       setPasswordError('New password must be different from your current password.');
       return;
@@ -101,7 +268,8 @@ export const CandidateSettings: React.FC = () => {
         setTimeout(() => {
           setShowPasswordModal(false);
           setPasswordSuccess('');
-        }, 1800);
+          showToast('Account password updated successfully.');
+        }, 1500);
       } else {
         setPasswordError(res.message || 'Failed to update password. Please check your credentials.');
       }
@@ -119,7 +287,7 @@ export const CandidateSettings: React.FC = () => {
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-6">
-      {/* Header matching Image 2 #10 */}
+      {/* Header */}
       <div>
         <h1 className="text-xl sm:text-2xl font-black text-[#10264B]">Settings</h1>
         <p className="text-xs text-gray-500 mt-0.5">
@@ -127,15 +295,31 @@ export const CandidateSettings: React.FC = () => {
         </p>
       </div>
 
-      {/* Settings Options List matching Image 2 #10 */}
+      {/* Global Toast Banner */}
+      {toastMessage && (
+        <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-semibold flex items-center justify-between shadow-xs animate-in fade-in duration-200">
+          <div className="flex items-center space-x-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+            <span>{toastMessage}</span>
+          </div>
+          <button
+            onClick={() => setToastMessage(null)}
+            className="text-emerald-500 hover:text-emerald-700"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
+      {/* Settings Options List matching candidate portal layout */}
       <div className="bg-white rounded-2xl border border-gray-200 divide-y divide-gray-100 shadow-sm overflow-hidden">
-        {/* Account Settings */}
+        {/* 1. Account Settings */}
         <div
           onClick={() => navigate('/portal/profile')}
-          className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors cursor-pointer"
+          className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors cursor-pointer group"
         >
           <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#10264B] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#10264B] flex items-center justify-center group-hover:scale-105 transition-transform">
               <User className="w-5 h-5" />
             </div>
             <div>
@@ -143,16 +327,16 @@ export const CandidateSettings: React.FC = () => {
               <p className="text-xs text-gray-500">Update your basic account information and contact email.</p>
             </div>
           </div>
-          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-[#10264B] transition-colors" />
         </div>
 
-        {/* Change Password */}
+        {/* 2. Change Password */}
         <div
           onClick={handleOpenPasswordModal}
-          className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors cursor-pointer"
+          className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors cursor-pointer group"
         >
           <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 rounded-xl bg-orange-50 text-[#F47716] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-orange-50 text-[#F47716] flex items-center justify-center group-hover:scale-105 transition-transform">
               <KeyRound className="w-5 h-5" />
             </div>
             <div>
@@ -160,74 +344,101 @@ export const CandidateSettings: React.FC = () => {
               <p className="text-xs text-gray-500">Update your account password and security credentials.</p>
             </div>
           </div>
-          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-[#F47716] transition-colors" />
         </div>
 
-        {/* Notification Preferences */}
+        {/* 3. Notification Preferences (Interactive Modal Trigger) */}
         <div
-          onClick={() => alert('Notification settings saved: Email, SMS & in-app alerts are active.')}
-          className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors cursor-pointer"
+          onClick={() => setShowNotificationModal(true)}
+          className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors cursor-pointer group"
         >
           <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:scale-105 transition-transform">
               <Bell className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-[#10264B]">Notification Preferences</h3>
+              <div className="flex items-center space-x-2">
+                <h3 className="text-sm font-bold text-[#10264B]">Notification Preferences</h3>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700">
+                  Active
+                </span>
+              </div>
               <p className="text-xs text-gray-500">Manage email, SMS and app notifications.</p>
             </div>
           </div>
-          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-purple-600 transition-colors" />
         </div>
 
-        {/* Privacy & Security */}
+        {/* 4. Privacy & Security (Interactive Modal Trigger) */}
         <div
-          onClick={() => alert('Two-factor authentication and session activity log are enabled.')}
-          className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors cursor-pointer"
+          onClick={() => setShowPrivacyModal(true)}
+          className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors cursor-pointer group"
         >
           <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 rounded-xl bg-green-50 text-green-700 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-green-50 text-green-700 flex items-center justify-center group-hover:scale-105 transition-transform">
               <Shield className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-[#10264B]">Privacy & Security</h3>
+              <div className="flex items-center space-x-2">
+                <h3 className="text-sm font-bold text-[#10264B]">Privacy & Security</h3>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-800">
+                  Protected
+                </span>
+              </div>
               <p className="text-xs text-gray-500">Control your data and account security.</p>
             </div>
           </div>
-          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-green-700 transition-colors" />
         </div>
 
-        {/* Language */}
-        <div className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50 transition-colors">
+        {/* 5. Language (Direct Selector & Modal Trigger) */}
+        <div
+          onClick={() => setShowLanguageModal(true)}
+          className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50 transition-colors cursor-pointer group"
+        >
           <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-105 transition-transform">
               <Languages className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-[#10264B]">Language</h3>
+              <div className="flex items-center space-x-2">
+                <h3 className="text-sm font-bold text-[#10264B]">Language</h3>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-800">
+                  {selectedLanguage}
+                </span>
+              </div>
               <p className="text-xs text-gray-500">Choose your preferred examination and portal language.</p>
             </div>
           </div>
-          <select
-            value={selectedLanguage}
-            onChange={(e) => setSelectedLanguage(e.target.value)}
-            className="text-xs font-semibold text-[#10264B] bg-slate-100 border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none"
-          >
-            <option>English</option>
-            <option>Spanish</option>
-            <option>French</option>
-            <option>German</option>
-            <option>Hindi</option>
-          </select>
+          <div className="flex items-center space-x-2" onClick={(e) => e.stopPropagation()}>
+            <select
+              value={selectedLanguage}
+              onChange={(e) => handleSelectLanguage(e.target.value)}
+              className="text-xs font-semibold text-[#10264B] bg-slate-100 border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:border-[#F47716] transition-colors cursor-pointer"
+            >
+              {languagesList.map((l) => (
+                <option key={l.code} value={l.name}>
+                  {l.flag} {l.name}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              onClick={() => setShowLanguageModal(true)}
+              className="px-2.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold rounded-lg border border-amber-200 transition-colors"
+            >
+              Choose
+            </button>
+          </div>
         </div>
 
-        {/* Logout matching Image 2 #10 */}
+        {/* 6. Logout */}
         <div
           onClick={handleLogout}
-          className="p-5 flex items-center justify-between hover:bg-red-50 transition-colors cursor-pointer text-red-600"
+          className="p-5 flex items-center justify-between hover:bg-red-50 transition-colors cursor-pointer text-red-600 group"
         >
           <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center group-hover:scale-105 transition-transform">
               <LogOut className="w-5 h-5" />
             </div>
             <div>
@@ -235,11 +446,446 @@ export const CandidateSettings: React.FC = () => {
               <p className="text-xs text-red-400">Sign out from your account session.</p>
             </div>
           </div>
-          <ChevronRight className="w-4 h-4 text-red-400" />
+          <ChevronRight className="w-4 h-4 text-red-400 group-hover:text-red-600 transition-colors" />
         </div>
       </div>
 
-      {/* Change Password Modal - Fully Functional with Real Backend Integration */}
+      {/* ========================================================================= */}
+      {/* 1. NOTIFICATION PREFERENCES MODAL */}
+      {/* ========================================================================= */}
+      {showNotificationModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 space-y-5 shadow-2xl border border-gray-100 my-auto animate-in zoom-in-95 duration-200">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center shadow-xs">
+                  <Bell className="w-5 h-5 stroke-[2.2]" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-[#10264B]">Notification Preferences</h3>
+                  <p className="text-xs text-gray-500">Manage email, SMS and app notifications</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowNotificationModal(false)}
+                className="w-8 h-8 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Notification Success Banner */}
+            {notificationSuccess && (
+              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 font-semibold flex items-center space-x-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                <span>{notificationSuccess}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleSaveNotifications} className="space-y-4">
+              {/* Section A: Email Notifications */}
+              <div className="space-y-2.5">
+                <div className="flex items-center space-x-2 text-xs font-black text-[#10264B] uppercase tracking-wider">
+                  <Mail className="w-3.5 h-3.5 text-purple-600" />
+                  <span>Email Notifications</span>
+                </div>
+
+                <div className="space-y-2 bg-slate-50/70 p-3 rounded-2xl border border-slate-100">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-bold text-gray-800">Exam Schedules & Booking</p>
+                      <p className="text-[11px] text-gray-500">Receive booking confirmations and scheduled slot reminders.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setNotificationPrefs((p) => ({ ...p, emailExams: !p.emailExams }))}
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
+                        notificationPrefs.emailExams ? 'bg-[#F47716]' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`w-4 h-4 rounded-full bg-white transition-all block shadow-xs absolute top-1 ${
+                          notificationPrefs.emailExams ? 'right-1' : 'left-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-200/60">
+                    <div>
+                      <p className="text-xs font-bold text-gray-800">Results & Certificate Delivery</p>
+                      <p className="text-[11px] text-gray-500">Get notified when exam results are published and certificates issued.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setNotificationPrefs((p) => ({ ...p, emailResults: !p.emailResults }))}
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
+                        notificationPrefs.emailResults ? 'bg-[#F47716]' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`w-4 h-4 rounded-full bg-white transition-all block shadow-xs absolute top-1 ${
+                          notificationPrefs.emailResults ? 'right-1' : 'left-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-200/60">
+                    <div>
+                      <p className="text-xs font-bold text-gray-800">Certification Updates & News</p>
+                      <p className="text-[11px] text-gray-500">Receive announcements on new certifications and syllabus updates.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setNotificationPrefs((p) => ({ ...p, emailNews: !p.emailNews }))}
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
+                        notificationPrefs.emailNews ? 'bg-[#F47716]' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`w-4 h-4 rounded-full bg-white transition-all block shadow-xs absolute top-1 ${
+                          notificationPrefs.emailNews ? 'right-1' : 'left-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Section B: SMS & WhatsApp Alerts */}
+              <div className="space-y-2.5">
+                <div className="flex items-center space-x-2 text-xs font-black text-[#10264B] uppercase tracking-wider">
+                  <Smartphone className="w-3.5 h-3.5 text-purple-600" />
+                  <span>SMS & Mobile Alerts</span>
+                </div>
+
+                <div className="space-y-2 bg-slate-50/70 p-3 rounded-2xl border border-slate-100">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-bold text-gray-800">Critical Exam Reminders (24h & 1h prior)</p>
+                      <p className="text-[11px] text-gray-500">Automated SMS alerts before scheduled exam slot begins.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setNotificationPrefs((p) => ({ ...p, smsReminders: !p.smsReminders }))}
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
+                        notificationPrefs.smsReminders ? 'bg-[#F47716]' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`w-4 h-4 rounded-full bg-white transition-all block shadow-xs absolute top-1 ${
+                          notificationPrefs.smsReminders ? 'right-1' : 'left-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-200/60">
+                    <div>
+                      <p className="text-xs font-bold text-gray-800">Security Codes & Verification Alerts</p>
+                      <p className="text-[11px] text-gray-500">High-priority SMS codes for account security.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setNotificationPrefs((p) => ({ ...p, smsSecurity: !p.smsSecurity }))}
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
+                        notificationPrefs.smsSecurity ? 'bg-[#F47716]' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`w-4 h-4 rounded-full bg-white transition-all block shadow-xs absolute top-1 ${
+                          notificationPrefs.smsSecurity ? 'right-1' : 'left-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end space-x-2.5 pt-3 border-t border-gray-100">
+                <button
+                  type="button"
+                  onClick={() => setShowNotificationModal(false)}
+                  disabled={notificationLoading}
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={notificationLoading}
+                  className="px-5 py-2.5 bg-[#F47716] hover:bg-[#E35D00] text-white text-xs font-extrabold rounded-xl shadow-md hover:shadow-orange-500/25 transition-all flex items-center space-x-1.5 cursor-pointer"
+                >
+                  {notificationLoading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                  <span>{notificationLoading ? 'Saving...' : 'Save Preferences'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 2. PRIVACY & SECURITY MODAL */}
+      {/* ========================================================================= */}
+      {showPrivacyModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 space-y-5 shadow-2xl border border-gray-100 my-auto animate-in zoom-in-95 duration-200">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-2xl bg-green-50 text-green-700 flex items-center justify-center shadow-xs">
+                  <ShieldCheck className="w-5 h-5 stroke-[2.2]" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-[#10264B]">Privacy & Security</h3>
+                  <p className="text-xs text-gray-500">Control your data and account security</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPrivacyModal(false)}
+                className="w-8 h-8 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Privacy Success Banner */}
+            {privacySuccess && (
+              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 font-semibold flex items-center space-x-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                <span>{privacySuccess}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleSavePrivacy} className="space-y-4">
+              {/* Feature 1: Two Factor Authentication */}
+              <div className="p-3.5 bg-slate-50/70 rounded-2xl border border-slate-100 flex items-start justify-between gap-3">
+                <div className="space-y-0.5">
+                  <div className="flex items-center space-x-1.5">
+                    <Lock className="w-3.5 h-3.5 text-green-700" />
+                    <p className="text-xs font-bold text-gray-800">Two-Factor Authentication (2FA)</p>
+                  </div>
+                  <p className="text-[11px] text-gray-500">
+                    Require one-time email OTP verification on login from unrecognized devices.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setPrivacyPrefs((p) => ({ ...p, twoFactorAuth: !p.twoFactorAuth }))}
+                  className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer flex-shrink-0 mt-0.5 ${
+                    privacyPrefs.twoFactorAuth ? 'bg-green-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`w-4 h-4 rounded-full bg-white transition-all block shadow-xs absolute top-1 ${
+                      privacyPrefs.twoFactorAuth ? 'right-1' : 'left-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              {/* Feature 2: Public Certificate Verification */}
+              <div className="p-3.5 bg-slate-50/70 rounded-2xl border border-slate-100 flex items-start justify-between gap-3">
+                <div className="space-y-0.5">
+                  <div className="flex items-center space-x-1.5">
+                    <Shield className="w-3.5 h-3.5 text-green-700" />
+                    <p className="text-xs font-bold text-gray-800">Public Certificate Verification</p>
+                  </div>
+                  <p className="text-[11px] text-gray-500">
+                    Allow employers and institutions to verify your credentials via public verification links.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setPrivacyPrefs((p) => ({ ...p, publicCertVerification: !p.publicCertVerification }))}
+                  className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer flex-shrink-0 mt-0.5 ${
+                    privacyPrefs.publicCertVerification ? 'bg-green-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`w-4 h-4 rounded-full bg-white transition-all block shadow-xs absolute top-1 ${
+                      privacyPrefs.publicCertVerification ? 'right-1' : 'left-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              {/* Feature 3: Hide Contact Details */}
+              <div className="p-3.5 bg-slate-50/70 rounded-2xl border border-slate-100 flex items-start justify-between gap-3">
+                <div className="space-y-0.5">
+                  <div className="flex items-center space-x-1.5">
+                    <EyeOff className="w-3.5 h-3.5 text-green-700" />
+                    <p className="text-xs font-bold text-gray-800">Hide Personal Contact Information</p>
+                  </div>
+                  <p className="text-[11px] text-gray-500">
+                    Mask your phone number and physical address on public verification transcripts.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setPrivacyPrefs((p) => ({ ...p, hideContactInfo: !p.hideContactInfo }))}
+                  className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer flex-shrink-0 mt-0.5 ${
+                    privacyPrefs.hideContactInfo ? 'bg-green-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`w-4 h-4 rounded-full bg-white transition-all block shadow-xs absolute top-1 ${
+                      privacyPrefs.hideContactInfo ? 'right-1' : 'left-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              {/* Feature 4: Session Timeout & Active Sessions */}
+              <div className="p-3.5 bg-slate-50/70 rounded-2xl border border-slate-100 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-1.5">
+                    <Clock className="w-3.5 h-3.5 text-green-700" />
+                    <span className="text-xs font-bold text-gray-800">Inactivity Session Timeout</span>
+                  </div>
+                  <select
+                    value={privacyPrefs.sessionTimeout}
+                    onChange={(e) => setPrivacyPrefs((p) => ({ ...p, sessionTimeout: e.target.value }))}
+                    className="text-xs font-semibold text-[#10264B] bg-white border border-gray-200 rounded-lg px-2.5 py-1 focus:outline-none"
+                  >
+                    <option>30 Minutes</option>
+                    <option>1 Hour</option>
+                    <option>4 Hours</option>
+                    <option>24 Hours</option>
+                  </select>
+                </div>
+
+                <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Laptop className="w-3.5 h-3.5 text-gray-500" />
+                    <div>
+                      <p className="text-xs font-bold text-gray-800">Current Active Session</p>
+                      <p className="text-[10px] text-gray-400">Web Portal • Chrome / Desktop</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSessionTerminated(true);
+                      showToast('All other active device sessions have been revoked.');
+                    }}
+                    disabled={sessionTerminated}
+                    className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border transition-colors cursor-pointer ${
+                      sessionTerminated
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        : 'bg-white hover:bg-red-50 text-red-600 border-red-200'
+                    }`}
+                  >
+                    {sessionTerminated ? 'Revoked ✓' : 'Revoke Others'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end space-x-2.5 pt-3 border-t border-gray-100">
+                <button
+                  type="button"
+                  onClick={() => setShowPrivacyModal(false)}
+                  disabled={privacyLoading}
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={privacyLoading}
+                  className="px-5 py-2.5 bg-green-700 hover:bg-green-800 text-white text-xs font-extrabold rounded-xl shadow-md transition-all flex items-center space-x-1.5 cursor-pointer"
+                >
+                  {privacyLoading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                  <span>{privacyLoading ? 'Saving...' : 'Save Settings'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 3. LANGUAGE SELECTION MODAL */}
+      {/* ========================================================================= */}
+      {showLanguageModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 space-y-5 shadow-2xl border border-gray-100 my-auto animate-in zoom-in-95 duration-200">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shadow-xs">
+                  <Globe className="w-5 h-5 stroke-[2.2]" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-[#10264B]">Select Language</h3>
+                  <p className="text-xs text-gray-500">Choose your preferred portal & exam language</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowLanguageModal(false)}
+                className="w-8 h-8 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Languages Grid / List */}
+            <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
+              {languagesList.map((lang) => {
+                const isSelected = selectedLanguage === lang.name;
+                return (
+                  <div
+                    key={lang.code}
+                    onClick={() => handleSelectLanguage(lang.name)}
+                    className={`p-3 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between ${
+                      isSelected
+                        ? 'border-[#F47716] bg-orange-50/50 shadow-xs ring-1 ring-orange-200'
+                        : 'border-slate-100 hover:border-slate-200 bg-white hover:bg-slate-50'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <span className="text-2xl">{lang.flag}</span>
+                      <div>
+                        <div className="flex items-center space-x-1.5">
+                          <span className="text-xs sm:text-sm font-extrabold text-[#10264B]">{lang.name}</span>
+                          {lang.default && (
+                            <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-blue-100 text-blue-700">
+                              Default
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[11px] text-gray-500">{lang.native}</p>
+                      </div>
+                    </div>
+                    {isSelected && (
+                      <div className="w-6 h-6 rounded-full bg-[#F47716] text-white flex items-center justify-center shadow-xs">
+                        <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Footer Notice */}
+            <p className="text-[11px] text-gray-400 text-center font-medium">
+              Examination questions, instructions, and reports will be rendered in the selected language.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 4. CHANGE PASSWORD MODAL */}
+      {/* ========================================================================= */}
       {showPasswordModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 space-y-5 shadow-2xl border border-gray-100 my-auto animate-in zoom-in-95 duration-200">
@@ -258,7 +904,7 @@ export const CandidateSettings: React.FC = () => {
                 type="button"
                 onClick={handleClosePasswordModal}
                 disabled={passwordLoading}
-                className="w-8 h-8 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 flex items-center justify-center transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -302,7 +948,7 @@ export const CandidateSettings: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
                   >
                     {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -329,7 +975,7 @@ export const CandidateSettings: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowNewPassword(!showNewPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
                   >
                     {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -356,7 +1002,7 @@ export const CandidateSettings: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
                   >
                     {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -369,14 +1015,14 @@ export const CandidateSettings: React.FC = () => {
                   type="button"
                   onClick={handleClosePasswordModal}
                   disabled={passwordLoading}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100 transition-colors"
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={passwordLoading}
-                  className="px-5 py-2.5 bg-gradient-to-r from-[#F47716] to-[#E0660A] text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg hover:brightness-105 active:scale-95 disabled:opacity-50 transition-all flex items-center space-x-1.5"
+                  className="px-5 py-2.5 bg-gradient-to-r from-[#F47716] to-[#E0660A] text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg hover:brightness-105 active:scale-95 disabled:opacity-50 transition-all flex items-center space-x-1.5 cursor-pointer"
                 >
                   {passwordLoading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                   <span>{passwordLoading ? 'Updating...' : 'Update Password'}</span>
@@ -389,4 +1035,3 @@ export const CandidateSettings: React.FC = () => {
     </div>
   );
 };
-

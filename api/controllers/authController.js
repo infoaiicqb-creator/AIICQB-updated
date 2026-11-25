@@ -359,6 +359,7 @@ export async function getMe(req, res) {
         candidateId: user.candidateId || null,
         phoneNumber: user.phoneNumber || '',
         emailVerified: user.emailVerified || false,
+        preferences: user.preferences || candidate?.preferences || null,
       },
       candidate,
     });
@@ -369,13 +370,14 @@ export async function getMe(req, res) {
 
 export async function updateProfile(req, res) {
   try {
-    const { fullName, phoneNumber, country, address, gender, dateOfBirth, aboutMe, organization, designation } = req.body;
+    const { fullName, phoneNumber, country, address, gender, dateOfBirth, aboutMe, organization, designation, preferences } = req.body;
     const uid = req.user.uid;
 
     const userUpdates = {};
     if (fullName) userUpdates.fullName = fullName.trim();
     if (phoneNumber) userUpdates.phoneNumber = phoneNumber.trim();
     if (organization !== undefined) userUpdates.organization = organization.trim();
+    if (preferences !== undefined) userUpdates.preferences = preferences;
 
     db.updateDoc('users', uid, userUpdates);
 
@@ -402,6 +404,7 @@ export async function updateProfile(req, res) {
       ...(aboutMe && { aboutMe: aboutMe.trim() }),
       ...(organization !== undefined && { organization: organization.trim() }),
       ...(designation !== undefined && { designation: designation.trim() }),
+      ...(preferences !== undefined && { preferences }),
       profileCompletion,
       updatedAt: new Date().toISOString(),
     };

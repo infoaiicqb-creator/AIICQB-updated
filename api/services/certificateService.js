@@ -123,3 +123,89 @@ export async function generateCertificate({
   return certificateRecord;
 }
 
+export async function ensureCandidateCertificates({ uid, email, candidateId, fullName }) {
+  const cleanEmail = email ? email.toLowerCase().trim() : '';
+
+  // 1. Current certificates
+  let certificates = db.find('certificates', c =>
+    (uid && c.candidateUid === uid) ||
+    (candidateId && (c.candidateId === candidateId || c.candidate_id === candidateId)) ||
+    (cleanEmail && c.candidateEmail && c.candidateEmail.toLowerCase() === cleanEmail)
+  );
+
+  // 2. Passed results
+  const passedResults = db.find('results', r =>
+    ((uid && r.candidateUid === uid) ||
+     (candidateId && (r.candidateId === candidateId || r.candidate_id === candidateId)) ||
+     (cleanEmail && r.candidateEmail && r.candidateEmail.toLowerCase() === cleanEmail)) &&
+    r.passed
+  );
+
+  // 3. Completed / passed schedules
+  const completedSchedules = db.find('examSchedules', s =>
+    ((uid && s.candidateUid === uid) ||
+     (candidateId && (s.candidateId === candidateId || s.candidate_id === candidateId)) ||
+     (cleanEmail && s.candidateEmail && s.candidateEmail.toLowerCase() === cleanEmail)) &&
+    (s.passed || (s.status === 'completed' && s.certificateNo))
+  );
+
+  // 4. Completed enrollments
+  const completedEnrollments = db.find('enrollments', e =>
+    ((uid && e.candidateUid === uid) ||
+     (candidateId && (e.candidateId === candidateId || e.candidate_id === candidateId)) ||
+     (cleanEmail && e.candidateEmail && e.candidateEmail.toLowerCase() === cleanEmail)) &&
+    e.status === 'completed'
+  );
+
+  const passedItems = [...passedResults, ...completedSchedules, ...completedEnrollments];
+
+  for (const item of passedItems) {
+    const certId = item.certificationId || item.certification_id;
+    const certCode = item.certificationCode || item.certification_code;
+    const certName = item.certificationName || item.certification_name || item.name;
+
+    const exists = certificates.some(c =>
+      (certId && c.certificationId === certId) ||
+      (certCode && c.certificationCode === certCode) ||
+      (certName && c.certificationName?.toLowerCase().trim() === certName.toLowerCase().trim())
+    );
+
+    if (!exists && (certId || certCode)) {
+      try {
+        const certCatalog = db.findOne('certifications', c =>
+          (certId && c.id === certId) ||
+          (certCode && c.code === certCode)
+        );
+
+        const newCert = await generateCertificate({
+          candidateUid: uid || item.candidateUid,
+          candidateName: fullName || item.candidateName || item.candidate_name || 'Candidate',
+          candidateId: candidateId || item.candidateId || item.candidate_id || 'AICQB-CAND',
+          candidateEmail: cleanEmail || item.candidateEmail || item.candidate_email,
+          certificationId: certId || certCatalog?.id,
+          certificationName: certName || certCatalog?.name || 'AICQB Certification',
+          certificationCode: certCode || certCatalog?.code || 'AICQB-CERT',
+          credentialLevel: item.certification_level || certCatalog?.level || 'Professional Level',
+          percentage: item.percentage || item.score || 85,
+          score: item.score || item.percentage || 85,
+        });
+
+        certificates.push(newCert);
+
+        // Also make sure enrollment status is 'completed'
+        const enr = db.findOne('enrollments', e =>
+          ((uid && e.candidateUid === uid) || (cleanEmail && e.candidateEmail?.toLowerCase() === cleanEmail)) &&
+          (e.certificationId === certId || e.certificationCode === certCode)
+        );
+        if (enr && enr.status !== 'completed') {
+          db.updateDoc('enrollments', enr.id, { status: 'completed', progressPercentage: 100 });
+        }
+      } catch (err) {
+        console.warn('Auto certificate generation skipped:', err.message);
+      }
+    }
+  }
+
+  return certificates;
+}
+

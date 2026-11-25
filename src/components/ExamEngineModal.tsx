@@ -295,6 +295,23 @@ export const ExamEngineModal: React.FC<ExamEngineModalProps> = ({ scheduleId, on
             spread: 90,
             origin: { y: 0.5 },
           });
+
+          // Sync local storage immediately for candidate certifications & certificates view
+          try {
+            const certId = sessionData?.certificationId || sessionData?.schedule?.certificationId;
+            const certCodeVal = certCode;
+            const currentCompleted = JSON.parse(localStorage.getItem('aicqb_completed_cert_ids') || '[]');
+            const updatedCompleted = Array.from(new Set([...currentCompleted, certId, certCodeVal].filter(Boolean)));
+            localStorage.setItem('aicqb_completed_cert_ids', JSON.stringify(updatedCompleted));
+
+            if (res.results.certificate) {
+              const currentCerts = JSON.parse(localStorage.getItem('aicqb_my_certs') || '[]');
+              const exists = currentCerts.some((c: any) => c.certificateNo === res.results.certificate.certificateNo);
+              if (!exists) {
+                localStorage.setItem('aicqb_my_certs', JSON.stringify([res.results.certificate, ...currentCerts]));
+              }
+            }
+          } catch (_) {}
         }
       } else {
         throw new Error(res?.message || 'Submission failed');
@@ -344,6 +361,13 @@ export const ExamEngineModal: React.FC<ExamEngineModalProps> = ({ scheduleId, on
           spread: 90,
           origin: { y: 0.5 },
         });
+
+        try {
+          const certId = sessionData?.certificationId || sessionData?.schedule?.certificationId;
+          const currentCompleted = JSON.parse(localStorage.getItem('aicqb_completed_cert_ids') || '[]');
+          const updatedCompleted = Array.from(new Set([...currentCompleted, certId, certCode].filter(Boolean)));
+          localStorage.setItem('aicqb_completed_cert_ids', JSON.stringify(updatedCompleted));
+        } catch (_) {}
       }
     } finally {
       setSubmitting(false);

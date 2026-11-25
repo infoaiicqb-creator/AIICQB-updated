@@ -7664,5 +7664,57 @@
     "id": "auditLogs_1795589477848_b3xka",
     "createdAt": "2026-11-25T06:51:17.848Z",
     "updatedAt": "2026-11-25T06:51:17.848Z"
+  },
+  {
+    "userId": "system",
+    "userEmail": "system",
+    "userRole": "System",
+    "action": "QR_SCAN_PAYMENT_SUCCESS",
+    "module": "Finance & Payments",
+    "details": "Test QR code scanned & verified for AICQB Certified Playwright Automation (9999 INR)",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-25T10:31:35.915Z",
+    "id": "auditLogs_1795602695915_xw363",
+    "createdAt": "2026-11-25T10:31:35.915Z",
+    "updatedAt": "2026-11-25T10:31:35.915Z"
+  },
+  {
+    "userId": "usr_1795161584876_gigns6",
+    "userEmail": "gaurav@gmail.com",
+    "userRole": "Candidate",
+    "action": "CANDIDATE_ENROLLED",
+    "module": "Certifications",
+    "details": "Candidate Gaurav Patil enrolled in AICQB Certified Playwright Automation (AICQB-PW-CP) and scheduled for examination.",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-25T10:31:35.953Z",
+    "id": "auditLogs_1795602695953_bftnl",
+    "createdAt": "2026-11-25T10:31:35.953Z",
+    "updatedAt": "2026-11-25T10:31:35.953Z"
+  },
+  {
+    "userId": "usr_1795161584876_gigns6",
+    "userEmail": "gaurav@gmail.com",
+    "userRole": "Candidate",
+    "action": "EXAM_SUBMISSION",
+    "module": "Examination Management",
+    "details": "Exam submitted for AICQB Certified Playwright Automation by gaurav@gmail.com - Score: 0% (FAILED - RETAKE GRANTED) - Fail",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-25T10:32:34.843Z",
+    "id": "auditLogs_1795602754843_amln8",
+    "createdAt": "2026-11-25T10:32:34.843Z",
+    "updatedAt": "2026-11-25T10:32:34.843Z"
+  },
+  {
+    "userId": "usr_1795161584876_gigns6",
+    "userEmail": "gaurav@gmail.com",
+    "userRole": "Candidate",
+    "action": "EXAM_SUBMISSION",
+    "module": "Examination Management",
+    "details": "Exam submitted for AICQB Certified Playwright Automation by gaurav@gmail.com - Score: 13% (FAILED - RETAKE GRANTED) - Fail",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-25T10:33:02.943Z",
+    "id": "auditLogs_1795602782943_ov8bp",
+    "createdAt": "2026-11-25T10:33:02.943Z",
+    "updatedAt": "2026-11-25T10:33:02.943Z"
   }
 ]

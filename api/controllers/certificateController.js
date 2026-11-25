@@ -1,6 +1,6 @@
 import QRCode from 'qrcode';
 import db from '../config/db.js';
-import { generateCertificate } from '../services/certificateService.js';
+import { generateCertificate, ensureCandidateCertificates } from '../services/certificateService.js';
 import { logAudit } from '../middleware/auth.js';
 
 export async function getCandidateCertificates(req, res) {
@@ -9,13 +9,12 @@ export async function getCandidateCertificates(req, res) {
     const candidateId = req.user.candidateId;
     const email = req.user.email?.toLowerCase();
 
-    const list = db.find(
-      'certificates',
-      c =>
-        (uid && c.candidateUid === uid) ||
-        (candidateId && c.candidateId === candidateId) ||
-        (email && c.candidateEmail && c.candidateEmail.toLowerCase() === email)
-    );
+    const list = await ensureCandidateCertificates({
+      uid,
+      email,
+      candidateId,
+      fullName: req.user.fullName,
+    });
 
     const normalized = list.map(c => ({
       ...c,

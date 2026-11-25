@@ -2794,5 +2794,209 @@
     "percentage": 27,
     "passed": false,
     "submitTime": "2026-11-25T06:51:17.837Z"
+  },
+  {
+    "id": "att_1795602733491_wr4j74",
+    "attemptId": "att_1795602733491_wr4j74",
+    "scheduleId": "SCH-AICQB-695904",
+    "candidateUid": "usr_1795161584876_gigns6",
+    "candidateId": "AICQB-1004704",
+    "candidateName": "Gaurav Patil",
+    "certificationId": "cert_aicqb_pw_cp",
+    "certificationName": "AICQB Certified Playwright Automation",
+    "certificationCode": "AICQB-PW-CP",
+    "startTime": "2026-11-25T10:32:13.491Z",
+    "durationMinutes": 90,
+    "totalQuestions": 6,
+    "status": "completed",
+    "answers": {
+      "q2": 0,
+      "q4": 1,
+      "q6": 0,
+      "q3": 0,
+      "q1": 2,
+      "q5": 2
+    },
+    "questionMap": {
+      "q5": {
+        "correctOptionIndex": 1,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q2": {
+        "correctOptionIndex": 3,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q3": {
+        "correctOptionIndex": 3,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q1": {
+        "correctOptionIndex": 3,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q6": {
+        "correctOptionIndex": 2,
+        "originalCorrectAnswer": 0,
+        "points": 10,
+        "questionType": "mcq"
+      },
+      "q4": {
+        "correctOptionIndex": 1,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      }
+    },
+    "questionOrder": [
+      "q5",
+      "q2",
+      "q3",
+      "q1",
+      "q6",
+      "q4"
+    ],
+    "createdAt": "2026-11-25T10:32:13.491Z",
+    "updatedAt": "2026-11-25T10:33:02.934Z",
+    "score": 4,
+    "maxScore": 30,
+    "percentage": 13,
+    "passed": false,
+    "submitTime": "2026-11-25T10:33:02.934Z"
+  },
+  {
+    "id": "att_1795602764732_yzfe0g",
+    "attemptId": "att_1795602764732_yzfe0g",
+    "scheduleId": "SCH-AICQB-695904",
+    "candidateUid": "usr_1795161584876_gigns6",
+    "candidateId": "AICQB-1004704",
+    "candidateName": "Gaurav Patil",
+    "certificationId": "cert_aicqb_pw_cp",
+    "certificationName": "AICQB Certified Playwright Automation",
+    "certificationCode": "AICQB-PW-CP",
+    "startTime": "2026-11-25T10:32:44.732Z",
+    "durationMinutes": 90,
+    "totalQuestions": 6,
+    "status": "in-progress",
+    "answers": {},
+    "questionMap": {
+      "q2": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q4": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q6": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 0,
+        "points": 10,
+        "questionType": "mcq"
+      },
+      "q3": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q1": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q5": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      }
+    },
+    "questionOrder": [
+      "q2",
+      "q4",
+      "q6",
+      "q3",
+      "q1",
+      "q5"
+    ],
+    "createdAt": "2026-11-25T10:32:44.732Z",
+    "updatedAt": "2026-11-25T10:32:44.732Z"
+  },
+  {
+    "id": "att_1795602784684_uc5i6g",
+    "attemptId": "att_1795602784684_uc5i6g",
+    "scheduleId": "SCH-AICQB-695904",
+    "candidateUid": "usr_1795161584876_gigns6",
+    "candidateId": "AICQB-1004704",
+    "candidateName": "Gaurav Patil",
+    "certificationId": "cert_aicqb_pw_cp",
+    "certificationName": "AICQB Certified Playwright Automation",
+    "certificationCode": "AICQB-PW-CP",
+    "startTime": "2026-11-25T10:33:04.684Z",
+    "durationMinutes": 90,
+    "totalQuestions": 6,
+    "status": "in-progress",
+    "answers": {},
+    "questionMap": {
+      "q5": {
+        "correctOptionIndex": 2,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q4": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q3": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q2": {
+        "correctOptionIndex": 1,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q1": {
+        "correctOptionIndex": 1,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q6": {
+        "correctOptionIndex": 3,
+        "originalCorrectAnswer": 0,
+        "points": 10,
+        "questionType": "mcq"
+      }
+    },
+    "questionOrder": [
+      "q5",
+      "q4",
+      "q3",
+      "q2",
+      "q1",
+      "q6"
+    ],
+    "createdAt": "2026-11-25T10:33:04.684Z",
+    "updatedAt": "2026-11-25T10:33:04.684Z"
   }
 ]

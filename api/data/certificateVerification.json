@@ -758,5 +758,14 @@
     "createdAt": "2026-11-20T11:30:49.788Z",
     "id": "certificateVerification_1795174249790_4n152",
     "updatedAt": "2026-11-20T11:30:49.790Z"
+  },
+  {
+    "certificateNo": "AICQB-AI-2026-000124",
+    "candidateName": "Gaurav Patil",
+    "certificationName": "AICQB Certified AI Professional",
+    "verifiedCount": 0,
+    "createdAt": "2026-11-25T10:41:42.601Z",
+    "id": "certificateVerification_1795603302606_f7y6k",
+    "updatedAt": "2026-11-25T10:41:42.606Z"
   }
 ]

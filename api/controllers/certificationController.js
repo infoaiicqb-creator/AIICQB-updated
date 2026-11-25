@@ -1,5 +1,6 @@
 import db from '../config/db.js';
 import { logAudit } from '../middleware/auth.js';
+import { ensureCandidateCertificates } from '../services/certificateService.js';
 
 export async function getCertifications(req, res) {
   try {
@@ -82,12 +83,13 @@ export async function getCandidateCertificationStatus(req, res) {
       (candidateId && (e.candidateId === candidateId || e.candidate_id === candidateId))
     );
 
-    // Find candidate's certificates
-    const certificates = db.find('certificates', c =>
-      (uid && c.candidateUid === uid) ||
-      (email && c.candidateEmail?.toLowerCase() === email) ||
-      (candidateId && (c.candidateId === candidateId || c.candidate_id === candidateId))
-    );
+    // Ensure all passed exams/schedules have their certificates generated and synced
+    const certificates = await ensureCandidateCertificates({
+      uid,
+      email,
+      candidateId,
+      fullName: req.user?.fullName,
+    });
 
     // Find candidate's active exam schedules
     const schedules = db.find('examSchedules', s =>
@@ -148,11 +150,29 @@ export async function getCandidateCertificationStatus(req, res) {
       }
     }
 
+    // Collect all passed results & completed schedules
+    const passedResults = db.find('results', r =>
+      ((uid && r.candidateUid === uid) ||
+       (candidateId && (r.candidateId === candidateId || r.candidate_id === candidateId)) ||
+       (email && r.candidateEmail && r.candidateEmail.toLowerCase() === email)) &&
+      r.passed
+    );
+    const passedSchedules = db.find('examSchedules', s =>
+      ((uid && s.candidateUid === uid) ||
+       (candidateId && (s.candidateId === candidateId || s.candidate_id === candidateId)) ||
+       (email && s.candidateEmail && s.candidateEmail.toLowerCase() === email)) &&
+      (s.passed || (s.status === 'completed' && s.certificateNo))
+    );
+
     const completedCertIds = Array.from(new Set([
-      ...certificates.filter(c => c.status === 'Issued').map(c => c.certificationId),
-      ...certificates.filter(c => c.status === 'Issued').map(c => c.certificationCode),
+      ...certificates.map(c => c.certificationId),
+      ...certificates.map(c => c.certificationCode),
       ...enrollments.filter(e => e.status === 'completed').map(e => e.certificationId),
       ...enrollments.filter(e => e.status === 'completed').map(e => e.certificationCode),
+      ...passedResults.map(r => r.certificationId),
+      ...passedResults.map(r => r.certificationCode),
+      ...passedSchedules.map(s => s.certificationId),
+      ...passedSchedules.map(s => s.certificationCode),
     ])).filter(Boolean);
 
     // Active enrollments: enrolled, in-progress, PAID, active, success

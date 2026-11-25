@@ -10,6 +10,8 @@ import {
   Award,
   CheckCircle2,
   ChevronRight,
+  ChevronDown,
+  GraduationCap,
   Loader2,
   Sparkles,
   CalendarCheck,
@@ -34,6 +36,9 @@ export const CandidateCertifications: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDomain, setSelectedDomain] = useState('All');
   const [activeTab, setActiveTab] = useState<'all' | 'enrolled' | 'completed'>('all');
+  const [selectedLevelFilter, setSelectedLevelFilter] = useState<'All' | 'foundation' | 'professional' | 'expert'>('All');
+  const [showLevelMenu, setShowLevelMenu] = useState(false);
+  const [initialLevelModalId, setInitialLevelModalId] = useState<'foundation' | 'professional' | 'expert'>('professional');
 
   // Candidate status (Enrolled & Completed)
   const [enrolledCertIds, setEnrolledCertIds] = useState<string[]>(() => {
@@ -248,6 +253,171 @@ export const CandidateCertifications: React.FC = () => {
               {completedCerts.length}
             </span>
           </button>
+
+          {/* Level of Exam Button */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowLevelMenu(!showLevelMenu)}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 border shadow-2xs ${
+                selectedLevelFilter !== 'All'
+                  ? 'bg-gradient-to-r from-[#F47716] to-[#FF8C38] text-white border-orange-600'
+                  : 'bg-slate-100 text-[#10264B] border-slate-200 hover:bg-slate-200'
+              }`}
+            >
+              <GraduationCap className={`w-3.5 h-3.5 ${selectedLevelFilter !== 'All' ? 'text-white' : 'text-[#F47716]'}`} />
+              <span>
+                {selectedLevelFilter === 'All'
+                  ? 'Level of Exam'
+                  : selectedLevelFilter === 'foundation'
+                  ? 'Foundation Level'
+                  : selectedLevelFilter === 'professional'
+                  ? 'Professional Level'
+                  : 'Expert Level'}
+              </span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showLevelMenu ? 'rotate-180' : ''}`} />
+            </button>
+
+            {showLevelMenu && (
+              <>
+                <div
+                  className="fixed inset-0 z-20"
+                  onClick={() => setShowLevelMenu(false)}
+                />
+                <div className="absolute left-0 sm:left-auto sm:right-0 mt-1.5 w-64 bg-white rounded-xl shadow-xl border border-gray-200 p-2 z-30 animate-scaleUp">
+                  <div className="px-2.5 py-1 text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center justify-between border-b border-gray-100 pb-1.5">
+                    <span>Filter by Exam Level</span>
+                    {selectedLevelFilter !== 'All' && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedLevelFilter('All');
+                          setShowLevelMenu(false);
+                        }}
+                        className="text-[10px] text-[#F47716] font-bold hover:underline cursor-pointer"
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Guide CTA */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowLevelMenu(false);
+                      const targetCert = certifications[0];
+                      if (targetCert) {
+                        setInitialLevelModalId(
+                          selectedLevelFilter !== 'All' ? selectedLevelFilter : 'professional'
+                        );
+                        setSelectedForLevelModal(targetCert);
+                      }
+                    }}
+                    className="w-full mt-1.5 mb-1.5 p-2 rounded-lg bg-orange-50 hover:bg-orange-100/80 border border-orange-200 text-left transition-colors flex items-center justify-between group cursor-pointer"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <div className="w-6 h-6 rounded-full bg-[#F47716] text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+                        <GraduationCap className="w-3.5 h-3.5" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-[#10264B] group-hover:text-[#F47716]">
+                          Exam Levels Guide
+                        </p>
+                        <p className="text-[10px] text-gray-500">View CF, CP, CE & Fees</p>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-3.5 h-3.5 text-orange-500" />
+                  </button>
+
+                  <div className="space-y-1 pt-1 border-t border-gray-100">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedLevelFilter('All');
+                        setShowLevelMenu(false);
+                      }}
+                      className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-medium text-left flex items-center justify-between transition-colors cursor-pointer ${
+                        selectedLevelFilter === 'All'
+                          ? 'bg-orange-50 text-[#10264B] font-bold'
+                          : 'text-gray-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <span className="w-2 h-2 rounded-full bg-gray-400" />
+                        <span>All Exam Levels</span>
+                      </div>
+                      <span className="text-[10px] text-gray-400">All</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedLevelFilter('foundation');
+                        setShowLevelMenu(false);
+                      }}
+                      className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-medium text-left flex items-center justify-between transition-colors cursor-pointer ${
+                        selectedLevelFilter === 'foundation'
+                          ? 'bg-blue-50 text-blue-900 font-bold'
+                          : 'text-gray-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <span className="w-2 h-2 rounded-full bg-blue-500" />
+                        <span>Foundation Level</span>
+                      </div>
+                      <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-[#DCEAFE] text-[#1E40AF]">
+                        Beginner
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedLevelFilter('professional');
+                        setShowLevelMenu(false);
+                      }}
+                      className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-medium text-left flex items-center justify-between transition-colors cursor-pointer ${
+                        selectedLevelFilter === 'professional'
+                          ? 'bg-orange-50 text-orange-950 font-bold'
+                          : 'text-gray-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <span className="w-2 h-2 rounded-full bg-[#F47716]" />
+                        <span>Professional Level</span>
+                      </div>
+                      <span className="px-1.5 py-0.2 rounded text-[9px] font-extrabold bg-[#F47716] text-white">
+                        ★ Popular
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedLevelFilter('expert');
+                        setShowLevelMenu(false);
+                      }}
+                      className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-medium text-left flex items-center justify-between transition-colors cursor-pointer ${
+                        selectedLevelFilter === 'expert'
+                          ? 'bg-purple-50 text-purple-900 font-bold'
+                          : 'text-gray-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <span className="w-2 h-2 rounded-full bg-purple-500" />
+                        <span>Expert Level</span>
+                      </div>
+                      <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-[#E9D5FF] text-[#6B21A8]">
+                        Advanced
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -346,13 +516,37 @@ export const CandidateCertifications: React.FC = () => {
 
                 {/* Right Side: Level, Price & Action matching Image 2 #3 */}
                 <div className="flex flex-wrap sm:flex-nowrap items-center justify-between sm:justify-end gap-3 pt-3 md:pt-0 border-t md:border-t-0 border-gray-100">
-                  <span className="px-2.5 py-1 bg-purple-50 text-purple-700 text-[11px] font-semibold rounded-md border border-purple-200">
-                    {cert.level}
-                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setInitialLevelModalId(
+                        selectedLevelFilter !== 'All' ? selectedLevelFilter : 'professional'
+                      );
+                      setSelectedForLevelModal(cert);
+                    }}
+                    title="Click to view or change exam level"
+                    className="px-2.5 py-1 bg-purple-50 hover:bg-purple-100 text-purple-700 text-[11px] font-semibold rounded-md border border-purple-200 flex items-center space-x-1 transition-colors cursor-pointer"
+                  >
+                    <GraduationCap className="w-3.5 h-3.5 text-purple-600" />
+                    <span>
+                      {selectedLevelFilter === 'foundation'
+                        ? 'Foundation Level'
+                        : selectedLevelFilter === 'expert'
+                        ? 'Expert Level'
+                        : cert.level}
+                    </span>
+                  </button>
 
                   <div className="text-right">
                     <span className="text-base font-black text-[#10264B]">
-                      ₹{cert.examFee.toLocaleString('en-IN')}
+                      ₹{
+                        (selectedLevelFilter === 'foundation'
+                          ? 4500
+                          : selectedLevelFilter === 'expert'
+                          ? 13999
+                          : cert.examFee
+                        ).toLocaleString('en-IN')
+                      }
                     </span>
                   </div>
 
@@ -381,7 +575,12 @@ export const CandidateCertifications: React.FC = () => {
                     </button>
                   ) : (
                     <button
-                      onClick={() => setSelectedForLevelModal(cert)}
+                      onClick={() => {
+                        setInitialLevelModalId(
+                          selectedLevelFilter !== 'All' ? selectedLevelFilter : 'professional'
+                        );
+                        setSelectedForLevelModal(cert);
+                      }}
                       className="px-4 py-2 bg-[#F47716] hover:bg-[#DC660E] text-white font-bold text-xs rounded-lg shadow-sm transition-all cursor-pointer"
                     >
                       Enroll Now &gt;
@@ -398,6 +597,7 @@ export const CandidateCertifications: React.FC = () => {
       {selectedForLevelModal && (
         <SelectExamLevelModal
           certification={selectedForLevelModal}
+          initialLevelId={initialLevelModalId}
           onClose={() => setSelectedForLevelModal(null)}
           onContinue={(selectedLevel) => {
             const targetCert = selectedForLevelModal;

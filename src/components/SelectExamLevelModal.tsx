@@ -37,6 +37,7 @@ interface SelectExamLevelModalProps {
     examFeeUSD?: number;
     currency?: string;
   };
+  initialLevelId?: 'foundation' | 'professional' | 'expert';
   onContinue: (selectedLevel: {
     levelId: string;
     levelName: string;
@@ -51,6 +52,7 @@ interface SelectExamLevelModalProps {
 
 export const SelectExamLevelModal: React.FC<SelectExamLevelModalProps> = ({
   certification,
+  initialLevelId,
   onContinue,
   onClose,
 }) => {
@@ -106,8 +108,10 @@ export const SelectExamLevelModal: React.FC<SelectExamLevelModalProps> = ({
     },
   ];
 
-  // Default selected level is "Professional Level" matching screenshot
-  const [selectedLevelId, setSelectedLevelId] = useState<'foundation' | 'professional' | 'expert'>('professional');
+  // Default selected level is "Professional Level" matching screenshot, or initialLevelId if passed
+  const [selectedLevelId, setSelectedLevelId] = useState<'foundation' | 'professional' | 'expert'>(
+    initialLevelId || 'professional'
+  );
 
   const selectedLevel = levels.find((l) => l.id === selectedLevelId) || levels[1];
 

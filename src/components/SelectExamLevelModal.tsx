@@ -130,21 +130,21 @@ export const SelectExamLevelModal: React.FC<SelectExamLevelModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-[490px] w-full p-4 sm:p-5 relative my-auto animate-scaleUp border border-slate-100">
-        {/* Close Button Top-Right */}
+      <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-[480px] w-full p-4 sm:p-5 relative my-auto animate-scaleUp border border-slate-100">
+        {/* Close Button Top-Right Matching Screenshot */}
         <button
           onClick={onClose}
-          className="absolute right-3.5 top-3.5 sm:right-4 sm:top-4 w-7 h-7 rounded-full bg-[#F47716] hover:bg-[#E35D00] text-white flex items-center justify-center transition-all cursor-pointer shadow-md hover:scale-105"
+          className="absolute right-3.5 top-3.5 sm:right-4 sm:top-4 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#F47716] hover:bg-[#E35D00] text-white flex items-center justify-center transition-all cursor-pointer shadow-md hover:scale-105"
           title="Close"
         >
-          <X className="w-3.5 h-3.5 stroke-[2.5]" />
+          <X className="w-4 h-4 stroke-[3]" />
         </button>
 
         {/* Modal Header */}
         <div className="text-center space-y-1 pt-0.5 pr-6 sm:pr-0">
           <div className="flex items-center justify-center space-x-2">
-            <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#F47716] to-[#FF8C38] text-white flex items-center justify-center shadow-xs">
-              <GraduationCap className="w-3.5 h-3.5 stroke-[2.5]" />
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-[#F47716] to-[#FF8C38] text-white flex items-center justify-center shadow-xs">
+              <GraduationCap className="w-4 h-4 stroke-[2.5]" />
             </div>
             <h2 className="text-lg sm:text-xl font-black tracking-tight">
               <span className="text-[#10264B]">Select </span>
@@ -157,7 +157,7 @@ export const SelectExamLevelModal: React.FC<SelectExamLevelModalProps> = ({
         </div>
 
         {/* Selected Certification Banner */}
-        <div className="mt-3 bg-[#F2F4FD] border border-[#DCE4F9] rounded-xl p-2.5 sm:p-3 flex items-center space-x-2.5 shadow-xs">
+        <div className="mt-2.5 bg-[#F0F4FD] border border-[#DCE4F8] rounded-xl p-2.5 sm:p-3 flex items-center space-x-2.5 shadow-xs">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#F47716] to-[#FF7F24] text-white flex items-center justify-center font-mono font-bold text-xs flex-shrink-0 shadow-xs">
             <Code2 className="w-4 h-4 stroke-[2.5]" />
           </div>
@@ -167,14 +167,14 @@ export const SelectExamLevelModal: React.FC<SelectExamLevelModalProps> = ({
             </h4>
             <p className="text-[10px] text-slate-600 truncate mt-0.5">
               <span className="font-semibold text-slate-700">Code: {certification.code}</span>
-              <span className="mx-1 text-slate-400">|</span>
+              <span className="mx-1 text-slate-300">|</span>
               <span>Domain: {certification.domain}</span>
             </p>
           </div>
         </div>
 
         {/* Level Options Cards */}
-        <div className="mt-3 space-y-2">
+        <div className="mt-2.5 space-y-2">
           {levels.map((lvl) => {
             const isSelected = selectedLevelId === lvl.id;
             const certCodeDisplay = `${baseCodePrefix}-${lvl.certificateSuffix}® (${lvl.certificateTitle})`;
@@ -185,7 +185,7 @@ export const SelectExamLevelModal: React.FC<SelectExamLevelModalProps> = ({
                 onClick={() => setSelectedLevelId(lvl.id)}
                 className={`rounded-xl p-2.5 sm:p-3 border-2 transition-all cursor-pointer flex items-center justify-between gap-2.5 select-none ${
                   isSelected
-                    ? 'border-[#F47716] bg-[#FFFBF7] shadow-sm ring-1 ring-orange-200'
+                    ? 'border-[#F47716] bg-[#FFFBF7] shadow-xs ring-1 ring-orange-200'
                     : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50'
                 }`}
               >
@@ -245,12 +245,12 @@ export const SelectExamLevelModal: React.FC<SelectExamLevelModalProps> = ({
                         <FileText className="w-2.5 h-2.5 text-slate-400" />
                         <span>{lvl.mcqs} MCQs</span>
                       </span>
-                      <span>|</span>
+                      <span className="text-slate-300">|</span>
                       <span className="flex items-center space-x-0.5">
                         <Clock className="w-2.5 h-2.5 text-slate-400" />
-                        <span>{lvl.durationMinutes} Min</span>
+                        <span>{lvl.durationMinutes} Minutes</span>
                       </span>
-                      <span>|</span>
+                      <span className="text-slate-300">|</span>
                       <span className="flex items-center space-x-0.5">
                         <BarChart className="w-2.5 h-2.5 text-slate-400" />
                         <span>{lvl.difficulty}</span>
@@ -265,8 +265,8 @@ export const SelectExamLevelModal: React.FC<SelectExamLevelModalProps> = ({
                 </div>
 
                 {/* Right: Divider & Exam Fee */}
-                <div className="text-right pl-2.5 sm:pl-3 border-l border-slate-200 flex-shrink-0">
-                  <span className="text-[9px] text-slate-500 font-semibold block uppercase tracking-wider">
+                <div className="text-right pl-2.5 sm:pl-3 border-l border-slate-200 flex-shrink-0 min-w-[70px]">
+                  <span className="text-[8.5px] text-slate-500 font-semibold block uppercase tracking-wider">
                     Exam Fee
                   </span>
                   <span className="text-sm sm:text-base font-black text-[#10264B]">
@@ -278,27 +278,27 @@ export const SelectExamLevelModal: React.FC<SelectExamLevelModalProps> = ({
           })}
         </div>
 
-        {/* 4 Feature Strip Icons */}
-        <div className="mt-3.5 pt-2.5 border-t border-slate-100 grid grid-cols-4 gap-1 text-center">
-          <div className="space-y-0.5">
+        {/* 4 Feature Strip Icons with Dividers (Matching Screenshot) */}
+        <div className="mt-3 pt-2.5 border-t border-slate-100 grid grid-cols-4 divide-x divide-slate-200 text-center">
+          <div className="px-1 space-y-0.5">
             <div className="w-5 h-5 mx-auto text-[#F47716] flex items-center justify-center">
               <ShieldCheck className="w-4 h-4 stroke-[2.2]" />
             </div>
             <p className="text-[8.5px] font-bold text-slate-800 leading-tight">
-              Industry Recognized
+              Industry Recognized Certificate
             </p>
           </div>
 
-          <div className="space-y-0.5">
+          <div className="px-1 space-y-0.5">
             <div className="w-5 h-5 mx-auto text-[#F47716] flex items-center justify-center">
               <BarChart3 className="w-4 h-4 stroke-[2.2]" />
             </div>
             <p className="text-[8.5px] font-bold text-slate-800 leading-tight">
-              Skill Validation
+              Role Based Skill Validation
             </p>
           </div>
 
-          <div className="space-y-0.5">
+          <div className="px-1 space-y-0.5">
             <div className="w-5 h-5 mx-auto text-[#F47716] flex items-center justify-center">
               <Globe className="w-4 h-4 stroke-[2.2]" />
             </div>
@@ -307,18 +307,18 @@ export const SelectExamLevelModal: React.FC<SelectExamLevelModalProps> = ({
             </p>
           </div>
 
-          <div className="space-y-0.5">
+          <div className="px-1 space-y-0.5">
             <div className="w-5 h-5 mx-auto text-[#F47716] flex items-center justify-center">
               <Award className="w-4 h-4 stroke-[2.2]" />
             </div>
             <p className="text-[8.5px] font-bold text-slate-800 leading-tight">
-              Career Advantage
+              Career & Placement Advantage
             </p>
           </div>
         </div>
 
         {/* Bottom Action Buttons */}
-        <div className="mt-3.5 pt-2 flex items-center gap-2.5">
+        <div className="mt-3.5 pt-1 flex items-center gap-2.5">
           <button
             type="button"
             onClick={onClose}

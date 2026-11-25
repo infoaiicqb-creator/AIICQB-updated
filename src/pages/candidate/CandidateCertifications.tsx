@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
 import { Certification, Certificate } from '../../types';
 import { RazorpayModal } from '../../components/RazorpayModal';
@@ -23,6 +24,7 @@ import {
 
 export const CandidateCertifications: React.FC = () => {
   const navigate = useNavigate();
+  const { user, candidate } = useAuth();
 
   const [certifications, setCertifications] = useState<Certification[]>(() => {
     try {
@@ -590,9 +592,13 @@ export const CandidateCertifications: React.FC = () => {
                   {completed ? (
                     <button
                       onClick={() => {
+                        const loggedName = user?.fullName || candidate?.fullName || 'Candidate';
+                        const loggedId = user?.candidateId || candidate?.candidateId || 'AICQB-CAND';
                         const targetCert = matchedCertificate || {
                           id: `cert_view_${cert.id}`,
                           certificateNo: `AICQB-${cert.code.replace(/[^A-Z]/g, '')}-2026-001248`,
+                          candidateName: loggedName,
+                          candidateId: loggedId,
                           certificationId: cert.id,
                           certificationName: cert.name,
                           certificationCode: cert.code,
@@ -604,7 +610,11 @@ export const CandidateCertifications: React.FC = () => {
                           validUntilFormatted: new Date(Date.now() + 86400000 * 365 * 3).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
                           verificationUrl: `${window.location.origin}/verify?id=${encodeURIComponent(`AICQB-${cert.code.replace(/[^A-Z]/g, '')}-2026-001248`)}`,
                         };
-                        setSelectedCertificateModal(targetCert as any);
+                        setSelectedCertificateModal({
+                          ...targetCert,
+                          candidateName: loggedName || targetCert.candidateName,
+                          candidateId: loggedId || targetCert.candidateId,
+                        } as any);
                       }}
                       className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-sm transition-all flex items-center space-x-1 cursor-pointer"
                     >

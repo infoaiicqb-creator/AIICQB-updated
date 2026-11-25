@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Certificate } from '../types';
+import { useAuth } from '../context/AuthContext';
 import {
   X,
   Download,
@@ -19,6 +20,7 @@ interface CertificateModalProps {
 export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate, onClose }) => {
   const certificateRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState<boolean>(false);
+  const { user, candidate } = useAuth();
 
   if (!certificate) return null;
 
@@ -78,8 +80,14 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
   };
 
   // DYNAMIC CERTIFICATE FIELDS:
-  // 1. Candidate Name
-  const candidateName = certificate.candidateName || 'Henry Thomas';
+  // 1. Candidate Name: ALWAYS display the currently logged-in candidate's name when viewing in candidate portal
+  const loggedInCandidateName = user?.fullName || candidate?.fullName || '';
+  const candidateName =
+    (loggedInCandidateName && (user?.role === 'Candidate' || !certificate.candidateName || certificate.candidateName === 'Henry Thomas' || certificate.candidateName === 'Candidate'))
+      ? loggedInCandidateName
+      : (certificate.candidateName && certificate.candidateName !== 'Henry Thomas'
+          ? certificate.candidateName
+          : (loggedInCandidateName || 'Candidate'));
 
   // 2. Certificate Specialization / Title
   const rawCertName = certificate.certificationName || 'Certified AI Practitioner';
@@ -106,7 +114,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
   const signatoryName =
     certificate.issuer?.authorizedSignatory ||
     certificate.issuer?.ceo ||
-    'Henry Thomas';
+    'Pushpak Wani';
 
   return (
     <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto">

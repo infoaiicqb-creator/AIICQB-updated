@@ -60,8 +60,8 @@ export const CandidateCertificates: React.FC = () => {
   // Only show verified active certificates earned after completing/passing the exam
   const displayCertificates = certificates.map((c) => ({
     ...c,
-    candidateName: c.candidateName || candidateName,
-    candidateId: c.candidateId || candidateId,
+    candidateName: user?.fullName || candidate?.fullName || c.candidateName || candidateName,
+    candidateId: user?.candidateId || candidate?.candidateId || c.candidateId || candidateId,
     grade: c.grade || 'Grade A+ (Distinction)',
   }));
 

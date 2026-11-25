@@ -2495,5 +2495,228 @@
     "percentage": 73,
     "passed": true,
     "submitTime": "2026-11-20T11:30:49.345Z"
+  },
+  {
+    "id": "att_1795588235420_wploxf",
+    "attemptId": "att_1795588235420_wploxf",
+    "scheduleId": "SCH-AICQB-235383",
+    "candidateUid": "usr_1795588234854_7u56mu",
+    "candidateId": "AICQB-1004708",
+    "candidateName": "Submission Test Candidate",
+    "certificationId": "cert_aicqb_ai_cp",
+    "certificationName": "AICQB Certified AI Professional",
+    "certificationCode": "AICQB-AI-CP",
+    "startTime": "2026-11-25T06:30:35.420Z",
+    "durationMinutes": 90,
+    "totalQuestions": 6,
+    "status": "completed",
+    "answers": {
+      "q6": 1,
+      "q5": 1,
+      "q4": 1,
+      "q3": 1,
+      "q2": 1,
+      "q1": 1
+    },
+    "questionMap": {
+      "q6": {
+        "correctOptionIndex": 2,
+        "originalCorrectAnswer": 0,
+        "points": 10,
+        "questionType": "mcq"
+      },
+      "q2": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q5": {
+        "correctOptionIndex": 1,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q1": {
+        "correctOptionIndex": 1,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q4": {
+        "correctOptionIndex": 2,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q3": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      }
+    },
+    "questionOrder": [
+      "q6",
+      "q2",
+      "q5",
+      "q1",
+      "q4",
+      "q3"
+    ],
+    "createdAt": "2026-11-25T06:30:35.427Z",
+    "updatedAt": "2026-11-25T06:30:35.542Z",
+    "score": 8,
+    "maxScore": 30,
+    "percentage": 27,
+    "passed": false,
+    "submitTime": "2026-11-25T06:30:35.542Z"
+  },
+  {
+    "id": "att_1795588826560_82f9mt",
+    "attemptId": "att_1795588826560_82f9mt",
+    "scheduleId": "SCH-AICQB-826529",
+    "candidateUid": "usr_1795588826152_hzi2rf",
+    "candidateId": "AICQB-1004709",
+    "candidateName": "Submission Test Candidate",
+    "certificationId": "cert_aicqb_ai_cp",
+    "certificationName": "AICQB Certified AI Professional",
+    "certificationCode": "AICQB-AI-CP",
+    "startTime": "2026-11-25T06:40:26.561Z",
+    "durationMinutes": 90,
+    "totalQuestions": 6,
+    "status": "completed",
+    "answers": {
+      "q1": 1
+    },
+    "questionMap": {
+      "q1": {
+        "correctOptionIndex": 2,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q6": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 0,
+        "points": 10,
+        "questionType": "mcq"
+      },
+      "q4": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q3": {
+        "correctOptionIndex": 3,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q5": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q2": {
+        "correctOptionIndex": 2,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      }
+    },
+    "questionOrder": [
+      "q1",
+      "q6",
+      "q4",
+      "q3",
+      "q5",
+      "q2"
+    ],
+    "createdAt": "2026-11-25T06:40:26.566Z",
+    "updatedAt": "2026-11-25T06:40:26.631Z",
+    "score": 0,
+    "maxScore": 30,
+    "percentage": 0,
+    "passed": false,
+    "submitTime": "2026-11-25T06:40:26.631Z"
+  },
+  {
+    "id": "att_1795588847434_zv9pza",
+    "attemptId": "att_1795588847434_zv9pza",
+    "scheduleId": "SCH-AICQB-847381",
+    "candidateUid": "usr_1795588847165_edhs6r",
+    "candidateId": "AICQB-1004710",
+    "candidateName": "Pass Candidate",
+    "certificationId": "cert_aicqb_ai_cp",
+    "certificationName": "AICQB Certified AI Professional",
+    "certificationCode": "AICQB-AI-CP",
+    "startTime": "2026-11-25T06:40:47.434Z",
+    "durationMinutes": 90,
+    "totalQuestions": 6,
+    "status": "completed",
+    "answers": {
+      "q6": 1,
+      "q5": 1,
+      "q4": 1,
+      "q3": 1,
+      "q2": 1,
+      "q1": 1
+    },
+    "questionMap": {
+      "q2": {
+        "correctOptionIndex": 1,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q5": {
+        "correctOptionIndex": 1,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q1": {
+        "correctOptionIndex": 1,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q3": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q4": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q6": {
+        "correctOptionIndex": 3,
+        "originalCorrectAnswer": 0,
+        "points": 10,
+        "questionType": "mcq"
+      }
+    },
+    "questionOrder": [
+      "q2",
+      "q5",
+      "q1",
+      "q3",
+      "q4",
+      "q6"
+    ],
+    "createdAt": "2026-11-25T06:40:47.434Z",
+    "updatedAt": "2026-11-25T06:40:47.464Z",
+    "score": 12,
+    "maxScore": 30,
+    "percentage": 40,
+    "passed": false,
+    "submitTime": "2026-11-25T06:40:47.464Z"
   }
 ]

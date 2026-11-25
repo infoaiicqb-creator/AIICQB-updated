@@ -93,7 +93,7 @@ export const api = {
   scheduleExam: (body: { certificationId: string; scheduledDate?: string; scheduledTime?: string }) =>
     request('/exams/schedule', { method: 'POST', body: JSON.stringify(body) }),
   startExamSession: (scheduleId: string) => request(`/exams/session/${scheduleId}`),
-  submitExam: (body: { attemptId: string; answers: Record<string, any> }) =>
+  submitExam: (body: { attemptId: string; answers: Record<string, any>; scheduleId?: string }) =>
     request('/exams/submit', { method: 'POST', body: JSON.stringify(body) }),
 
   // Certificates

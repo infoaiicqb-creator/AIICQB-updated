@@ -2734,12 +2734,12 @@
     "totalQuestions": 6,
     "status": "completed",
     "answers": {
-      "q6": 0,
-      "q5": 0,
-      "q4": 0,
-      "q2": 0,
-      "q3": 0,
-      "q1": 0
+      "q2": 3,
+      "q5": 2,
+      "q4": 3,
+      "q3": 2,
+      "q1": 3,
+      "q6": 1
     },
     "questionMap": {
       "q6": {
@@ -2788,12 +2788,12 @@
       "q1"
     ],
     "createdAt": "2026-11-25T06:49:11.761Z",
-    "updatedAt": "2026-11-25T06:51:17.838Z",
-    "score": 8,
+    "updatedAt": "2026-11-25T11:00:58.688Z",
+    "score": 14,
     "maxScore": 30,
-    "percentage": 27,
+    "percentage": 47,
     "passed": false,
-    "submitTime": "2026-11-25T06:51:17.837Z"
+    "submitTime": "2026-11-25T11:00:58.688Z"
   },
   {
     "id": "att_1795602733491_wr4j74",
@@ -2998,5 +2998,273 @@
     ],
     "createdAt": "2026-11-25T10:33:04.684Z",
     "updatedAt": "2026-11-25T10:33:04.684Z"
+  },
+  {
+    "id": "att_1795604392220_e1j6f4",
+    "attemptId": "att_1795604392220_e1j6f4",
+    "scheduleId": "sch_1795589342303_1fwvj",
+    "candidateUid": "usr_1795161584876_gigns6",
+    "candidateId": "AICQB-1004704",
+    "candidateName": "Gaurav Patil",
+    "certificationId": "cert_aicqb_ai_cp",
+    "certificationName": "AICQB Certified AI Professional",
+    "certificationCode": "AICQB-AI-CP",
+    "startTime": "2026-11-25T10:59:52.220Z",
+    "durationMinutes": 90,
+    "totalQuestions": 6,
+    "status": "completed",
+    "answers": {
+      "q6": 0,
+      "q3": 0,
+      "q5": 0,
+      "q2": 0,
+      "q1": 0,
+      "q4": 0
+    },
+    "questionMap": {
+      "q4": {
+        "correctOptionIndex": 3,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q2": {
+        "correctOptionIndex": 1,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q3": {
+        "correctOptionIndex": 3,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q6": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 0,
+        "points": 10,
+        "questionType": "mcq"
+      },
+      "q1": {
+        "correctOptionIndex": 3,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q5": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      }
+    },
+    "questionOrder": [
+      "q4",
+      "q2",
+      "q3",
+      "q6",
+      "q1",
+      "q5"
+    ],
+    "createdAt": "2026-11-25T10:59:52.220Z",
+    "updatedAt": "2026-11-25T11:00:27.302Z",
+    "score": 14,
+    "maxScore": 30,
+    "percentage": 47,
+    "passed": false,
+    "submitTime": "2026-11-25T11:00:27.302Z"
+  },
+  {
+    "id": "att_1795604409191_22zxje",
+    "attemptId": "att_1795604409191_22zxje",
+    "scheduleId": "sch_1795589342303_1fwvj",
+    "candidateUid": "usr_1795161584876_gigns6",
+    "candidateId": "AICQB-1004704",
+    "candidateName": "Gaurav Patil",
+    "certificationId": "cert_aicqb_ai_cp",
+    "certificationName": "AICQB Certified AI Professional",
+    "certificationCode": "AICQB-AI-CP",
+    "startTime": "2026-11-25T11:00:09.192Z",
+    "durationMinutes": 90,
+    "totalQuestions": 6,
+    "status": "in-progress",
+    "answers": {},
+    "questionMap": {
+      "q6": {
+        "correctOptionIndex": 3,
+        "originalCorrectAnswer": 0,
+        "points": 10,
+        "questionType": "mcq"
+      },
+      "q3": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q5": {
+        "correctOptionIndex": 3,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q2": {
+        "correctOptionIndex": 1,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q1": {
+        "correctOptionIndex": 2,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q4": {
+        "correctOptionIndex": 3,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      }
+    },
+    "questionOrder": [
+      "q6",
+      "q3",
+      "q5",
+      "q2",
+      "q1",
+      "q4"
+    ],
+    "createdAt": "2026-11-25T11:00:09.192Z",
+    "updatedAt": "2026-11-25T11:00:09.192Z"
+  },
+  {
+    "id": "att_1795604439515_9szvwe",
+    "attemptId": "att_1795604439515_9szvwe",
+    "scheduleId": "SCH-AICQB-127272",
+    "candidateUid": "usr_1795161584876_gigns6",
+    "candidateId": "AICQB-1004704",
+    "candidateName": "Gaurav Patil",
+    "certificationId": "cert_aicqb_st_cp",
+    "certificationName": "AICQB Certified Software Tester",
+    "certificationCode": "AICQB-ST-CP",
+    "startTime": "2026-11-25T11:00:39.515Z",
+    "durationMinutes": 75,
+    "totalQuestions": 6,
+    "status": "in-progress",
+    "answers": {},
+    "questionMap": {
+      "q2": {
+        "correctOptionIndex": 1,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q5": {
+        "correctOptionIndex": 2,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q4": {
+        "correctOptionIndex": 3,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q3": {
+        "correctOptionIndex": 3,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q1": {
+        "correctOptionIndex": 3,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q6": {
+        "correctOptionIndex": 3,
+        "originalCorrectAnswer": 0,
+        "points": 10,
+        "questionType": "mcq"
+      }
+    },
+    "questionOrder": [
+      "q2",
+      "q5",
+      "q4",
+      "q3",
+      "q1",
+      "q6"
+    ],
+    "createdAt": "2026-11-25T11:00:39.515Z",
+    "updatedAt": "2026-11-25T11:00:39.515Z"
+  },
+  {
+    "id": "att_1795604469425_g1yr11",
+    "attemptId": "att_1795604469425_g1yr11",
+    "scheduleId": "SCH-AICQB-127272",
+    "candidateUid": "usr_1795161584876_gigns6",
+    "candidateId": "AICQB-1004704",
+    "candidateName": "Gaurav Patil",
+    "certificationId": "cert_aicqb_st_cp",
+    "certificationName": "AICQB Certified Software Tester",
+    "certificationCode": "AICQB-ST-CP",
+    "startTime": "2026-11-25T11:01:09.425Z",
+    "durationMinutes": 75,
+    "totalQuestions": 6,
+    "status": "in-progress",
+    "answers": {},
+    "questionMap": {
+      "q2": {
+        "correctOptionIndex": 1,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q1": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q5": {
+        "correctOptionIndex": 3,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q3": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      },
+      "q6": {
+        "correctOptionIndex": 2,
+        "originalCorrectAnswer": 0,
+        "points": 10,
+        "questionType": "mcq"
+      },
+      "q4": {
+        "correctOptionIndex": 0,
+        "originalCorrectAnswer": 1,
+        "points": 4,
+        "questionType": "mcq"
+      }
+    },
+    "questionOrder": [
+      "q2",
+      "q1",
+      "q5",
+      "q3",
+      "q6",
+      "q4"
+    ],
+    "createdAt": "2026-11-25T11:01:09.425Z",
+    "updatedAt": "2026-11-25T11:01:09.425Z"
   }
 ]

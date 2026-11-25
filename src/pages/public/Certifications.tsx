@@ -4,6 +4,7 @@ import { api } from '../../services/api';
 import { Certification } from '../../types';
 import { useAuth } from '../../context/AuthContext';
 import { RazorpayModal } from '../../components/RazorpayModal';
+import { SelectExamLevelModal } from '../../components/SelectExamLevelModal';
 import { Search, Filter, CheckCircle2, ChevronRight, Loader2, Award } from 'lucide-react';
 
 export const Certifications: React.FC = () => {
@@ -14,7 +15,8 @@ export const Certifications: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '');
   const [selectedDomain, setSelectedDomain] = useState(searchParams.get('domain') || 'All');
-  const [selectedForEnroll, setSelectedForEnroll] = useState<Certification | null>(null);
+  const [selectedForLevelModal, setSelectedForLevelModal] = useState<Certification | null>(null);
+  const [selectedForEnroll, setSelectedForEnroll] = useState<any>(null);
 
   const domainTabs = [
     { label: 'All', value: 'All' },
@@ -54,7 +56,7 @@ export const Certifications: React.FC = () => {
             { replace: true }
           );
         } else {
-          setSelectedForEnroll(matched);
+          setSelectedForLevelModal(matched);
         }
       }
     }
@@ -68,7 +70,7 @@ export const Certifications: React.FC = () => {
       );
       return;
     }
-    setSelectedForEnroll(cert);
+    setSelectedForLevelModal(cert);
   };
 
   const loadCertifications = async () => {
@@ -210,6 +212,27 @@ export const Certifications: React.FC = () => {
             </div>
           ))}
         </div>
+      )}
+
+      {/* Select Exam Level Modal */}
+      {selectedForLevelModal && (
+        <SelectExamLevelModal
+          certification={selectedForLevelModal}
+          onClose={() => setSelectedForLevelModal(null)}
+          onContinue={(selectedLevel) => {
+            const targetCert = selectedForLevelModal;
+            setSelectedForLevelModal(null);
+            setSelectedForEnroll({
+              ...targetCert,
+              level: selectedLevel.levelName,
+              code: selectedLevel.code,
+              examFee: selectedLevel.amount,
+              examFeeUSD: selectedLevel.amountUSD,
+              duration: `${selectedLevel.durationMinutes} Minutes`,
+              mcqs: selectedLevel.mcqs,
+            });
+          }}
+        />
       )}
 
       {/* Direct Razorpay Checkout Modal (Active when Logged In) */}

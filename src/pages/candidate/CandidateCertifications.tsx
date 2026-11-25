@@ -4,6 +4,7 @@ import { api } from '../../services/api';
 import { Certification, Certificate } from '../../types';
 import { RazorpayModal } from '../../components/RazorpayModal';
 import { CertificateModal } from '../../components/CertificateModal';
+import { SelectExamLevelModal } from '../../components/SelectExamLevelModal';
 import {
   Search,
   Award,
@@ -54,7 +55,8 @@ export const CandidateCertifications: React.FC = () => {
   const [candidateCertificates, setCandidateCertificates] = useState<Certificate[]>([]);
 
   // Modals
-  const [selectedForEnroll, setSelectedForEnroll] = useState<Certification | null>(null);
+  const [selectedForLevelModal, setSelectedForLevelModal] = useState<Certification | null>(null);
+  const [selectedForEnroll, setSelectedForEnroll] = useState<any>(null);
   const [selectedCertificateModal, setSelectedCertificateModal] = useState<Certificate | null>(null);
   const [enrolledSuccessBanner, setEnrolledSuccessBanner] = useState<{ name: string; code: string } | null>(null);
 
@@ -379,7 +381,7 @@ export const CandidateCertifications: React.FC = () => {
                     </button>
                   ) : (
                     <button
-                      onClick={() => setSelectedForEnroll(cert)}
+                      onClick={() => setSelectedForLevelModal(cert)}
                       className="px-4 py-2 bg-[#F47716] hover:bg-[#DC660E] text-white font-bold text-xs rounded-lg shadow-sm transition-all cursor-pointer"
                     >
                       Enroll Now &gt;
@@ -390,6 +392,27 @@ export const CandidateCertifications: React.FC = () => {
             );
           })}
         </div>
+      )}
+
+      {/* Select Exam Level Modal (Matching Screenshot) */}
+      {selectedForLevelModal && (
+        <SelectExamLevelModal
+          certification={selectedForLevelModal}
+          onClose={() => setSelectedForLevelModal(null)}
+          onContinue={(selectedLevel) => {
+            const targetCert = selectedForLevelModal;
+            setSelectedForLevelModal(null);
+            setSelectedForEnroll({
+              ...targetCert,
+              level: selectedLevel.levelName,
+              code: selectedLevel.code,
+              examFee: selectedLevel.amount,
+              examFeeUSD: selectedLevel.amountUSD,
+              duration: `${selectedLevel.durationMinutes} Minutes`,
+              mcqs: selectedLevel.mcqs,
+            });
+          }}
+        />
       )}
 
       {/* Razorpay Checkout Trigger */}

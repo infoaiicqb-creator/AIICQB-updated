@@ -7638,5 +7638,31 @@
     "id": "auditLogs_1795588847471_mqyru",
     "createdAt": "2026-11-25T06:40:47.471Z",
     "updatedAt": "2026-11-25T06:40:47.471Z"
+  },
+  {
+    "userId": "system",
+    "userEmail": "system",
+    "userRole": "System",
+    "action": "LOGIN",
+    "module": "Authentication",
+    "details": "User logged in: gaurav@gmail.com (Candidate)",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-25T06:48:57.977Z",
+    "id": "auditLogs_1795589337982_8dzts",
+    "createdAt": "2026-11-25T06:48:57.982Z",
+    "updatedAt": "2026-11-25T06:48:57.982Z"
+  },
+  {
+    "userId": "usr_1795161584876_gigns6",
+    "userEmail": "gaurav@gmail.com",
+    "userRole": "Candidate",
+    "action": "EXAM_SUBMISSION",
+    "module": "Examination Management",
+    "details": "Exam submitted for AICQB Certified Software Tester by gaurav@gmail.com - Score: 27% (FAILED - RETAKE GRANTED) - Fail",
+    "ipAddress": "::1",
+    "timestamp": "2026-11-25T06:51:17.848Z",
+    "id": "auditLogs_1795589477848_b3xka",
+    "createdAt": "2026-11-25T06:51:17.848Z",
+    "updatedAt": "2026-11-25T06:51:17.848Z"
   }
 ]

@@ -1,0 +1,337 @@
+import React, { useState } from 'react';
+import {
+  GraduationCap,
+  X,
+  Code2,
+  FileText,
+  Clock,
+  BarChart,
+  ShieldCheck,
+  BarChart3,
+  Globe,
+  Award,
+  ArrowRight,
+} from 'lucide-react';
+
+export interface ExamLevelOption {
+  id: 'foundation' | 'professional' | 'expert';
+  name: string;
+  badge: string;
+  badgeType: 'beginner' | 'popular' | 'advanced';
+  mcqs: number;
+  durationMinutes: number;
+  difficulty: string;
+  certificateSuffix: string;
+  certificateTitle: string;
+  feeINR: number;
+  feeUSD: number;
+}
+
+interface SelectExamLevelModalProps {
+  certification: {
+    id: string;
+    code: string;
+    name: string;
+    domain: string;
+    examFee?: number;
+    examFeeUSD?: number;
+    currency?: string;
+  };
+  onContinue: (selectedLevel: {
+    levelId: string;
+    levelName: string;
+    code: string;
+    amount: number;
+    amountUSD: number;
+    durationMinutes: number;
+    mcqs: number;
+  }) => void;
+  onClose: () => void;
+}
+
+export const SelectExamLevelModal: React.FC<SelectExamLevelModalProps> = ({
+  certification,
+  onContinue,
+  onClose,
+}) => {
+  // Base code manipulation, e.g. "AIICQB-AT-CP" -> "AIICQB-AT"
+  const cleanCode = certification.code.replace(/®/g, '').trim();
+  const baseCodePrefix = cleanCode.includes('-')
+    ? cleanCode.substring(0, cleanCode.lastIndexOf('-'))
+    : cleanCode;
+
+  const defaultProfessionalFee = certification.examFee || 9999;
+  const defaultProfessionalFeeUSD = certification.examFeeUSD || 119;
+
+  // Level Options matching screenshot
+  const levels: ExamLevelOption[] = [
+    {
+      id: 'foundation',
+      name: 'Foundation Level',
+      badge: 'Beginner',
+      badgeType: 'beginner',
+      mcqs: 50,
+      durationMinutes: 60,
+      difficulty: 'Easy',
+      certificateSuffix: 'CF',
+      certificateTitle: 'Certified Foundation',
+      feeINR: 4500,
+      feeUSD: 59,
+    },
+    {
+      id: 'professional',
+      name: 'Professional Level',
+      badge: '★ Most Popular',
+      badgeType: 'popular',
+      mcqs: 75,
+      durationMinutes: 90,
+      difficulty: 'Medium',
+      certificateSuffix: 'CP',
+      certificateTitle: 'Certified Professional',
+      feeINR: defaultProfessionalFee,
+      feeUSD: defaultProfessionalFeeUSD,
+    },
+    {
+      id: 'expert',
+      name: 'Expert Level',
+      badge: 'Advanced',
+      badgeType: 'advanced',
+      mcqs: 100,
+      durationMinutes: 120,
+      difficulty: 'Advanced',
+      certificateSuffix: 'CE',
+      certificateTitle: 'Certified Expert',
+      feeINR: 13999,
+      feeUSD: 169,
+    },
+  ];
+
+  // Default selected level is "Professional Level" matching screenshot
+  const [selectedLevelId, setSelectedLevelId] = useState<'foundation' | 'professional' | 'expert'>('professional');
+
+  const selectedLevel = levels.find((l) => l.id === selectedLevelId) || levels[1];
+
+  const handleContinue = () => {
+    const finalCertCode = `${baseCodePrefix}-${selectedLevel.certificateSuffix}®`;
+    onContinue({
+      levelId: selectedLevel.id,
+      levelName: selectedLevel.name,
+      code: finalCertCode,
+      amount: selectedLevel.feeINR,
+      amountUSD: selectedLevel.feeUSD,
+      durationMinutes: selectedLevel.durationMinutes,
+      mcqs: selectedLevel.mcqs,
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-xl w-full p-5 sm:p-7 relative my-auto animate-scaleUp border border-slate-100">
+        {/* Close Button Top-Right matching screenshot */}
+        <button
+          onClick={onClose}
+          className="absolute right-4 sm:right-6 top-4 sm:top-6 w-8 h-8 rounded-full bg-[#F47716] hover:bg-[#E35D00] text-white flex items-center justify-center transition-all cursor-pointer shadow-md hover:scale-105"
+          title="Close"
+        >
+          <X className="w-4 h-4 stroke-[2.5]" />
+        </button>
+
+        {/* Modal Header */}
+        <div className="text-center space-y-1.5 pt-1 pr-8 sm:pr-0">
+          <div className="flex items-center justify-center space-x-2">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#F47716] to-[#FF8C38] text-white flex items-center justify-center shadow-xs">
+              <GraduationCap className="w-4 h-4 stroke-[2.5]" />
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight">
+              <span className="text-[#10264B]">Select </span>
+              <span className="text-[#F47716]">Exam Level</span>
+            </h2>
+          </div>
+          <p className="text-xs text-slate-500 font-medium max-w-md mx-auto leading-relaxed">
+            Choose the exam level for this certification based on your experience and career goal.
+          </p>
+        </div>
+
+        {/* Selected Certification Banner */}
+        <div className="mt-4 bg-[#F2F4FD] border border-[#DCE4F9] rounded-2xl p-3 sm:p-3.5 flex items-center space-x-3 shadow-xs">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#F47716] to-[#FF7F24] text-white flex items-center justify-center font-mono font-bold text-sm flex-shrink-0 shadow-sm">
+            <Code2 className="w-5 h-5 stroke-[2.5]" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h4 className="text-sm sm:text-base font-extrabold text-[#10264B] truncate">
+              {certification.name}
+            </h4>
+            <p className="text-[11px] text-slate-600 truncate mt-0.5">
+              <span className="font-semibold text-slate-700">Code: {certification.code}</span>
+              <span className="mx-1.5 text-slate-400">|</span>
+              <span>Domain: {certification.domain}</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Level Options Cards */}
+        <div className="mt-4 space-y-2.5">
+          {levels.map((lvl) => {
+            const isSelected = selectedLevelId === lvl.id;
+            const certCodeDisplay = `${baseCodePrefix}-${lvl.certificateSuffix}® (${lvl.certificateTitle})`;
+
+            return (
+              <div
+                key={lvl.id}
+                onClick={() => setSelectedLevelId(lvl.id)}
+                className={`rounded-2xl p-3.5 sm:p-4 border-2 transition-all cursor-pointer flex items-center justify-between gap-3 select-none ${
+                  isSelected
+                    ? 'border-[#F47716] bg-[#FFFBF7] shadow-md ring-1 ring-orange-200'
+                    : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50'
+                }`}
+              >
+                {/* Left: Radio + Icon + Info */}
+                <div className="flex items-center space-x-3 sm:space-x-3.5 min-w-0">
+                  {/* Radio Indicator matching screenshot */}
+                  <div
+                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
+                      isSelected ? 'border-[#F47716]' : 'border-slate-300'
+                    }`}
+                  >
+                    {isSelected && (
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#F47716]" />
+                    )}
+                  </div>
+
+                  {/* Level Graduation Cap Icon */}
+                  <div
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                      lvl.id === 'foundation'
+                        ? 'text-blue-600'
+                        : lvl.id === 'professional'
+                        ? 'text-[#F47716]'
+                        : 'text-purple-600'
+                    }`}
+                  >
+                    <GraduationCap className="w-6 h-6 stroke-[2]" />
+                  </div>
+
+                  {/* Details */}
+                  <div className="space-y-0.5 min-w-0">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xs sm:text-sm font-extrabold text-[#10264B]">
+                        {lvl.name}
+                      </span>
+                      {/* Badge */}
+                      {lvl.badgeType === 'beginner' && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#DCEAFE] text-[#1E40AF]">
+                          {lvl.badge}
+                        </span>
+                      )}
+                      {lvl.badgeType === 'popular' && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#F47716] text-white shadow-xs">
+                          {lvl.badge}
+                        </span>
+                      )}
+                      {lvl.badgeType === 'advanced' && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#E9D5FF] text-[#6B21A8]">
+                          {lvl.badge}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Metadata: MCQs | Duration | Difficulty */}
+                    <div className="flex items-center space-x-2 text-[10.5px] text-slate-500 font-medium">
+                      <span className="flex items-center space-x-1">
+                        <FileText className="w-3 h-3 text-slate-400" />
+                        <span>{lvl.mcqs} MCQs</span>
+                      </span>
+                      <span>|</span>
+                      <span className="flex items-center space-x-1">
+                        <Clock className="w-3 h-3 text-slate-400" />
+                        <span>{lvl.durationMinutes} Minutes</span>
+                      </span>
+                      <span>|</span>
+                      <span className="flex items-center space-x-1">
+                        <BarChart className="w-3 h-3 text-slate-400" />
+                        <span>{lvl.difficulty}</span>
+                      </span>
+                    </div>
+
+                    {/* Certificate Code */}
+                    <p className="text-[10px] text-slate-500 truncate pt-0.5 font-medium">
+                      Certificate: <span className="font-semibold text-slate-700">{certCodeDisplay}</span>
+                    </p>
+                  </div>
+                </div>
+
+                {/* Right: Divider & Exam Fee */}
+                <div className="text-right pl-3 sm:pl-4 border-l border-slate-200 flex-shrink-0">
+                  <span className="text-[10px] text-slate-500 font-semibold block uppercase tracking-wider">
+                    Exam Fee
+                  </span>
+                  <span className="text-base sm:text-lg font-black text-[#10264B]">
+                    ₹{lvl.feeINR.toLocaleString('en-IN')}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* 4 Feature Strip Icons matching screenshot */}
+        <div className="mt-5 pt-4 border-t border-slate-100 grid grid-cols-4 gap-2 text-center">
+          <div className="space-y-1">
+            <div className="w-6 h-6 mx-auto text-[#F47716] flex items-center justify-center">
+              <ShieldCheck className="w-5 h-5 stroke-[2.2]" />
+            </div>
+            <p className="text-[9.5px] font-bold text-slate-800 leading-tight">
+              Industry Recognized Certificate
+            </p>
+          </div>
+
+          <div className="space-y-1">
+            <div className="w-6 h-6 mx-auto text-[#F47716] flex items-center justify-center">
+              <BarChart3 className="w-5 h-5 stroke-[2.2]" />
+            </div>
+            <p className="text-[9.5px] font-bold text-slate-800 leading-tight">
+              Role Based Skill Validation
+            </p>
+          </div>
+
+          <div className="space-y-1">
+            <div className="w-6 h-6 mx-auto text-[#F47716] flex items-center justify-center">
+              <Globe className="w-5 h-5 stroke-[2.2]" />
+            </div>
+            <p className="text-[9.5px] font-bold text-slate-800 leading-tight">
+              Global Credibility
+            </p>
+          </div>
+
+          <div className="space-y-1">
+            <div className="w-6 h-6 mx-auto text-[#F47716] flex items-center justify-center">
+              <Award className="w-5 h-5 stroke-[2.2]" />
+            </div>
+            <p className="text-[9.5px] font-bold text-slate-800 leading-tight">
+              Career & Placement Advantage
+            </p>
+          </div>
+        </div>
+
+        {/* Bottom Action Buttons */}
+        <div className="mt-5 pt-3 flex items-center gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-1/3 py-3 px-4 rounded-2xl border-2 border-[#10264B] text-[#10264B] font-extrabold text-xs sm:text-sm hover:bg-slate-50 transition-colors cursor-pointer text-center shadow-xs"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleContinue}
+            className="w-2/3 py-3 px-5 rounded-2xl bg-[#F47716] hover:bg-[#E35D00] text-white font-black text-xs sm:text-sm transition-all shadow-md hover:shadow-orange-500/25 flex items-center justify-center space-x-2 cursor-pointer hover:scale-[1.01]"
+          >
+            <span>Continue to Enrollment</span>
+            <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};

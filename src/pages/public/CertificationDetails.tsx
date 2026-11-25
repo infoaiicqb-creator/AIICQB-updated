@@ -4,6 +4,7 @@ import { api } from '../../services/api';
 import { Certification } from '../../types';
 import { useAuth } from '../../context/AuthContext';
 import { RazorpayModal } from '../../components/RazorpayModal';
+import { SelectExamLevelModal } from '../../components/SelectExamLevelModal';
 import {
   Award,
   CheckCircle2,
@@ -26,6 +27,8 @@ export const CertificationDetails: React.FC = () => {
   const [cert, setCert] = useState<Certification | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'overview' | 'syllabus' | 'exam' | 'prerequisites'>('overview');
+  const [showLevelModal, setShowLevelModal] = useState(false);
+  const [enrollLevelData, setEnrollLevelData] = useState<any>(null);
   const [showCheckout, setShowCheckout] = useState(false);
 
   useEffect(() => {
@@ -43,7 +46,7 @@ export const CertificationDetails: React.FC = () => {
           { replace: true }
         );
       } else {
-        setShowCheckout(true);
+        setShowLevelModal(true);
       }
     }
   }, [searchParams, cert, user, id, navigate]);
@@ -69,7 +72,7 @@ export const CertificationDetails: React.FC = () => {
       );
       return;
     }
-    setShowCheckout(true);
+    setShowLevelModal(true);
   };
 
   if (loading) {
@@ -287,22 +290,46 @@ export const CertificationDetails: React.FC = () => {
         </div>
       </div>
 
+      {/* Select Exam Level Modal */}
+      {showLevelModal && cert && (
+        <SelectExamLevelModal
+          certification={cert}
+          onClose={() => {
+            setShowLevelModal(false);
+            if (searchParams.get('enroll')) {
+              const newParams = new URLSearchParams(searchParams);
+              newParams.delete('enroll');
+              newParams.delete('certName');
+              newParams.delete('message');
+              setSearchParams(newParams, { replace: true });
+            }
+          }}
+          onContinue={(selectedLevel) => {
+            setEnrollLevelData(selectedLevel);
+            setShowLevelModal(false);
+            setShowCheckout(true);
+          }}
+        />
+      )}
+
       {/* Razorpay Modal Trigger */}
-      {showCheckout && (
+      {showCheckout && cert && (
         <RazorpayModal
           certificationId={cert.id}
           certificationName={cert.name}
-          certificationCode={cert.code}
-          certificationLevel={cert.level}
-          amount={cert.examFee}
-          amountUSD={cert.examFeeUSD}
+          certificationCode={enrollLevelData?.code || cert.code}
+          certificationLevel={enrollLevelData?.levelName || cert.level}
+          amount={enrollLevelData?.amount ?? cert.examFee}
+          amountUSD={enrollLevelData?.amountUSD ?? cert.examFeeUSD}
           currency={cert.currency}
           onSuccess={() => {
             setShowCheckout(false);
+            setEnrollLevelData(null);
             navigate(`/portal/exams?enrolled=${encodeURIComponent(cert.name)}`);
           }}
           onClose={() => {
             setShowCheckout(false);
+            setEnrollLevelData(null);
             if (searchParams.get('enroll')) {
               const newParams = new URLSearchParams(searchParams);
               newParams.delete('enroll');

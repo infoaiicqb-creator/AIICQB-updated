@@ -729,5 +729,25 @@
     "publishedAt": "2026-11-25T06:40:47.464Z",
     "createdAt": "2026-11-25T06:40:47.466Z",
     "updatedAt": "2026-11-25T06:40:47.466Z"
+  },
+  {
+    "id": "res_1795589477840_p05k8o",
+    "attemptId": "att_1795589351761_qf8j3x",
+    "scheduleId": "SCH-AICQB-127272",
+    "candidateUid": "usr_1795161584876_gigns6",
+    "candidateId": "AICQB-1004704",
+    "candidateEmail": "gaurav@gmail.com",
+    "candidateName": "Gaurav Patil",
+    "certificationId": "cert_aicqb_st_cp",
+    "certificationName": "AICQB Certified Software Tester",
+    "certificationCode": "AICQB-ST-CP",
+    "score": 8,
+    "maxScore": 30,
+    "percentage": 27,
+    "passed": false,
+    "issueCertificateEligible": false,
+    "publishedAt": "2026-11-25T06:51:17.837Z",
+    "createdAt": "2026-11-25T06:51:17.840Z",
+    "updatedAt": "2026-11-25T06:51:17.840Z"
   }
 ]

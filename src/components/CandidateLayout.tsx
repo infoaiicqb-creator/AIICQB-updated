@@ -13,7 +13,6 @@ import {
   Headphones,
   Settings,
   LogOut,
-  Bell,
   Menu,
   X,
 } from 'lucide-react';
@@ -177,14 +176,8 @@ export const CandidateLayout: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-2 sm:space-x-4">
-            {/* Notification Bell */}
-            <div className="relative cursor-pointer p-1.5 text-gray-500 hover:text-[#10264B]">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-[#F47716] rounded-full ring-2 ring-white"></span>
-            </div>
-
             {/* Candidate User Pill */}
-            <div className="flex items-center space-x-2.5 sm:space-x-3 pl-2 sm:pl-3 border-l border-gray-200">
+            <div className="flex items-center space-x-2.5 sm:space-x-3">
               <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#10264B] text-white flex items-center justify-center font-bold text-xs ring-2 ring-orange-200">
                 {displayName.charAt(0).toUpperCase()}
               </div>
